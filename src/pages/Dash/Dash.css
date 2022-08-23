@@ -1,0 +1,9 @@
+.logo {
+    height: 100px;
+    margin: auto;
+}
+
+.logo-text {
+    font-weight: 900;
+    color: var(--chakra-colors-blue-500);
+}
