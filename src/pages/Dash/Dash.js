@@ -16,11 +16,12 @@ import {
     useToast,
     VStack,
 } from '@chakra-ui/react';
-import React from 'react';
+import React, { useState } from 'react';
 import { FiLogOut, FiMenu, FiShield, FiTarget, FiUser } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 
 import { auth, signOut } from '../../utilities/auth';
+import { getUserSettings, MockSettings } from '../../utilities/user_data';
 import Account from '../Account/Account';
 import Overview from '../Overview/Overview';
 import Solutions from '../Solutions/Solutions';
@@ -30,14 +31,19 @@ import './Dash.css';
 
 export default function Dash(props, { children }) {
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const [userData, setUserData] = useState(MockSettings);
+
+    getUserSettings().then(result => {
+        setUserData(result);
+    });
 
     var innerPage;
     if (props.overview) {
-        innerPage = <Overview></Overview>;
+        innerPage = <Overview userData={userData} />;
     } else if (props.solutions) {
-        innerPage = <Solutions></Solutions>;
+        innerPage = <Solutions userData={userData} />;
     } else if (props.account) {
-        innerPage = <Account></Account>;
+        innerPage = <Account userData={userData} />;
     }
 
     return (
@@ -59,7 +65,7 @@ export default function Dash(props, { children }) {
                     <SidebarContent onClose={onClose} />
                 </DrawerContent>
             </Drawer>
-            <MobileNav onOpen={onOpen} />
+            <MobileNav userData={userData} onOpen={onOpen} />
             <Box ml={{ base: 0, md: 60 }} p="4">
                 {innerPage}
                 {children}
@@ -190,7 +196,7 @@ const NavItem = ({ icon, children, ...rest }) => {
     );
 };
 
-const MobileNav = ({ onOpen, ...rest }) => {
+const MobileNav = ({ userData, onOpen, ...rest }) => {
     return (
         <Flex
             ml={{ base: 0, md: 60 }}
@@ -222,19 +228,18 @@ const MobileNav = ({ onOpen, ...rest }) => {
             <HStack spacing={{ base: '0', md: '6' }}>
                 <Flex alignItems={'center'}>
                     <HStack>
-                        <Avatar
-                            size={'sm'}
-                            src={'https://github.com/iosifache.png'}
-                        />
+                        <Avatar size={'sm'} src={userData.account.profile} />
                         <VStack
                             display={{ base: 'none', md: 'flex' }}
                             alignItems="flex-start"
                             spacing="1px"
                             ml="2"
                         >
-                            <Text fontSize="sm">George-Andrei Iosif</Text>
+                            <Text fontSize="sm">
+                                {userData.account.full_name}
+                            </Text>
                             <Text fontSize="xs" color="gray.600">
-                                MutableSecurity
+                                {userData.account.organization}
                             </Text>
                         </VStack>
                     </HStack>

@@ -47,14 +47,18 @@ function AnnotatedTextInput(props) {
 
 function AnnotatedRadioGroup(props) {
     var radioValues = props.radioLabels.map((label, key) => (
-        <Radio value={props.radioValues[key]}>{label}</Radio>
+        <Radio value={key.toString()} key={key}>
+            {label}
+        </Radio>
     ));
+
+    var value = props.radioValues.indexOf(props.value).toString();
 
     return (
         <FormControl>
             <FormLabel>{props.title}</FormLabel>
             <RadioGroup
-                defaultValue={props.defaultValue}
+                value={value}
                 border="1px"
                 borderColor="gray.200"
                 borderRadius="base"
@@ -68,7 +72,13 @@ function AnnotatedRadioGroup(props) {
 }
 
 function AnnotatedSlider(props) {
-    const [failedTests, setFailedTests] = useState(5);
+    const [failedTests, setFailedTests] = useState();
+
+    const notifyChangedValue = function (newValue) {
+        props.onChange(newValue);
+
+        setFailedTests(newValue);
+    };
 
     return (
         <FormControl>
@@ -79,7 +89,7 @@ function AnnotatedSlider(props) {
                 min={props.min}
                 max={props.max}
                 step={props.step}
-                onChange={setFailedTests}
+                onChange={notifyChangedValue}
                 w="50%"
                 isDisabled
             >
@@ -88,7 +98,7 @@ function AnnotatedSlider(props) {
                 </SliderTrack>
                 <SliderThumb boxSize={10} backgroundColor="white">
                     <Box color="blue" fontWeight={300}>
-                        {failedTests}
+                        {props.value}
                     </Box>
                 </SliderThumb>
             </Slider>
@@ -97,7 +107,13 @@ function AnnotatedSlider(props) {
     );
 }
 
-export default function Account() {
+export default function Account(props) {
+    var userData = props.userData;
+
+    const changeFailedTestsTrigger = function (newValue) {
+        userData.reporting_configuration.failed_tests_trigger = newValue;
+    };
+
     return (
         <VStack spacing={4} p={3} align="stretch" bgColor={'white'}>
             <Heading>Settings</Heading>
@@ -108,21 +124,21 @@ export default function Account() {
             <AnnotatedTextInput
                 title="Full Name"
                 description="Your full name"
-                value="George-Andrei Iosif"
+                value={userData.account.full_name}
                 icon={<FaRegAddressCard color="gray.300" />}
                 inputType="text"
             />
             <AnnotatedTextInput
                 title="Email Address"
                 description="The email address you use to log in into Dash"
-                value="andrei@mutablesecurity.io"
+                value={userData.account.email}
                 icon={<FiAtSign color="gray.300" />}
                 inputType="email"
             />
             <AnnotatedTextInput
                 title="Organization"
                 description="The organization whom infrastructure you manage"
-                value="MutableSecurity"
+                value={userData.account.organization}
                 icon={<FaRegBuilding color="gray.300" />}
                 inputType="text"
             />
@@ -136,10 +152,7 @@ export default function Account() {
                     flex={1}
                 />
                 <Box w="70px" margin="auto 0 auto 20px">
-                    <Image
-                        src="https://github.com/iosifache.png"
-                        borderRadius="md"
-                    />
+                    <Image src={userData.account.profile} borderRadius="md" />
                 </Box>
             </Flex>
 
@@ -147,11 +160,11 @@ export default function Account() {
                 Agents Configuration
             </Heading>
             <AnnotatedRadioGroup
-                defaultValue={60}
                 title="Reporting Interval"
                 description="Interval between two consecutive sendings of data from an agent to MutableSecurity servers"
                 radioLabels={['Every minute', 'Every hour', 'Every day']}
-                radioValues={[60, 60 * 60, 24 * 60 * 60]}
+                radioValues={['60', '3600', '86400']}
+                value={userData.agents_configuration.reporting_interval.toString()}
             />
 
             <Heading as="h3" size="lg">
@@ -163,14 +176,16 @@ export default function Account() {
                 min={0}
                 max={100}
                 step={5}
+                value={userData.reporting_configuration.failed_tests_trigger}
+                onChange={changeFailedTestsTrigger}
             />
             <AnnotatedRadioGroup
-                defaultValue={1}
                 title="Trigger for Configuration Change Reporting"
                 description="The moment in which the configuration change should be
                 reported to you by email"
                 radioLabels={['When any test fails', 'Daily', 'Weekly']}
-                radioValues={[0, 1, 2]}
+                radioValues={['instant', 'daily', 'weekly']}
+                value={userData.reporting_configuration.config_change_group}
             />
         </VStack>
     );
