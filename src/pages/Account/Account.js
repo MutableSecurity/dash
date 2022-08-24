@@ -22,7 +22,7 @@ import React, { useState } from 'react';
 import { FaRegAddressCard, FaRegBuilding } from 'react-icons/fa';
 import { FiAtSign, FiCamera } from 'react-icons/fi';
 
-function EditableInput(props) {
+function AnnotatedTextInput(props) {
     return (
         <Box flex={props.flex}>
             <FormControl>
@@ -45,9 +45,59 @@ function EditableInput(props) {
     );
 }
 
-export default function Account() {
+function AnnotatedRadioGroup(props) {
+    var radioValues = props.radioLabels.map((label, key) => (
+        <Radio value={props.radioValues[key]}>{label}</Radio>
+    ));
+
+    return (
+        <FormControl>
+            <FormLabel>{props.title}</FormLabel>
+            <RadioGroup
+                defaultValue={props.defaultValue}
+                border="1px"
+                borderColor="gray.200"
+                borderRadius="base"
+                padding={2}
+            >
+                <Stack direction="row">{radioValues}</Stack>
+            </RadioGroup>
+            <FormHelperText>{props.description}</FormHelperText>
+        </FormControl>
+    );
+}
+
+function AnnotatedSlider(props) {
     const [failedTests, setFailedTests] = useState(5);
 
+    return (
+        <FormControl>
+            <FormLabel>{props.title}</FormLabel>
+            <Slider
+                aria-label="slider-ex-1"
+                defaultValue={5}
+                min={props.min}
+                max={props.max}
+                step={props.step}
+                onChange={setFailedTests}
+                w="50%"
+                isDisabled
+            >
+                <SliderTrack>
+                    <SliderFilledTrack />
+                </SliderTrack>
+                <SliderThumb boxSize={10} backgroundColor="white">
+                    <Box color="blue" fontWeight={300}>
+                        {failedTests}
+                    </Box>
+                </SliderThumb>
+            </Slider>
+            <FormHelperText>{props.description}</FormHelperText>
+        </FormControl>
+    );
+}
+
+export default function Account() {
     return (
         <VStack spacing={4} p={3} align="stretch" bgColor={'white'}>
             <Heading>Settings</Heading>
@@ -55,21 +105,21 @@ export default function Account() {
             <Heading as="h3" size="lg">
                 Account Details
             </Heading>
-            <EditableInput
+            <AnnotatedTextInput
                 title="Full Name"
                 description="Your full name"
                 value="George-Andrei Iosif"
                 icon={<FaRegAddressCard color="gray.300" />}
                 inputType="text"
             />
-            <EditableInput
+            <AnnotatedTextInput
                 title="Email Address"
                 description="The email address you use to log in into Dash"
                 value="andrei@mutablesecurity.io"
                 icon={<FiAtSign color="gray.300" />}
                 inputType="email"
             />
-            <EditableInput
+            <AnnotatedTextInput
                 title="Organization"
                 description="The organization whom infrastructure you manage"
                 value="MutableSecurity"
@@ -77,7 +127,7 @@ export default function Account() {
                 inputType="text"
             />
             <Flex>
-                <EditableInput
+                <AnnotatedTextInput
                     title="Profile Picture"
                     description="Your profile picture"
                     placeholder="Click to select a new profile picture"
@@ -96,75 +146,32 @@ export default function Account() {
             <Heading as="h3" size="lg">
                 Agents Configuration
             </Heading>
-            <FormControl>
-                <FormLabel>Reporting Interval</FormLabel>
-                <RadioGroup
-                    defaultValue="1"
-                    border="1px"
-                    borderColor="gray.200"
-                    borderRadius="base"
-                    padding={2}
-                >
-                    <Stack direction="row">
-                        <Radio value="1">Every minute</Radio>
-                        <Radio value="2">Every hour</Radio>
-                        <Radio value="3">Every day</Radio>
-                    </Stack>
-                </RadioGroup>
-                <FormHelperText>
-                    Interval between two consecutive sendings of data from an
-                    agent to MutableSecurity servers
-                </FormHelperText>
-            </FormControl>
+            <AnnotatedRadioGroup
+                defaultValue={60}
+                title="Reporting Interval"
+                description="Interval between two consecutive sendings of data from an agent to MutableSecurity servers"
+                radioLabels={['Every minute', 'Every hour', 'Every day']}
+                radioValues={[60, 60 * 60, 24 * 60 * 60]}
+            />
 
             <Heading as="h3" size="lg">
                 Email Reporting Configuration
             </Heading>
-            <FormControl>
-                <FormLabel>Number of Failed Tests Before Reporting</FormLabel>
-                <Slider
-                    aria-label="slider-ex-1"
-                    defaultValue={5}
-                    min={0}
-                    max={100}
-                    step={5}
-                    onChange={setFailedTests}
-                    w="50%"
-                    isDisabled
-                >
-                    <SliderTrack>
-                        <SliderFilledTrack />
-                    </SliderTrack>
-                    <SliderThumb boxSize={10}>
-                        <Box color="blue">{failedTests}</Box>
-                    </SliderThumb>
-                </Slider>
-                <FormHelperText>
-                    Number of tests to fail before reporting the events by email
-                </FormHelperText>
-            </FormControl>
-            <FormControl>
-                <FormLabel>
-                    Trigger for Configuration Change Reporting
-                </FormLabel>
-                <RadioGroup
-                    defaultValue="2"
-                    border="1px"
-                    borderColor="gray.200"
-                    borderRadius="base"
-                    padding={2}
-                >
-                    <Stack direction="row">
-                        <Radio value="1">When any test fails</Radio>
-                        <Radio value="2">Daily</Radio>
-                        <Radio value="3">Weekly</Radio>
-                    </Stack>
-                </RadioGroup>
-                <FormHelperText>
-                    The moment in which the configuration change should be
-                    reported to you by email
-                </FormHelperText>
-            </FormControl>
+            <AnnotatedSlider
+                title="Number of Failed Tests Before Reporting"
+                description="Number of tests to fail before reporting the events by email"
+                min={0}
+                max={100}
+                step={5}
+            />
+            <AnnotatedRadioGroup
+                defaultValue={1}
+                title="Trigger for Configuration Change Reporting"
+                description="The moment in which the configuration change should be
+                reported to you by email"
+                radioLabels={['When any test fails', 'Daily', 'Weekly']}
+                radioValues={[0, 1, 2]}
+            />
         </VStack>
     );
 }
