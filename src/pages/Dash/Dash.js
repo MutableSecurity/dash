@@ -17,16 +17,29 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import React from 'react';
-import { FiLogOut, FiMenu, FiShield, FiTarget } from 'react-icons/fi';
+import { FiLogOut, FiMenu, FiShield, FiTarget, FiUser } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
-
 import { auth, signOut } from '../../utilities/auth';
+
+import Account from '../Account/Account';
+import Overview from '../Overview/Overview';
+import Solutions from '../Solutions/Solutions';
 
 import logo from '../../assets/logo.svg';
 import './Dash.css';
 
-export default function SidebarWithHeader({ children }) {
+export default function Dash(props, { children }) {
     const { isOpen, onOpen, onClose } = useDisclosure();
+
+    var innerPage;
+    if (props.overview) {
+        innerPage = <Overview></Overview>;
+    } else if (props.solutions) {
+        innerPage = <Solutions></Solutions>;
+    } else if (props.account) {
+        innerPage = <Account></Account>;
+    }
+
     return (
         <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
             <SidebarContent
@@ -48,6 +61,7 @@ export default function SidebarWithHeader({ children }) {
             </Drawer>
             <MobileNav onOpen={onOpen} />
             <Box ml={{ base: 0, md: 60 }} p="4">
+                {innerPage}
                 {children}
             </Box>
         </Box>
@@ -58,8 +72,27 @@ const SidebarContent = ({ onClose, ...rest }) => {
     const navigate = useNavigate();
     const toast = useToast();
     const LinkItems = [
-        { name: 'Overview', icon: FiTarget, action: () => {} },
-        { name: 'Solutions', icon: FiShield, action: () => {} },
+        {
+            name: 'Overview',
+            icon: FiTarget,
+            action: () => {
+                navigate('/overview');
+            },
+        },
+        {
+            name: 'Solutions',
+            icon: FiShield,
+            action: () => {
+                navigate('/solutions');
+            },
+        },
+        {
+            name: 'Account',
+            icon: FiUser,
+            action: () => {
+                navigate('/account');
+            },
+        },
         {
             name: 'Log Out',
             icon: FiLogOut,

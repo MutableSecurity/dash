@@ -26,8 +26,6 @@ export default function SplitScreen() {
     const handleLogin = () => {
         signInWithEmailAndPassword(auth, email, password)
             .then(userCredential => {
-                const user = userCredential.user;
-
                 toast({
                     title: 'Welcome back!',
                     description:

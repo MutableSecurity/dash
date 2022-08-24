@@ -21,7 +21,23 @@ function App() {
                         path="/overview"
                         element={
                             <RequireActiveSession>
-                                <Dash />
+                                <Dash overview />
+                            </RequireActiveSession>
+                        }
+                    />
+                    <Route
+                        path="/solutions"
+                        element={
+                            <RequireActiveSession>
+                                <Dash solutions />
+                            </RequireActiveSession>
+                        }
+                    />
+                    <Route
+                        path="/account"
+                        element={
+                            <RequireActiveSession>
+                                <Dash account />
                             </RequireActiveSession>
                         }
                     />
