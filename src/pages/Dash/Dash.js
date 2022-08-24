@@ -19,8 +19,8 @@ import {
 import React from 'react';
 import { FiLogOut, FiMenu, FiShield, FiTarget, FiUser } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
-import { auth, signOut } from '../../utilities/auth';
 
+import { auth, signOut } from '../../utilities/auth';
 import Account from '../Account/Account';
 import Overview from '../Overview/Overview';
 import Solutions from '../Solutions/Solutions';
