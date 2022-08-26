@@ -40,6 +40,8 @@ export default function SplitScreen() {
                 }, 3000);
             })
             .catch(error => {
+                console.log(error);
+
                 toast({
                     title: 'There is an issue..',
                     description:

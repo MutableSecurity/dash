@@ -1,15 +1,92 @@
-import React, { useState } from 'react';
+import {
+    Flex,
+    Heading,
+    Stat,
+    StatHelpText,
+    StatLabel,
+    StatNumber,
+    VStack,
+} from '@chakra-ui/react';
+import React, { useEffect, useState } from 'react';
 
-import { getLastMonthStatistics } from '../../utilities/user_data';
+import {
+    TimeLineChartWithCursor,
+    TimeStackedChartWithCursor,
+} from '../../components/TimeChartsWithCursor/TimeChartsWithCursor';
+import {
+    getLastMonthStatistics,
+    MockMonthStatistics,
+} from '../../utilities/user_data';
 
 export default function Overview() {
-    const [lastMonthStatistics, setLastMonthStatistics] = useState(null);
+    const [receivedStats, markStatsAsReceived] = useState(false);
+    const [lastMonthStatistics, setLastMonthStatistics] =
+        useState(MockMonthStatistics);
 
-    if (lastMonthStatistics == null) {
+    useEffect(() => {
         getLastMonthStatistics().then(result => {
             setLastMonthStatistics(result);
+            markStatsAsReceived(true);
         });
-    }
+    });
 
-    return <h1>Overview</h1>;
+    const solutionsInstalledNow =
+        lastMonthStatistics.solutionsCounts[
+            lastMonthStatistics.solutionsCounts.length - 1
+        ];
+    const availabilityPercentageNow =
+        lastMonthStatistics.availabilityPercentages[
+            lastMonthStatistics.availabilityPercentages.length - 1
+        ];
+
+    if (!receivedStats) return;
+    else
+        return (
+            <VStack spacing={4} p={3} align="stretch" bgColor={'white'}>
+                <Heading>Overview</Heading>
+                <Flex>
+                    <Stat>
+                        <StatLabel>Installed Solutions</StatLabel>
+                        <StatNumber>{solutionsInstalledNow}</StatNumber>
+                        <StatHelpText>in the last report</StatHelpText>
+                    </Stat>
+                    <Stat>
+                        <StatLabel>Passed Tests Percentage</StatLabel>
+                        <StatNumber>{availabilityPercentageNow}%</StatNumber>
+                        <StatHelpText>in the last report</StatHelpText>
+                    </Stat>
+                    <Stat>
+                        <StatLabel>Reports</StatLabel>
+                        <StatNumber>
+                            {lastMonthStatistics.reportsCount}
+                        </StatNumber>
+                        <StatHelpText>in the last month</StatHelpText>
+                    </Stat>
+                </Flex>
+                <Heading as="h3" size="lg">
+                    Monthly Graphs
+                </Heading>
+                <TimeLineChartWithCursor
+                    title="Installed Solutions"
+                    timestamps={lastMonthStatistics.timestamps}
+                    values={lastMonthStatistics.solutionsCounts}
+                    yDomain={[0, 10]}
+                />
+                <TimeLineChartWithCursor
+                    title="Passed Tests Percentage"
+                    timestamps={lastMonthStatistics.timestamps}
+                    values={lastMonthStatistics.availabilityPercentages}
+                    yDomain={[0, 100]}
+                    valuePreffix="%"
+                />
+                <TimeStackedChartWithCursor
+                    title="Passed-Failed Tests Distribution"
+                    upperValues={lastMonthStatistics.failedTestsCounts}
+                    upperValuesLabel="Failed Tests"
+                    bottomValues={lastMonthStatistics.passedTestsCounts}
+                    bottomValuesLabel="Passed Tests"
+                    timestamps={lastMonthStatistics.timestamps}
+                />
+            </VStack>
+        );
 }

@@ -1,111 +1,13 @@
-import {
-    Box,
-    Flex,
-    FormControl,
-    FormHelperText,
-    FormLabel,
-    Heading,
-    Image,
-    Input,
-    InputGroup,
-    InputLeftElement,
-    Radio,
-    RadioGroup,
-    Slider,
-    SliderFilledTrack,
-    SliderThumb,
-    SliderTrack,
-    Stack,
-    VStack,
-} from '@chakra-ui/react';
-import React, { useState } from 'react';
+import { Box, Flex, Heading, Image, VStack } from '@chakra-ui/react';
+import React from 'react';
 import { FaRegAddressCard, FaRegBuilding } from 'react-icons/fa';
 import { FiAtSign, FiCamera } from 'react-icons/fi';
 
-function AnnotatedTextInput(props) {
-    return (
-        <Box flex={props.flex}>
-            <FormControl>
-                <FormLabel>{props.title}</FormLabel>
-                <InputGroup>
-                    <InputLeftElement
-                        pointerEvents="none"
-                        children={props.icon}
-                    />
-                    <Input
-                        type="{props.type}"
-                        isDisabled
-                        value={props.value}
-                        placeholder={props.placeholder}
-                    />
-                </InputGroup>
-                <FormHelperText>{props.description}</FormHelperText>
-            </FormControl>
-        </Box>
-    );
-}
-
-function AnnotatedRadioGroup(props) {
-    var radioValues = props.radioLabels.map((label, key) => (
-        <Radio value={key.toString()} key={key}>
-            {label}
-        </Radio>
-    ));
-
-    var value = props.radioValues.indexOf(props.value).toString();
-
-    return (
-        <FormControl>
-            <FormLabel>{props.title}</FormLabel>
-            <RadioGroup
-                value={value}
-                border="1px"
-                borderColor="gray.200"
-                borderRadius="base"
-                padding={2}
-            >
-                <Stack direction="row">{radioValues}</Stack>
-            </RadioGroup>
-            <FormHelperText>{props.description}</FormHelperText>
-        </FormControl>
-    );
-}
-
-function AnnotatedSlider(props) {
-    const [failedTests, setFailedTests] = useState();
-
-    const notifyChangedValue = function (newValue) {
-        props.onChange(newValue);
-
-        setFailedTests(newValue);
-    };
-
-    return (
-        <FormControl>
-            <FormLabel>{props.title}</FormLabel>
-            <Slider
-                aria-label="slider-ex-1"
-                defaultValue={5}
-                min={props.min}
-                max={props.max}
-                step={props.step}
-                onChange={notifyChangedValue}
-                w="50%"
-                isDisabled
-            >
-                <SliderTrack>
-                    <SliderFilledTrack />
-                </SliderTrack>
-                <SliderThumb boxSize={10} backgroundColor="white">
-                    <Box color="blue" fontWeight={300}>
-                        {props.value}
-                    </Box>
-                </SliderThumb>
-            </Slider>
-            <FormHelperText>{props.description}</FormHelperText>
-        </FormControl>
-    );
-}
+import {
+    AnnotatedRadioGroup,
+    AnnotatedSlider,
+    AnnotatedTextInput,
+} from '../../components/AnnotatedInput/AnnotatedInput';
 
 export default function Account(props) {
     var userData = props.userData;

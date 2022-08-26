@@ -47,12 +47,14 @@ class Settings {
 class MonthStastistics {
     constructor(
         reportsCount,
+        timestamps,
         solutionsCounts,
         availabilityPercentages,
         failedTestsCounts,
         passedTestsCounts
     ) {
         this.reportsCount = reportsCount;
+        this.timestamps = timestamps;
         this.solutionsCounts = solutionsCounts;
         this.availabilityPercentages = availabilityPercentages;
         this.failedTestsCounts = failedTestsCounts;
@@ -68,7 +70,7 @@ export const MockSettings = new Settings(
     MockAgentsConfiguration,
     MockReportingConfiguration
 );
-export const MockMonthStatistics = new MonthStastistics(0, [], [], [], []);
+export const MockMonthStatistics = new MonthStastistics(0, [], [], [], [], []);
 
 export function getUserSettings() {
     const userID = auth.currentUser.uid;
@@ -85,6 +87,8 @@ export function getUserSettings() {
             }
         })
         .catch(error => {
+            console.log(error);
+
             return null;
         });
 }
@@ -102,21 +106,21 @@ export function getLastMonthStatistics() {
         .then(snapshot => {
             if (snapshot.exists()) {
                 var reports = snapshot.val();
-                console.log(reports);
 
                 var reportsCount = 0;
+                var timestamps = [];
                 var solutionsCounts = [];
                 var availabilityPercentages = [];
                 var failedTestsCounts = [];
                 var passedTestsCounts = [];
 
                 reports.forEach(report => {
+                    timestamps.push(new Date(report.timestamp * 1000));
                     solutionsCounts.push(report.solutions.length);
 
                     var failedTests = 0;
                     var passedTests = 0;
                     report.solutions.forEach(solution => {
-                        // console.log(solution.tests_results);
                         if (solution.tests_results) {
                             Object.values(solution.tests_results).forEach(
                                 value => {
@@ -130,7 +134,7 @@ export function getLastMonthStatistics() {
                         }
                     });
                     var availabilityPercentage =
-                        passedTests / (passedTests + failedTests);
+                        (100 * passedTests) / (passedTests + failedTests);
 
                     reportsCount += 1;
 
@@ -141,6 +145,7 @@ export function getLastMonthStatistics() {
 
                 return new MonthStastistics(
                     reportsCount,
+                    timestamps,
                     solutionsCounts,
                     availabilityPercentages,
                     failedTestsCounts,
@@ -152,6 +157,7 @@ export function getLastMonthStatistics() {
         })
         .catch(error => {
             console.log(error);
+
             return null;
         });
 }
