@@ -13,10 +13,7 @@ import {
     TimeLineChartWithCursor,
     TimeStackedChartWithCursor,
 } from '../../components/TimeChartsWithCursor/TimeChartsWithCursor';
-import {
-    getLastMonthStatistics,
-    MockMonthStatistics,
-} from '../../utilities/user_data';
+import { MockMonthStatistics } from '../../utilities/data_models';
 
 export default function Overview() {
     const [receivedStats, markStatsAsReceived] = useState(false);

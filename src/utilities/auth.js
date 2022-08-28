@@ -5,7 +5,7 @@ import {
 } from 'firebase/auth';
 import { Navigate } from 'react-router-dom';
 
-import app from './firebase';
+import { app } from './firebase_controller';
 
 export const auth = getAuth(app);
 

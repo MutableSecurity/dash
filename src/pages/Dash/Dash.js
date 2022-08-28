@@ -17,14 +17,15 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
-import { FiLogOut, FiMenu, FiShield, FiTarget, FiUser } from 'react-icons/fi';
+import { FiLogOut, FiMenu, FiRadio, FiTarget, FiUser } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 
 import { auth, signOut } from '../../utilities/auth';
-import { getUserSettings, MockSettings } from '../../utilities/user_data';
+import { MockSettings } from '../../utilities/data_models';
+import { getUserSettings } from '../../utilities/firebase_controller';
 import Account from '../Account/Account';
+import Agents from '../Agents/Agents';
 import Overview from '../Overview/Overview';
-import Solutions from '../Solutions/Solutions';
 
 import logo from '../../assets/logo.svg';
 import './Dash.css';
@@ -40,8 +41,8 @@ export default function Dash(props, { children }) {
     var innerPage;
     if (props.overview) {
         innerPage = <Overview userData={userData} />;
-    } else if (props.solutions) {
-        innerPage = <Solutions userData={userData} />;
+    } else if (props.agents) {
+        innerPage = <Agents userData={userData} />;
     } else if (props.account) {
         innerPage = <Account userData={userData} />;
     }
@@ -86,10 +87,10 @@ const SidebarContent = ({ onClose, ...rest }) => {
             },
         },
         {
-            name: 'Solutions',
-            icon: FiShield,
+            name: 'Agents',
+            icon: FiRadio,
             action: () => {
-                navigate('/solutions');
+                navigate('/agents');
             },
         },
         {

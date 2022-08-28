@@ -26,10 +26,10 @@ function App() {
                         }
                     />
                     <Route
-                        path="/solutions"
+                        path="/agents"
                         element={
                             <RequireActiveSession>
-                                <Dash solutions />
+                                <Dash agents />
                             </RequireActiveSession>
                         }
                     />

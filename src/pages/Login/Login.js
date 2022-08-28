@@ -15,7 +15,6 @@ import { useNavigate } from 'react-router-dom';
 import { auth, signInWithEmailAndPassword } from '../../utilities/auth';
 
 import logo from '../../assets/logo.svg';
-import './Login.css';
 
 export default function SplitScreen() {
     const [email, setEmail] = useState('');
@@ -64,7 +63,7 @@ export default function SplitScreen() {
                         align="center"
                         justify="center"
                     >
-                        <Image src={logo} className="logo" />
+                        <Image src={logo} width={200} />
                         <Heading fontSize={'2xl'} textAlign="center">
                             Sign in to MutableSecurity
                         </Heading>
