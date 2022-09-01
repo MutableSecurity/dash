@@ -26,6 +26,7 @@ import { getUserSettings } from '../../utilities/firebase_controller';
 import Account from '../Account/Account';
 import Agents from '../Agents/Agents';
 import Overview from '../Overview/Overview';
+import Solution from '../Solution/Solution';
 import Solutions from '../Solutions/Solutions';
 
 import logo from '../../assets/logo.svg';
@@ -34,7 +35,7 @@ import './Dash.css';
 export default function Dash(props, { children }) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [userData, setUserData] = useState(MockSettings);
-    const { agentID } = useParams();
+    const { agentID, solutionID } = useParams();
 
     getUserSettings().then(result => {
         setUserData(result);
@@ -49,6 +50,8 @@ export default function Dash(props, { children }) {
         innerPage = <Account userData={userData} />;
     } else if (props.solutions) {
         innerPage = <Solutions agentId={agentID} />;
+    } else if (props.solution) {
+        innerPage = <Solution solutionId={solutionID} />;
     }
 
     return (

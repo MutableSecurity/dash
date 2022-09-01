@@ -87,7 +87,7 @@ export default function Agents() {
                             variant="solid"
                             colorScheme="blue"
                         >
-                            All Agents
+                            Agents
                         </Tag>
                     </BreadcrumbLink>
                 </BreadcrumbItem>

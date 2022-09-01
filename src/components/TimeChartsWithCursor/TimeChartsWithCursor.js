@@ -14,6 +14,8 @@ import {
     VictoryVoronoiContainer,
 } from 'victory';
 
+import { convertUTCSecondsToFormattedDate } from '../../utilities/date';
+
 const translateValuesToTimeseries = (timestamps, values) => {
     return timestamps.map(function (timestamp, i) {
         return { x: timestamp, y: values[i] };
@@ -33,7 +35,7 @@ const RulerCursor = ({ yLabel, valuePreffix, x, y, datum, dx, dy }) => (
             strokeWidth={0}
         />
         <text x={x + 3} y={y - 25} fontSize="5">
-            {`Date: ${datum.x.toISOString()}`}
+            {`Date: ${convertUTCSecondsToFormattedDate(datum.x)}`}
         </text>
         <text x={x + 3} y={y - 15} fontSize="5">
             {`${yLabel}: ${datum.y}${valuePreffix}`}
@@ -44,11 +46,18 @@ const RulerCursor = ({ yLabel, valuePreffix, x, y, datum, dx, dy }) => (
 export function TimeLineChartWithCursor(props) {
     const valuePreffix = props.valuePreffix ? props.valuePreffix : '';
 
+    console.log(props.timestamps);
+
     return (
         <Box>
-            <Heading as="h3" size="md">
-                {props.title}
-            </Heading>
+            {props.title ? (
+                <Heading as="h3" size="md">
+                    {props.title}
+                </Heading>
+            ) : (
+                ''
+            )}
+
             <VictoryChart
                 theme={VictoryTheme.grayscale}
                 domain={{ y: props.yDomain }}
@@ -65,7 +74,7 @@ export function TimeLineChartWithCursor(props) {
                                 }}
                                 flyoutComponent={
                                     <RulerCursor
-                                        yLabel={props.title}
+                                        yLabel={props.yLabel}
                                         valuePreffix={valuePreffix}
                                     />
                                 }

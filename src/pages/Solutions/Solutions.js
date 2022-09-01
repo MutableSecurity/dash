@@ -17,12 +17,12 @@ import {
 import React, { useEffect, useState } from 'react';
 import { FiChevronRight, FiZoomIn } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
-import { MockAgent } from '../../utilities/data_models';
+import { MockSolution } from '../../utilities/data_models';
 import { getSolutions } from '../../utilities/firebase_controller';
 
 export default function Solutions(props) {
     const [receivedSolutions, markSolutionsAsReceived] = useState(false);
-    const [solutions, setSolutions] = useState([MockAgent]);
+    const [solutions, setSolutions] = useState([MockSolution]);
     const agentId = props.agentId;
 
     useEffect(() => {
@@ -41,7 +41,7 @@ export default function Solutions(props) {
                 <Tr>
                     <Td>{solution.solution_id}</Td>
                     <Td textAlign={'right'}>
-                        <Link to={'/solution/' + solution.id}>
+                        <Link to={'/solutions/' + solution.id}>
                             <IconButton
                                 colorScheme="blue"
                                 aria-label="Inspect solution"
@@ -83,7 +83,7 @@ export default function Solutions(props) {
                             variant="solid"
                             colorScheme="blue"
                         >
-                            All Agents
+                            Agents
                         </Tag>
                     </BreadcrumbLink>
                 </BreadcrumbItem>

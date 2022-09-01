@@ -72,6 +72,7 @@ export default function Overview() {
                     timestamps={lastMonthStatistics.timestamps}
                     values={lastMonthStatistics.solutionsCounts}
                     yDomain={[0, 10]}
+                    yLabel="Installed Solutions"
                 />
                 <TimeLineChartWithCursor
                     title="Passed Tests Percentage"
@@ -79,6 +80,7 @@ export default function Overview() {
                     values={lastMonthStatistics.availabilityPercentages}
                     yDomain={[0, 100]}
                     valuePreffix="%"
+                    yLabel="Passed Tests Percentage"
                 />
                 <TimeStackedChartWithCursor
                     title="Passed-Failed Tests Distribution"

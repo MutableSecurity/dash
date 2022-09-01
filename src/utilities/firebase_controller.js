@@ -11,7 +11,14 @@ import {
 import { plainToClass } from 'class-transformer';
 import { initializeApp } from 'firebase/app';
 import { auth } from './auth';
-import { Agent, MonthStastistics, Settings, Solution } from './data_models';
+import {
+    Agent,
+    FailedTestDetails,
+    MetricValues,
+    MonthStastistics,
+    Settings,
+    Solution,
+} from './data_models';
 import mock_data from './offline_firebase.json';
 
 const FIREBASE_CONFIG = {
@@ -30,6 +37,16 @@ const database = ref(getDatabase(app));
 const TESTING = true;
 const PROMISE_DELAY = 100;
 const MONTH_IN_SECONDS = 31 * 24 * 60 * 60;
+const MEASUREMENTS_IN_TEST = 10;
+const TEST_TIMESTAMPS = [...Array(MEASUREMENTS_IN_TEST).keys()].map(
+    x => Math.floor(Date.now() / 1000) - (MEASUREMENTS_IN_TEST - x) * 3600
+);
+const METRICS_VALUES = [...Array(MEASUREMENTS_IN_TEST)].map(() =>
+    Math.floor(Math.random() * 9)
+);
+const PASSED_TESTS_VALUES = [...Array(MEASUREMENTS_IN_TEST)].map(() =>
+    Math.floor(Math.random() * 100)
+);
 
 function createTestPromise(data) {
     return new Promise(function (resolve, reject) {
@@ -71,9 +88,8 @@ function getUserSettingsTest() {
 
 function getLastMonthStatisticsProd() {
     const userID = auth.currentUser.uid;
-    const monthInSeconds = 31 * 24 * 60 * 60;
     const now = Math.floor(Date.now() / 1000);
-    const startDate = now - monthInSeconds;
+    const startDate = now - MONTH_IN_SECONDS;
 
     var reportsRef = child(database, 'UserData/' + userID + '/reports');
     var orderQuery = query(reportsRef, orderByChild('timestamp'));
@@ -200,7 +216,17 @@ function getAgentsTest() {
     return createTestPromise(data);
 }
 
-function getSolutionsProd() {
+function getSolutionProd(solutionId) {
+    return createTestPromise({});
+}
+
+function getSolutionTest(solutionId) {
+    var data = plainToClass(Solution, mock_data.solutions[solutionId]);
+
+    return createTestPromise(data);
+}
+
+function getSolutionsProd(agentId) {
     return createTestPromise({});
 }
 
@@ -208,8 +234,6 @@ function getSolutionsTest(agentId) {
     var data = Object.keys(mock_data.solutions)
         .map(key => {
             var solution = mock_data.solutions[key];
-
-            console.log(solution);
 
             if (solution['parent_agent'] !== agentId) {
                 return null;
@@ -220,11 +244,49 @@ function getSolutionsTest(agentId) {
 
             return returnedSolution;
         })
-        .filter(x => !!x);
-    console.log(agentId);
-    console.log(data);
+        .filter(solution => !!solution);
 
     return createTestPromise(data);
+}
+
+function getLastConfigurationProd(solutionId) {
+    return createTestPromise({});
+}
+
+function getLastConfigurationTest(solutionId) {
+    var allInformation = mock_data.information_reports['-NAs41CC-k7QFJ2EDk-T'];
+    var data = {
+        current_user: allInformation['current_user'],
+        machine_id: allInformation['machine_id'],
+    };
+
+    return createTestPromise(data);
+}
+
+function getMetricsValueProd(solutionId, informationId) {
+    return createTestPromise({});
+}
+
+function getMetricsValueTest(solutionId, informationId) {
+    return new MetricValues(TEST_TIMESTAMPS, METRICS_VALUES);
+}
+
+function getPassedTestsForSolutionProd(solutionId) {
+    return createTestPromise({});
+}
+
+function getPassedTestsForSolutionTest(solutionId) {
+    return new MetricValues(TEST_TIMESTAMPS, PASSED_TESTS_VALUES);
+}
+
+function getLastTestFailedProd(solutionId, testsCount) {
+    return createTestPromise({});
+}
+
+function getLastTestFailedTest(solutionId, testsCount) {
+    return TEST_TIMESTAMPS.map(timestamp => {
+        return new FailedTestDetails(timestamp, 'ubuntu');
+    });
 }
 
 export const getUserSettings = TESTING
@@ -235,3 +297,16 @@ export const getLastMonthStatistics = TESTING
     : getLastMonthStatisticsProd;
 export const getAgents = TESTING ? getAgentsTest : getAgentsProd;
 export const getSolutions = TESTING ? getSolutionsTest : getSolutionsProd;
+export const getSolution = TESTING ? getSolutionTest : getSolutionProd;
+export const getLastConfiguration = TESTING
+    ? getLastConfigurationTest
+    : getLastConfigurationProd;
+export const getMetricsValue = TESTING
+    ? getMetricsValueTest
+    : getMetricsValueProd;
+export const getPassedTestsForSolution = TESTING
+    ? getPassedTestsForSolutionTest
+    : getPassedTestsForSolutionProd;
+export const getLastTestFailed = TESTING
+    ? getLastTestFailedTest
+    : getLastTestFailedProd;
