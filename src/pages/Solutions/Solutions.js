@@ -2,7 +2,6 @@ import {
     Breadcrumb,
     BreadcrumbItem,
     BreadcrumbLink,
-    Code,
     Heading,
     IconButton,
     Table,
@@ -19,35 +18,33 @@ import React, { useEffect, useState } from 'react';
 import { FiChevronRight, FiZoomIn } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import { MockAgent } from '../../utilities/data_models';
-import { getAgents } from '../../utilities/firebase_controller';
+import { getSolutions } from '../../utilities/firebase_controller';
 
-export default function Agents() {
-    const [receivedAgents, markAgentsAsReceived] = useState(false);
-    const [agents, setAgents] = useState([MockAgent]);
+export default function Solutions(props) {
+    const [receivedSolutions, markSolutionsAsReceived] = useState(false);
+    const [solutions, setSolutions] = useState([MockAgent]);
+    const agentId = props.agentId;
 
     useEffect(() => {
-        getAgents().then(result => {
-            setAgents(result);
-            markAgentsAsReceived(true);
+        getSolutions(agentId).then(result => {
+            setSolutions(result);
+            markSolutionsAsReceived(true);
         });
     });
 
-    if (!receivedAgents) return;
+    if (!receivedSolutions) return;
 
-    var agentsRows;
-    if (agents.length !== 0) {
-        agentsRows = agents.map(agent => {
+    var solutionsRows;
+    if (solutions.length !== 0) {
+        solutionsRows = solutions.map(solution => {
             return (
                 <Tr>
-                    <Td>
-                        <Code>{agent.alias}</Code>
-                    </Td>
-                    <Td>{agent.description}</Td>
+                    <Td>{solution.solution_id}</Td>
                     <Td textAlign={'right'}>
-                        <Link to={'/agents/' + agent.id}>
+                        <Link to={'/solution/' + solution.id}>
                             <IconButton
                                 colorScheme="blue"
-                                aria-label="Inspect agent"
+                                aria-label="Inspect solution"
                                 icon={<FiZoomIn />}
                             />
                         </Link>
@@ -56,22 +53,21 @@ export default function Agents() {
             );
         });
     } else {
-        agentsRows = <Tr>No data</Tr>;
+        solutionsRows = <Tr>No data</Tr>;
     }
 
     return (
         <VStack spacing={4} p={3} align="stretch" bgColor={'white'}>
-            <Heading>All Agents</Heading>
+            <Heading>All Solutions of Agent</Heading>
             <TableContainer marginBottom={10}>
                 <Table variant="simple">
                     <Thead>
                         <Tr>
-                            <Th>Alias</Th>
-                            <Th>Description</Th>
-                            <Th textAlign="right">Actions</Th>
+                            <Th>Type</Th>
+                            <Th textAlign={'right'}>Actions</Th>
                         </Tr>
                     </Thead>
-                    <Tbody>{agentsRows}</Tbody>
+                    <Tbody>{solutionsRows}</Tbody>
                 </Table>
             </TableContainer>
             <Breadcrumb
@@ -80,7 +76,7 @@ export default function Agents() {
                 separator={<FiChevronRight color="gray.500" />}
             >
                 <BreadcrumbItem>
-                    <BreadcrumbLink href="#">
+                    <BreadcrumbLink href="/agents">
                         <Tag
                             size="md"
                             key="md"
@@ -88,6 +84,18 @@ export default function Agents() {
                             colorScheme="blue"
                         >
                             All Agents
+                        </Tag>
+                    </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbItem>
+                    <BreadcrumbLink href="#">
+                        <Tag
+                            size="md"
+                            key="md"
+                            variant="solid"
+                            colorScheme="blue"
+                        >
+                            Agent #{agentId}
                         </Tag>
                     </BreadcrumbLink>
                 </BreadcrumbItem>

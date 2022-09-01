@@ -21,11 +21,15 @@ export default function Overview() {
         useState(MockMonthStatistics);
 
     useEffect(() => {
-        getLastMonthStatistics().then(result => {
-            setLastMonthStatistics(result);
-            markStatsAsReceived(true);
-        });
-    });
+        setLastMonthStatistics(MockMonthStatistics);
+        markStatsAsReceived(true);
+    }, []);
+    // useEffect(() => {
+    //     getLastMonthStatistics().then(result => {
+    //         setLastMonthStatistics(result);
+    //         markStatsAsReceived(true);
+    //     });
+    // });
 
     const solutionsInstalledNow =
         lastMonthStatistics.solutionsCounts[

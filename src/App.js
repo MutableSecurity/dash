@@ -34,6 +34,14 @@ function App() {
                         }
                     />
                     <Route
+                        path="/agents/:agentID"
+                        element={
+                            <RequireActiveSession>
+                                <Dash solutions />
+                            </RequireActiveSession>
+                        }
+                    />
+                    <Route
                         path="/account"
                         element={
                             <RequireActiveSession>

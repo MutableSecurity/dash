@@ -9,9 +9,18 @@ import { app } from './firebase_controller';
 
 export const auth = getAuth(app);
 
+var user = undefined;
+
+auth.onAuthStateChanged(changedUser => {
+    if (changedUser) {
+        user = changedUser;
+    } else {
+        user = undefined;
+    }
+});
+
 export function RequireActiveSession({ children }) {
-    const auth = getAuth();
-    const user = auth.currentUser;
+    user = auth.currentUser;
 
     if (user) {
         return children;

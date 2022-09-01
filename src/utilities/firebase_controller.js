@@ -11,7 +11,7 @@ import {
 import { plainToClass } from 'class-transformer';
 import { initializeApp } from 'firebase/app';
 import { auth } from './auth';
-import { Agent, AgentStatus, MonthStastistics, Settings } from './data_models';
+import { Agent, MonthStastistics, Settings, Solution } from './data_models';
 import mock_data from './offline_firebase.json';
 
 const FIREBASE_CONFIG = {
@@ -29,7 +29,7 @@ export const app = initializeApp(FIREBASE_CONFIG);
 const database = ref(getDatabase(app));
 const TESTING = true;
 const PROMISE_DELAY = 100;
-const ONLINE_TIME_WINDOW = 1000 * 60 * 60 * 24;
+const MONTH_IN_SECONDS = 31 * 24 * 60 * 60;
 
 function createTestPromise(data) {
     return new Promise(function (resolve, reject) {
@@ -39,17 +39,8 @@ function createTestPromise(data) {
     });
 }
 
-export function getUserSettings() {
+function getUserSettingsProd() {
     const userID = auth.currentUser.uid;
-
-    if (TESTING) {
-        var data = plainToClass(
-            Settings,
-            mock_data.VLjFcXZ1aiddKubb1rBSHABCpvm1.settings
-        );
-
-        return createTestPromise(data);
-    }
 
     return get(child(database, 'UserData/' + userID + '/settings'))
         .then(snapshot => {
@@ -69,21 +60,20 @@ export function getUserSettings() {
         });
 }
 
-export function getLastMonthStatistics() {
+function getUserSettingsTest() {
+    var data = plainToClass(
+        Settings,
+        mock_data.users.VLjFcXZ1aiddKubb1rBSHABCpvm1
+    );
+
+    return createTestPromise(data);
+}
+
+function getLastMonthStatisticsProd() {
     const userID = auth.currentUser.uid;
     const monthInSeconds = 31 * 24 * 60 * 60;
     const now = Math.floor(Date.now() / 1000);
     const startDate = now - monthInSeconds;
-
-    if (TESTING) {
-        var data = generateMonthStatisticsFromReports(
-            mock_data.VLjFcXZ1aiddKubb1rBSHABCpvm1.agents,
-            startDate,
-            now
-        );
-
-        return createTestPromise(data);
-    }
 
     var reportsRef = child(database, 'UserData/' + userID + '/reports');
     var orderQuery = query(reportsRef, orderByChild('timestamp'));
@@ -106,6 +96,19 @@ export function getLastMonthStatistics() {
         });
 }
 
+function getLastMonthStatisticsTest() {
+    const now = Math.floor(Date.now() / 1000);
+    const startDate = now - MONTH_IN_SECONDS;
+
+    var data = generateMonthStatisticsFromReports(
+        mock_data.agents,
+        startDate,
+        Math.floor(Date.now() / 1000)
+    );
+
+    return createTestPromise(data);
+}
+
 function generateMonthStatisticsFromReports(agentsData, startDate, endDate) {
     var reportsCount = 0;
     var rawSolutionsCounts = new Map();
@@ -117,7 +120,7 @@ function generateMonthStatisticsFromReports(agentsData, startDate, endDate) {
     var availabilityPercentages = [];
     var timestamps = [];
 
-    agentsData.forEach(agent => {
+    mock_data.agents.forEach(agent => {
         agent.solutions.forEach(solution => {
             solution.reports.forEach(report => {
                 incremetKeyOrCreate(rawSolutionsCounts, report.timestamp);
@@ -182,28 +185,53 @@ function incremetKeyOrCreate(map, key) {
     }
 }
 
-export function getAgents() {
-    if (TESTING) {
-        var data = mock_data.VLjFcXZ1aiddKubb1rBSHABCpvm1.agents.map(agent => {
-            var returnedAgent = plainToClass(Agent, agent);
-            var firstSolution = agent.solutions[0];
-            var lastReport =
-                firstSolution.reports[firstSolution.reports.length - 1];
+function getAgentsProd() {
+    return createTestPromise({});
+}
 
-            returnedAgent.solutionsCounts = agent.solutions.length;
-            returnedAgent.lastTimestamp = 1000 * lastReport.timestamp;
-            if (
-                1000 * lastReport.timestamp + ONLINE_TIME_WINDOW >=
-                Date.now()
-            ) {
-                returnedAgent.status = AgentStatus.ONLINE;
-            } else {
-                returnedAgent.status = AgentStatus.UNKNOWN;
+function getAgentsTest() {
+    var data = Object.keys(mock_data.agents).map(key => {
+        var returnedAgent = plainToClass(Agent, mock_data.agents[key]);
+        returnedAgent.id = key;
+
+        return returnedAgent;
+    });
+
+    return createTestPromise(data);
+}
+
+function getSolutionsProd() {
+    return createTestPromise({});
+}
+
+function getSolutionsTest(agentId) {
+    var data = Object.keys(mock_data.solutions)
+        .map(key => {
+            var solution = mock_data.solutions[key];
+
+            console.log(solution);
+
+            if (solution['parent_agent'] !== agentId) {
+                return null;
             }
 
-            return returnedAgent;
-        });
+            var returnedSolution = plainToClass(Solution, solution);
+            returnedSolution.id = key;
 
-        return createTestPromise(data);
-    }
+            return returnedSolution;
+        })
+        .filter(x => !!x);
+    console.log(agentId);
+    console.log(data);
+
+    return createTestPromise(data);
 }
+
+export const getUserSettings = TESTING
+    ? getUserSettingsTest
+    : getUserSettingsProd;
+export const getLastMonthStatistics = TESTING
+    ? getLastMonthStatisticsTest
+    : getLastMonthStatisticsProd;
+export const getAgents = TESTING ? getAgentsTest : getAgentsProd;
+export const getSolutions = TESTING ? getSolutionsTest : getSolutionsProd;

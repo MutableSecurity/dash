@@ -18,7 +18,7 @@ import {
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { FiLogOut, FiMenu, FiRadio, FiTarget, FiUser } from 'react-icons/fi';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { auth, signOut } from '../../utilities/auth';
 import { MockSettings } from '../../utilities/data_models';
@@ -26,6 +26,7 @@ import { getUserSettings } from '../../utilities/firebase_controller';
 import Account from '../Account/Account';
 import Agents from '../Agents/Agents';
 import Overview from '../Overview/Overview';
+import Solutions from '../Solutions/Solutions';
 
 import logo from '../../assets/logo.svg';
 import './Dash.css';
@@ -33,6 +34,7 @@ import './Dash.css';
 export default function Dash(props, { children }) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [userData, setUserData] = useState(MockSettings);
+    const { agentID } = useParams();
 
     getUserSettings().then(result => {
         setUserData(result);
@@ -45,6 +47,8 @@ export default function Dash(props, { children }) {
         innerPage = <Agents userData={userData} />;
     } else if (props.account) {
         innerPage = <Account userData={userData} />;
+    } else if (props.solutions) {
+        innerPage = <Solutions agentId={agentID} />;
     }
 
     return (

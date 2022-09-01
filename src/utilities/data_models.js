@@ -79,19 +79,19 @@ export const AgentStatus = {
 };
 
 export class Agent {
-    constructor(id, host, solutionsCounts, status, lastTimestamp) {
+    constructor(id, alias, description) {
         this.id = id;
-        this.host = host;
-        this.solutionsCounts = solutionsCounts;
-        this.status = status;
-        this.lastTimestamp = lastTimestamp;
+        this.alias = alias;
+        this.description = description;
     }
 }
 
-export const MockAgent = new Agent(
-    0,
-    'Server',
-    1,
-    AgentStatus.ONLINE,
-    Date.now()
-);
+export const MockAgent = new Agent('id', 'server', 'Server');
+
+export class Solution {
+    constructor(solution_type) {
+        this.solution_type = solution_type;
+    }
+}
+
+export const MockSolution = new Agent('dummy');
