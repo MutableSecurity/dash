@@ -1,10 +1,8 @@
 import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
     Code,
     Heading,
     IconButton,
+    SkeletonText,
     Tab,
     Table,
     TableContainer,
@@ -15,29 +13,40 @@ import {
     Tag,
     Tbody,
     Td,
+    Text,
     Th,
     Thead,
     Tr,
     VStack,
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
-import { FiCheck, FiChevronRight } from 'react-icons/fi';
+import { FiCheck } from 'react-icons/fi';
 
 import { TimeLineChartWithCursor } from '../../components/TimeChartsWithCursor/TimeChartsWithCursor';
-import { MockSolution } from '../../utilities/data_models';
+import { MockAgent, MockSolution } from '../../utilities/data_models';
 import { convertUTCSecondsToFormattedDate } from '../../utilities/date';
 import {
+    getAgent,
     getLastConfiguration,
     getLastTestFailed,
     getMetricsValue,
     getPassedTestsForSolution,
     getSolution,
 } from '../../utilities/firebase_controller';
-import { getAvailableMetricsForSolution } from '../../utilities/solutions_details';
+import {
+    getAvailableMetricsForSolution,
+    getCategories,
+    getDescription,
+    getFullName,
+    getInformationDescription,
+    getMaturity,
+    getTestDescription,
+} from '../../utilities/solutions_details';
 
 export default function Solution(props) {
     const [receivedSolution, markSolutionAsReceived] = useState(false);
     const [solution, setSolution] = useState(MockSolution);
+    const [agent, setAgent] = useState(MockAgent);
     const [lastConfigurationSet, setLastConfigurationSet] = useState({});
     const solutionId = props.solutionId;
 
@@ -50,6 +59,16 @@ export default function Solution(props) {
 
                 markSolutionAsReceived(true);
             });
+
+            getAgent(props.agentId).then(result => {
+                setAgent(result);
+
+                props.setTitleMethod(
+                    getFullName(solution.solution_id) +
+                        ' Managed By Agent ' +
+                        result.alias
+                );
+            });
         });
     });
 
@@ -61,30 +80,33 @@ export default function Solution(props) {
                 <Td>
                     <Code>{key}</Code>
                 </Td>
+                <Td>{getInformationDescription(solution.solution_id, key)}</Td>
                 <Td>{lastConfigurationSet[key]}</Td>
             </Tr>
         );
     });
 
-    var tabList = getAvailableMetricsForSolution(solutionId).map(identifier => {
-        return <Tab>{identifier}</Tab>;
-    });
-    var tabPanelsList = getAvailableMetricsForSolution(solutionId).map(
+    var tabList = getAvailableMetricsForSolution(solution.solution_id).map(
         identifier => {
-            var details = getMetricsValue(solutionId, identifier);
-
-            return (
-                <TabPanel>
-                    <TimeLineChartWithCursor
-                        timestamps={details.timestamps}
-                        values={details.values}
-                        yDomain={[0, 10]}
-                        yLabel="Value"
-                    />
-                </TabPanel>
-            );
+            return <Tab>{identifier}</Tab>;
         }
     );
+    var tabPanelsList = getAvailableMetricsForSolution(
+        solution.solution_id
+    ).map(identifier => {
+        var details = getMetricsValue(solutionId, identifier);
+
+        return (
+            <TabPanel>
+                <TimeLineChartWithCursor
+                    timestamps={details.timestamps}
+                    values={details.values}
+                    yDomain={[0, 10]}
+                    yLabel="Value"
+                />
+            </TabPanel>
+        );
+    });
 
     var passedTestsData = getPassedTestsForSolution(solutionId);
     var passedTestsChart = (
@@ -102,6 +124,7 @@ export default function Solution(props) {
             <Tr>
                 <Td>{convertUTCSecondsToFormattedDate(test.timestamp)}</Td>
                 <Td>{<Code>{test.id}</Code>}</Td>
+                <Td>{getTestDescription(solution.solution_id, test.id)}</Td>
                 <Td textAlign="center">
                     <IconButton
                         colorScheme="green"
@@ -113,25 +136,55 @@ export default function Solution(props) {
         );
     });
 
+    var solutionCategories = getCategories(solution.solution_id).map(
+        category => (
+            <Tag size="md" key="md" variant="solid" colorScheme="blue">
+                {category}
+            </Tag>
+        )
+    );
+    var solutionDetails = (
+        <VStack spacing={3} p={0} align="stretch" bgColor={'white'}>
+            <Text>
+                <Text as="b">Identifier</Text>:{' '}
+                <Code>{solution.solution_id}</Code>
+            </Text>
+            <Text>
+                <Text as="b">Full Name</Text>:{' '}
+                {getFullName(solution.solution_id)}
+            </Text>
+            <Text>
+                <Text as="b">Description</Text>:{' '}
+                {getDescription(solution.solution_id)}
+            </Text>
+            <Text>
+                <Text as="b">Categories</Text>: {solutionCategories}
+            </Text>
+            <Text>
+                <Text as="b">Maturity</Text>:{' '}
+                {getMaturity(solution.solution_id)}
+            </Text>
+        </VStack>
+    );
+
     return (
         <VStack spacing={4} p={3} align="stretch" bgColor={'white'}>
             <Heading as="h1" size="lg">
-                Solution <Code>dummy</Code>
-            </Heading>
-
-            <Heading as="h2" size="md">
                 Information
             </Heading>
+            <SkeletonText mt="4" noOfLines={1} spacing="4" />
 
-            <Heading as="h3" size="sm">
+            <Heading as="h2" size="md">
                 Current Configuration
             </Heading>
+            <SkeletonText mt="4" noOfLines={2} spacing="4" />
 
             <TableContainer marginBottom={10}>
-                <Table variant="simple" size="sm">
+                <Table variant="simple">
                     <Thead>
                         <Tr>
                             <Th>Identifier</Th>
+                            <Th>Description</Th>
                             <Th>Value</Th>
                         </Tr>
                     </Thead>
@@ -139,33 +192,38 @@ export default function Solution(props) {
                 </Table>
             </TableContainer>
 
-            <Heading as="h3" size="sm">
+            <Heading as="h2" size="md">
                 Metrics Graphs
             </Heading>
+            <SkeletonText mt="4" noOfLines={2} spacing="4" />
 
             <Tabs variant="solid-rounded" colorScheme="blue" size="sm" isLazy>
                 <TabList>{tabList}</TabList>
                 <TabPanels>{tabPanelsList}</TabPanels>
             </Tabs>
 
-            <Heading as="h2" size="md">
+            <Heading as="h1" size="lg">
                 Tests
             </Heading>
+            <SkeletonText mt="4" noOfLines={1} spacing="4" />
 
-            <Heading as="h3" size="sm">
+            <Heading as="h2" size="md">
                 Passed Tests Percentages
             </Heading>
+            <SkeletonText mt="4" noOfLines={2} spacing="4" />
             {passedTestsChart}
 
-            <Heading as="h3" size="sm">
+            <Heading as="h2" size="md">
                 Last Failed Tests
             </Heading>
+            <SkeletonText mt="4" noOfLines={2} spacing="4" />
             <TableContainer marginBottom={10}>
-                <Table variant="simple" size="sm">
+                <Table variant="simple">
                     <Thead>
                         <Tr>
-                            <Th>Timestamp</Th>
+                            <Th>Fail Time</Th>
                             <Th>Test Identifier</Th>
+                            <Th>Test Description</Th>
                             <Th textAlign="center">Actions</Th>
                         </Tr>
                     </Thead>
@@ -173,48 +231,10 @@ export default function Solution(props) {
                 </Table>
             </TableContainer>
 
-            <Breadcrumb
-                fontWeight="extrabold"
-                spacing="8px"
-                separator={<FiChevronRight color="gray.500" />}
-            >
-                <BreadcrumbItem>
-                    <BreadcrumbLink href="/agents">
-                        <Tag
-                            size="md"
-                            key="md"
-                            variant="solid"
-                            colorScheme="blue"
-                        >
-                            Agents
-                        </Tag>
-                    </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbItem>
-                    <BreadcrumbLink href="#">
-                        <Tag
-                            size="md"
-                            key="md"
-                            variant="solid"
-                            colorScheme="blue"
-                        >
-                            Agent {solution.parent_agent}
-                        </Tag>
-                    </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbItem>
-                    <BreadcrumbLink href="#">
-                        <Tag
-                            size="md"
-                            key="md"
-                            variant="solid"
-                            colorScheme="blue"
-                        >
-                            Solution {solution.solution_id}
-                        </Tag>
-                    </BreadcrumbLink>
-                </BreadcrumbItem>
-            </Breadcrumb>
+            <Heading as="h1" size="lg">
+                General Information
+            </Heading>
+            {solutionDetails}
         </VStack>
     );
 }

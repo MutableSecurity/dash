@@ -1,0 +1,319 @@
+{
+    "solutions": {
+        "dummy": {
+            "identifier": "dummy",
+            "full_name": "Dummy Security Solution",
+            "maturity": "Development/testing purposes only",
+            "description": "No security at all!",
+            "categories": ["No Security"],
+            "information": {
+                "file_size": {
+                    "description": "File size",
+                    "properties": ["METRIC", "READ_ONLY"]
+                },
+                "current_user": {
+                    "description": "User under which the automation is ran",
+                    "properties": ["CONFIGURATION", "WRITABLE"]
+                },
+                "machine_id": {
+                    "description": "Machine ID",
+                    "properties": ["METRIC", "READ_ONLY"]
+                }
+            },
+            "tests": {
+                "ubuntu": {
+                    "description": "Checks if the operating system is Ubuntu."
+                },
+                "presence": {
+                    "description": "Checks if a file is present."
+                }
+            }
+        },
+        "lets_encrypt": {
+            "identifier": "lets_encrypt",
+            "full_name": "Let's Encrypt x Certbot",
+            "maturity": "Under refactoring",
+            "description": "Let's Encrypt is a free, automated, and open certificate authority brought to you by the nonprofit Internet Security Research Group (ISRG). Certbot is a free, open source software tool for automatically using Let's Encrypt certificates on manually-administrated websites to enable HTTPS.",
+            "categories": ["Encryption for Web Applications"],
+            "information": {},
+            "tests": {}
+        },
+        "duplicati": {
+            "identifier": "duplicati",
+            "full_name": "Duplicati 2.0",
+            "maturity": "Development/testing purposes only",
+            "description": "Duplicati is a backup client that securely stores encrypted, incremental, compressed backups on local storage, cloud storage services and remote file servers.",
+            "categories": ["No Security"],
+            "information": {
+                "architecture": {
+                    "description": "Binary's architecture",
+                    "properties": [
+                        "CONFIGURATION",
+                        "READ_ONLY",
+                        "AUTO_GENERATED_BEFORE_INSTALL"
+                    ]
+                },
+                "compression_module": {
+                    "description": "Algorithm used from compression",
+                    "properties": [
+                        "CONFIGURATION",
+                        "OPTIONAL",
+                        "WITH_DEFAULT_VALUE",
+                        "NON_DEDUCTIBLE",
+                        "WRITABLE"
+                    ]
+                },
+                "encryption_module": {
+                    "description": "Algorithm used for encrytion",
+                    "properties": [
+                        "CONFIGURATION",
+                        "OPTIONAL",
+                        "WITH_DEFAULT_VALUE",
+                        "NON_DEDUCTIBLE",
+                        "WRITABLE"
+                    ]
+                },
+                "exclude_files_attributes": {
+                    "description": "Don't backup files which have this attribute",
+                    "properties": [
+                        "CONFIGURATION",
+                        "OPTIONAL",
+                        "WITH_DEFAULT_VALUE",
+                        "NON_DEDUCTIBLE",
+                        "WRITABLE"
+                    ]
+                },
+                "skip_files_larger_than": {
+                    "description": "Don't backup files which heve size larger than corresponding value",
+                    "properties": [
+                        "CONFIGURATION",
+                        "OPTIONAL",
+                        "WITH_DEFAULT_VALUE",
+                        "NON_DEDUCTIBLE",
+                        "WRITABLE"
+                    ]
+                },
+                "restore_path": {
+                    "description": "Path of directory you want to restore your backup",
+                    "properties": [
+                        "CONFIGURATION",
+                        "OPTIONAL",
+                        "WITH_DEFAULT_VALUE",
+                        "NON_DEDUCTIBLE",
+                        "WRITABLE"
+                    ]
+                },
+                "passphrase": {
+                    "description": "This value represents the value by encryption key",
+                    "properties": [
+                        "CONFIGURATION",
+                        "OPTIONAL",
+                        "WITH_DEFAULT_VALUE",
+                        "NON_DEDUCTIBLE",
+                        "WRITABLE"
+                    ]
+                }
+            },
+            "tests": {
+                "encryption_test": {
+                    "description": "Checks if the Duplici local encryption works"
+                },
+                "supported_architecture": {
+                    "description": "Checks if there is any build for this architecture."
+                },
+                "command": {
+                    "description": "Checks if the Duplici cli is registered as a command."
+                }
+            }
+        },
+        "suricata": {
+            "identifier": "suricata",
+            "full_name": "Suricata",
+            "maturity": "Under refactoring",
+            "description": "Suricata is the leading independent open source threat detection engine. By combining intrusion detection (IDS), intrusion prevention (IPS), network security monitoring (NSM) and PCAP processing, Suricata can quickly identify, stop, and assess even the most sophisticated attacks.",
+            "categories": ["Network Intrusion Detection and Prevention System"],
+            "information": {},
+            "tests": {}
+        },
+        "teler": {
+            "identifier": "teler",
+            "full_name": "teler",
+            "maturity": "Production",
+            "description": "teler is a real-time intrusion detection and threat alert based on web log. Targets only nginx installed on Ubuntu.",
+            "categories": ["Web Intrusion Detection System"],
+            "information": {
+                "port": {
+                    "description": "Port on which the web server runs",
+                    "properties": [
+                        "CONFIGURATION",
+                        "MANDATORY",
+                        "WITH_DEFAULT_VALUE",
+                        "NON_DEDUCTIBLE",
+                        "WRITABLE"
+                    ]
+                },
+                "log_format": {
+                    "description": "Format in which the messages are logged",
+                    "properties": [
+                        "CONFIGURATION",
+                        "MANDATORY",
+                        "WITH_DEFAULT_VALUE",
+                        "NON_DEDUCTIBLE",
+                        "WRITABLE"
+                    ]
+                },
+                "log_location": {
+                    "description": "Location in which nginx logs messages",
+                    "properties": [
+                        "CONFIGURATION",
+                        "MANDATORY",
+                        "WITH_DEFAULT_VALUE",
+                        "NON_DEDUCTIBLE",
+                        "WRITABLE"
+                    ]
+                },
+                "command": {
+                    "description": "Command used to create teler's process and crontab",
+                    "properties": [
+                        "CONFIGURATION",
+                        "READ_ONLY",
+                        "AUTO_GENERATED_BEFORE_INSTALL"
+                    ]
+                },
+                "version": {
+                    "description": "Installed version",
+                    "properties": ["METRIC"]
+                },
+                "architecture": {
+                    "description": "Binary's architecture",
+                    "properties": [
+                        "CONFIGURATION",
+                        "READ_ONLY",
+                        "AUTO_GENERATED_BEFORE_INSTALL"
+                    ]
+                },
+                "alerts_count": {
+                    "description": "Total number of generated alerts",
+                    "properties": ["METRIC", "READ_ONLY"]
+                },
+                "daily_alerts_count": {
+                    "description": "Total number of alerts generated today",
+                    "properties": ["METRIC", "READ_ONLY"]
+                },
+                "top_attacks_types": {
+                    "description": "Top 3 types of web attacks",
+                    "properties": ["METRIC", "READ_ONLY"]
+                },
+                "top_attackers": {
+                    "description": "Top 3 attackers",
+                    "properties": ["METRIC", "READ_ONLY"]
+                },
+                "fail2ban_integration": {
+                    "description": "Whether the integration with Fail2ban is activated",
+                    "properties": [
+                        "CONFIGURATION",
+                        "MANDATORY",
+                        "WITH_DEFAULT_VALUE",
+                        "NON_DEDUCTIBLE",
+                        "WRITABLE"
+                    ]
+                }
+            },
+            "tests": {
+                "bad_user_agent_detection": {
+                    "description": "Checks if teler detects a request with a bad user agent."
+                },
+                "internet_access": {
+                    "description": "Checks if host has Internet access."
+                },
+                "process_running": {
+                    "description": "Checks if teler's process is running."
+                },
+                "presence": {
+                    "description": "Checks if a file is present."
+                },
+                "supported_architecture": {
+                    "description": "Checks if there is any build for this architecture."
+                },
+                "nginx_active": {
+                    "description": "Checks if nginx is installed and the service is active."
+                }
+            }
+        },
+        "fail2ban": {
+            "identifier": "fail2ban",
+            "full_name": "Fail2ban",
+            "maturity": "Production",
+            "description": "Fail2ban is an intrusion prevention software framework that protects Unix-like servers from brute-force attacks. It scans log files and bans IP addresses conducting too many failed operations (for example, login attempts). This module targets Debian-based operating systems and has already set a SSH jail.",
+            "categories": ["Host Intrusion Prevention System"],
+            "information": {
+                "ssh_port": {
+                    "description": "Port on which the SSH server runs",
+                    "properties": [
+                        "CONFIGURATION",
+                        "MANDATORY",
+                        "WITH_DEFAULT_VALUE",
+                        "NON_DEDUCTIBLE",
+                        "WRITABLE"
+                    ]
+                },
+                "max_retries": {
+                    "description": "Login attempts limit above which a user is banned",
+                    "properties": [
+                        "CONFIGURATION",
+                        "MANDATORY",
+                        "WITH_DEFAULT_VALUE",
+                        "NON_DEDUCTIBLE",
+                        "WRITABLE"
+                    ]
+                },
+                "ban_seconds": {
+                    "description": "Ban duration in seconds",
+                    "properties": [
+                        "CONFIGURATION",
+                        "MANDATORY",
+                        "WITH_DEFAULT_VALUE",
+                        "NON_DEDUCTIBLE",
+                        "WRITABLE"
+                    ]
+                },
+                "ignored_ips": {
+                    "description": "IPs to ignore. Can identify machines like the pentest-related one or controlled strictly by your cloud provider.",
+                    "properties": [
+                        "CONFIGURATION",
+                        "OPTIONAL",
+                        "WITH_DEFAULT_VALUE",
+                        "NON_DEDUCTIBLE",
+                        "WRITABLE"
+                    ]
+                },
+                "jails_count": {
+                    "description": "Number of set jails",
+                    "properties": ["METRIC", "READ_ONLY"]
+                },
+                "active_jails": {
+                    "description": "Active jails",
+                    "properties": ["METRIC", "READ_ONLY"]
+                },
+                "banned_ips": {
+                    "description": "Banned IPs from all jails",
+                    "properties": ["METRIC", "READ_ONLY"]
+                }
+            },
+            "tests": {
+                "ubuntu": {
+                    "description": "Checks if the operating system is Ubuntu."
+                },
+                "active_service": {
+                    "description": "Checks if the Fail2ban service is active."
+                },
+                "command": {
+                    "description": "Checks if the Fail2ban client is registered as a command."
+                },
+                "healthcheck": {
+                    "description": "Checks if Fail2ban blocks an IP when identifying multiple logs generated by it."
+                }
+            }
+        }
+    }
+}

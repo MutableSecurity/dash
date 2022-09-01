@@ -10,6 +10,7 @@ import {
     IconButton,
     Image,
     Link,
+    Spacer,
     Text,
     useColorModeValue,
     useDisclosure,
@@ -17,17 +18,18 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
-import { FiLogOut, FiMenu, FiRadio, FiTarget, FiUser } from 'react-icons/fi';
+import { FiLogOut, FiMenu, FiTarget, FiUser } from 'react-icons/fi';
+import { GrNodes } from 'react-icons/gr';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { auth, signOut } from '../../utilities/auth';
 import { MockSettings } from '../../utilities/data_models';
 import { getUserSettings } from '../../utilities/firebase_controller';
 import Account from '../Account/Account';
-import Agents from '../Agents/Agents';
+import Agent from '../Agent/Agent';
+import Architecture from '../Architecture/Architecture';
 import Overview from '../Overview/Overview';
 import Solution from '../Solution/Solution';
-import Solutions from '../Solutions/Solutions';
 
 import logo from '../../assets/logo.svg';
 import './Dash.css';
@@ -35,6 +37,7 @@ import './Dash.css';
 export default function Dash(props, { children }) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [userData, setUserData] = useState(MockSettings);
+    const [title, setTitle] = useState('');
     const { agentID, solutionID } = useParams();
 
     getUserSettings().then(result => {
@@ -43,19 +46,27 @@ export default function Dash(props, { children }) {
 
     var innerPage;
     if (props.overview) {
-        innerPage = <Overview userData={userData} />;
-    } else if (props.agents) {
-        innerPage = <Agents userData={userData} />;
+        innerPage = <Overview userData={userData} setTitleMethod={setTitle} />;
+    } else if (props.architecture) {
+        innerPage = (
+            <Architecture userData={userData} setTitleMethod={setTitle} />
+        );
     } else if (props.account) {
-        innerPage = <Account userData={userData} />;
-    } else if (props.solutions) {
-        innerPage = <Solutions agentId={agentID} />;
+        innerPage = <Account userData={userData} setTitleMethod={setTitle} />;
+    } else if (props.agent) {
+        innerPage = <Agent agentId={agentID} setTitleMethod={setTitle} />;
     } else if (props.solution) {
-        innerPage = <Solution solutionId={solutionID} />;
+        innerPage = (
+            <Solution
+                agentId={agentID}
+                solutionId={solutionID}
+                setTitleMethod={setTitle}
+            />
+        );
     }
 
     return (
-        <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
+        <Box minH="100vh" bg="white">
             <SidebarContent
                 onClose={() => onClose}
                 display={{ base: 'none', md: 'block' }}
@@ -73,8 +84,8 @@ export default function Dash(props, { children }) {
                     <SidebarContent onClose={onClose} />
                 </DrawerContent>
             </Drawer>
-            <MobileNav userData={userData} onOpen={onOpen} />
-            <Box ml={{ base: 0, md: 60 }} p="4">
+            <MobileNav title={title} userData={userData} onOpen={onOpen} />
+            <Box ml={{ base: 0, md: 60 }} p="10" background="white">
                 {innerPage}
                 {children}
             </Box>
@@ -94,10 +105,10 @@ const SidebarContent = ({ onClose, ...rest }) => {
             },
         },
         {
-            name: 'Agents',
-            icon: FiRadio,
+            name: 'Architecture',
+            icon: GrNodes,
             action: () => {
-                navigate('/agents');
+                navigate('/architecture');
             },
         },
         {
@@ -204,7 +215,7 @@ const NavItem = ({ icon, children, ...rest }) => {
     );
 };
 
-const MobileNav = ({ userData, onOpen, ...rest }) => {
+const MobileNav = ({ title, userData, onOpen, ...rest }) => {
     return (
         <Flex
             ml={{ base: 0, md: 60 }}
@@ -226,12 +237,15 @@ const MobileNav = ({ userData, onOpen, ...rest }) => {
             />
 
             <Text
-                display={{ base: 'flex', md: 'none' }}
+                display={{ base: 'flex' }}
                 fontSize="2xl"
                 className="logo-text"
+                color="black"
             >
-                MutableSecurity
+                {title}
             </Text>
+
+            <Spacer />
 
             <HStack spacing={{ base: '0', md: '6' }}>
                 <Flex alignItems={'center'}>

@@ -15,7 +15,7 @@ import {
 } from '../../components/TimeChartsWithCursor/TimeChartsWithCursor';
 import { MockMonthStatistics } from '../../utilities/data_models';
 
-export default function Overview() {
+export default function Overview(props) {
     const [receivedStats, markStatsAsReceived] = useState(false);
     const [lastMonthStatistics, setLastMonthStatistics] =
         useState(MockMonthStatistics);
@@ -30,6 +30,8 @@ export default function Overview() {
     //         markStatsAsReceived(true);
     //     });
     // });
+
+    props.setTitleMethod('Overview');
 
     const solutionsInstalledNow =
         lastMonthStatistics.solutionsCounts[

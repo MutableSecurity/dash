@@ -26,10 +26,10 @@ function App() {
                         }
                     />
                     <Route
-                        path="/agents"
+                        path="/architecture"
                         element={
                             <RequireActiveSession>
-                                <Dash agents />
+                                <Dash architecture />
                             </RequireActiveSession>
                         }
                     />
@@ -37,12 +37,12 @@ function App() {
                         path="/agents/:agentID"
                         element={
                             <RequireActiveSession>
-                                <Dash solutions />
+                                <Dash agent />
                             </RequireActiveSession>
                         }
                     />
                     <Route
-                        path="/solutions/:solutionID"
+                        path="/agents/:agentID/solutions/:solutionID"
                         element={
                             <RequireActiveSession>
                                 <Dash solution />

@@ -10,6 +10,7 @@ import {
 
 import { plainToClass } from 'class-transformer';
 import { initializeApp } from 'firebase/app';
+import mock_data from '../data/offline_firebase.json';
 import { auth } from './auth';
 import {
     Agent,
@@ -19,7 +20,6 @@ import {
     Settings,
     Solution,
 } from './data_models';
-import mock_data from './offline_firebase.json';
 
 const FIREBASE_CONFIG = {
     apiKey: 'AIzaSyCuxxjfdyRRU0IkgmuN07bizMzq90KZeV4',
@@ -216,6 +216,16 @@ function getAgentsTest() {
     return createTestPromise(data);
 }
 
+function getAgentProd(agentId) {
+    return createTestPromise({});
+}
+
+function getAgentTest(agentId) {
+    var returnedAgent = plainToClass(Agent, mock_data.agents[agentId]);
+
+    return createTestPromise(returnedAgent);
+}
+
 function getSolutionProd(solutionId) {
     return createTestPromise({});
 }
@@ -295,6 +305,7 @@ export const getUserSettings = TESTING
 export const getLastMonthStatistics = TESTING
     ? getLastMonthStatisticsTest
     : getLastMonthStatisticsProd;
+export const getAgent = TESTING ? getAgentTest : getAgentProd;
 export const getAgents = TESTING ? getAgentsTest : getAgentsProd;
 export const getSolutions = TESTING ? getSolutionsTest : getSolutionsProd;
 export const getSolution = TESTING ? getSolutionTest : getSolutionProd;

@@ -46,8 +46,6 @@ const RulerCursor = ({ yLabel, valuePreffix, x, y, datum, dx, dy }) => (
 export function TimeLineChartWithCursor(props) {
     const valuePreffix = props.valuePreffix ? props.valuePreffix : '';
 
-    console.log(props.timestamps);
-
     return (
         <Box>
             {props.title ? (

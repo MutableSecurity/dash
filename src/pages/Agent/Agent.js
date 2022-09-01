@@ -1,12 +1,9 @@
 import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
     Heading,
     IconButton,
+    SkeletonText,
     Table,
     TableContainer,
-    Tag,
     Tbody,
     Td,
     Th,
@@ -15,13 +12,15 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
-import { FiChevronRight, FiZoomIn } from 'react-icons/fi';
+import { FiZoomIn } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
-import { MockSolution } from '../../utilities/data_models';
-import { getSolutions } from '../../utilities/firebase_controller';
+import { MockAgent, MockSolution } from '../../utilities/data_models';
+import { getAgent, getSolutions } from '../../utilities/firebase_controller';
+import { getDescription, getFullName } from '../../utilities/solutions_details';
 
-export default function Solutions(props) {
+export default function Agent(props) {
     const [receivedSolutions, markSolutionsAsReceived] = useState(false);
+    const [agent, setAgent] = useState(MockAgent);
     const [solutions, setSolutions] = useState([MockSolution]);
     const agentId = props.agentId;
 
@@ -30,6 +29,12 @@ export default function Solutions(props) {
             setSolutions(result);
             markSolutionsAsReceived(true);
         });
+
+        getAgent(agentId).then(result => {
+            setAgent(result);
+
+            props.setTitleMethod('Agent ' + result.alias);
+        });
     });
 
     if (!receivedSolutions) return;
@@ -37,11 +42,22 @@ export default function Solutions(props) {
     var solutionsRows;
     if (solutions.length !== 0) {
         solutionsRows = solutions.map(solution => {
+            var fullName = getFullName(solution.solution_id);
+            var description = getDescription(solution.solution_id);
+
             return (
                 <Tr>
-                    <Td>{solution.solution_id}</Td>
+                    <Td>{fullName}</Td>
+                    <Td>{description}</Td>
                     <Td textAlign={'right'}>
-                        <Link to={'/solutions/' + solution.id}>
+                        <Link
+                            to={
+                                '/agents/' +
+                                agentId +
+                                '/solutions/' +
+                                solution.id
+                            }
+                        >
                             <IconButton
                                 colorScheme="blue"
                                 aria-label="Inspect solution"
@@ -58,48 +74,20 @@ export default function Solutions(props) {
 
     return (
         <VStack spacing={4} p={3} align="stretch" bgColor={'white'}>
-            <Heading>All Solutions of Agent</Heading>
+            <Heading>Managed Solutions</Heading>
+            <SkeletonText mt="4" noOfLines={2} spacing="4" />
             <TableContainer marginBottom={10}>
                 <Table variant="simple">
                     <Thead>
                         <Tr>
-                            <Th>Type</Th>
+                            <Th>Name</Th>
+                            <Th>Description</Th>
                             <Th textAlign={'right'}>Actions</Th>
                         </Tr>
                     </Thead>
                     <Tbody>{solutionsRows}</Tbody>
                 </Table>
             </TableContainer>
-            <Breadcrumb
-                fontWeight="extrabold"
-                spacing="8px"
-                separator={<FiChevronRight color="gray.500" />}
-            >
-                <BreadcrumbItem>
-                    <BreadcrumbLink href="/agents">
-                        <Tag
-                            size="md"
-                            key="md"
-                            variant="solid"
-                            colorScheme="blue"
-                        >
-                            Agents
-                        </Tag>
-                    </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbItem>
-                    <BreadcrumbLink href="#">
-                        <Tag
-                            size="md"
-                            key="md"
-                            variant="solid"
-                            colorScheme="blue"
-                        >
-                            Agent #{agentId}
-                        </Tag>
-                    </BreadcrumbLink>
-                </BreadcrumbItem>
-            </Breadcrumb>
         </VStack>
     );
 }

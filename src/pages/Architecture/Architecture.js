@@ -1,13 +1,10 @@
 import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
     Code,
     Heading,
     IconButton,
+    SkeletonText,
     Table,
     TableContainer,
-    Tag,
     Tbody,
     Td,
     Th,
@@ -16,14 +13,16 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
-import { FiChevronRight, FiZoomIn } from 'react-icons/fi';
+import { FiZoomIn } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import { MockAgent } from '../../utilities/data_models';
 import { getAgents } from '../../utilities/firebase_controller';
 
-export default function Agents() {
+export default function Architecture(props) {
     const [receivedAgents, markAgentsAsReceived] = useState(false);
     const [agents, setAgents] = useState([MockAgent]);
+
+    props.setTitleMethod('Architecture');
 
     useEffect(() => {
         getAgents().then(result => {
@@ -61,7 +60,8 @@ export default function Agents() {
 
     return (
         <VStack spacing={4} p={3} align="stretch" bgColor={'white'}>
-            <Heading>All Agents</Heading>
+            <Heading>Your Agents</Heading>
+            <SkeletonText mt="4" noOfLines={2} spacing="4" />
             <TableContainer marginBottom={10}>
                 <Table variant="simple">
                     <Thead>
@@ -74,24 +74,6 @@ export default function Agents() {
                     <Tbody>{agentsRows}</Tbody>
                 </Table>
             </TableContainer>
-            <Breadcrumb
-                fontWeight="extrabold"
-                spacing="8px"
-                separator={<FiChevronRight color="gray.500" />}
-            >
-                <BreadcrumbItem>
-                    <BreadcrumbLink href="#">
-                        <Tag
-                            size="md"
-                            key="md"
-                            variant="solid"
-                            colorScheme="blue"
-                        >
-                            Agents
-                        </Tag>
-                    </BreadcrumbLink>
-                </BreadcrumbItem>
-            </Breadcrumb>
         </VStack>
     );
 }
