@@ -14,14 +14,21 @@ import {
     TimeStackedChartWithCursor,
 } from '../../components/TimeChartsWithCursor/TimeChartsWithCursor';
 import { MockMonthStatistics } from '../../utilities/data_models';
+import { getAgents } from '../../utilities/firebase_controller';
 
 export default function Overview(props) {
     const [receivedStats, markStatsAsReceived] = useState(false);
     const [lastMonthStatistics, setLastMonthStatistics] =
         useState(MockMonthStatistics);
+    const [agentsCount, setAgentsCount] = useState(0);
 
     useEffect(() => {
         setLastMonthStatistics(MockMonthStatistics);
+
+        getAgents().then(agents => {
+            setAgentsCount(agents.length);
+        });
+
         markStatsAsReceived(true);
     }, []);
     // useEffect(() => {
@@ -48,6 +55,11 @@ export default function Overview(props) {
             <VStack spacing={4} p={3} align="stretch" bgColor={'white'}>
                 <Heading>Overview</Heading>
                 <Flex>
+                    <Stat>
+                        <StatLabel>Agents</StatLabel>
+                        <StatNumber>{agentsCount}</StatNumber>
+                        <StatHelpText>at the moment</StatHelpText>
+                    </Stat>
                     <Stat>
                         <StatLabel>Installed Solutions</StatLabel>
                         <StatNumber>{solutionsInstalledNow}</StatNumber>
