@@ -278,7 +278,9 @@ function getMetricsValueProd(solutionId, informationId) {
 }
 
 function getMetricsValueTest(solutionId, informationId) {
-    return new MetricValues(TEST_TIMESTAMPS, METRICS_VALUES);
+    var data = new MetricValues(TEST_TIMESTAMPS, METRICS_VALUES);
+
+    return createTestPromise(data);
 }
 
 function getPassedTestsForSolutionProd(solutionId) {
@@ -286,7 +288,9 @@ function getPassedTestsForSolutionProd(solutionId) {
 }
 
 function getPassedTestsForSolutionTest(solutionId) {
-    return new MetricValues(TEST_TIMESTAMPS, PASSED_TESTS_VALUES);
+    var data = new MetricValues(TEST_TIMESTAMPS, PASSED_TESTS_VALUES);
+
+    return createTestPromise(data);
 }
 
 function getLastTestFailedProd(solutionId, testsCount) {
@@ -294,9 +298,11 @@ function getLastTestFailedProd(solutionId, testsCount) {
 }
 
 function getLastTestFailedTest(solutionId, testsCount) {
-    return TEST_TIMESTAMPS.map(timestamp => {
+    var data = TEST_TIMESTAMPS.map(timestamp => {
         return new FailedTestDetails(timestamp, 'ubuntu');
     });
+
+    return createTestPromise(data);
 }
 
 export const getUserSettings = TESTING

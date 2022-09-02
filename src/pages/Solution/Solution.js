@@ -48,11 +48,18 @@ export default function Solution(props) {
     const [solution, setSolution] = useState(MockSolution);
     const [agent, setAgent] = useState(MockAgent);
     const [lastConfigurationSet, setLastConfigurationSet] = useState({});
+    const [passedTestsData, setPassedTestsData] = useState({});
+    const [lastTestFailed, setLastTestFailed] = useState({});
     const solutionId = props.solutionId;
+    const [tabIndex, setTabIndex] = useState(0);
+    const [metrics, setMetrics] = useState([]);
+    const [currentMetricTests, setCurrentMetricTests] = useState([]);
 
     useEffect(() => {
         getSolution(solutionId).then(result => {
             setSolution(result);
+
+            setMetrics(getAvailableMetricsForSolution(result.solution_id));
 
             getLastConfiguration(result.solution_id).then(configurationSet => {
                 setLastConfigurationSet(configurationSet);
@@ -63,20 +70,34 @@ export default function Solution(props) {
             getAgent(props.agentId).then(result => {
                 setAgent(result);
 
-                props.setTitleMethod(
-                    getFullName(solution.solution_id) +
-                        ' Managed By Agent ' +
-                        result.alias
-                );
+                if (solution.solution_id !== undefined) {
+                    props.setTitleMethod(
+                        getFullName(solution.solution_id) +
+                            ' Managed By Agent ' +
+                            result.alias
+                    );
+                }
+            });
+
+            getLastTestFailed(solutionId, 5).then(result => {
+                setLastTestFailed(result);
+            });
+
+            getPassedTestsForSolution(solutionId).then(data => {
+                setPassedTestsData(data);
+            });
+
+            getMetricsValue(solutionId, metrics[tabIndex]).then(data => {
+                setCurrentMetricTests([...Array(metrics.length)].fill(data));
             });
         });
-    });
+    }, [tabIndex]);
 
     if (!receivedSolution) return;
 
     var configurationRows = Object.keys(lastConfigurationSet).map(key => {
         return (
-            <Tr>
+            <Tr key={key}>
                 <Td>
                     <Code>{key}</Code>
                 </Td>
@@ -86,21 +107,16 @@ export default function Solution(props) {
         );
     });
 
-    var tabList = getAvailableMetricsForSolution(solution.solution_id).map(
-        identifier => {
-            return <Tab>{identifier}</Tab>;
-        }
-    );
-    var tabPanelsList = getAvailableMetricsForSolution(
-        solution.solution_id
-    ).map(identifier => {
-        var details = getMetricsValue(solutionId, identifier);
+    var tabList = metrics.map((identifier, key) => {
+        return <Tab key={key}>{identifier}</Tab>;
+    });
 
+    var tabPanelsList = currentMetricTests.map(identifier => {
         return (
             <TabPanel>
                 <TimeLineChartWithCursor
-                    timestamps={details.timestamps}
-                    values={details.values}
+                    timestamps={identifier.timestamps}
+                    values={identifier.values}
                     yDomain={[0, 10]}
                     yLabel="Value"
                 />
@@ -108,33 +124,38 @@ export default function Solution(props) {
         );
     });
 
-    var passedTestsData = getPassedTestsForSolution(solutionId);
-    var passedTestsChart = (
-        <TimeLineChartWithCursor
-            timestamps={passedTestsData.timestamps}
-            values={passedTestsData.values}
-            yDomain={[0, 100]}
-            valuePreffix="%"
-            yLabel="Passed Tests Percentage"
-        />
-    );
-
-    var failedTestsRows = getLastTestFailed(solutionId, 10).map(test => {
-        return (
-            <Tr>
-                <Td>{convertUTCSecondsToFormattedDate(test.timestamp)}</Td>
-                <Td>{<Code>{test.id}</Code>}</Td>
-                <Td>{getTestDescription(solution.solution_id, test.id)}</Td>
-                <Td textAlign="center">
-                    <IconButton
-                        colorScheme="green"
-                        aria-label="Mark failed test as checked"
-                        icon={<FiCheck />}
-                    />
-                </Td>
-            </Tr>
+    var passedTestsChart = '';
+    if (passedTestsData) {
+        passedTestsChart = (
+            <TimeLineChartWithCursor
+                timestamps={passedTestsData.timestamps}
+                values={passedTestsData.values}
+                yDomain={[0, 100]}
+                valuePreffix="%"
+                yLabel="Passed Tests Percentage"
+            />
         );
-    });
+    }
+
+    var failedTestsRows = '';
+    if (lastTestFailed) {
+        failedTestsRows = lastTestFailed.map((test, key) => {
+            return (
+                <Tr key={key}>
+                    <Td>{convertUTCSecondsToFormattedDate(test.timestamp)}</Td>
+                    <Td>{<Code>{test.id}</Code>}</Td>
+                    <Td>{getTestDescription(solution.solution_id, test.id)}</Td>
+                    <Td textAlign="center">
+                        <IconButton
+                            colorScheme="green"
+                            aria-label="Mark failed test as checked"
+                            icon={<FiCheck />}
+                        />
+                    </Td>
+                </Tr>
+            );
+        });
+    }
 
     var solutionCategories = getCategories(solution.solution_id).map(
         category => (
@@ -197,7 +218,13 @@ export default function Solution(props) {
             </Heading>
             <SkeletonText mt="4" noOfLines={2} spacing="4" />
 
-            <Tabs variant="solid-rounded" colorScheme="blue" size="sm" isLazy>
+            <Tabs
+                variant="solid-rounded"
+                colorScheme="blue"
+                size="sm"
+                isLazy
+                onChange={index => setTabIndex(index)}
+            >
                 <TabList>{tabList}</TabList>
                 <TabPanels>{tabPanelsList}</TabPanels>
             </Tabs>

@@ -35,9 +35,9 @@ export default function Architecture(props) {
 
     var agentsRows;
     if (agents.length !== 0) {
-        agentsRows = agents.map(agent => {
+        agentsRows = agents.map((agent, key) => {
             return (
-                <Tr>
+                <Tr key={key}>
                     <Td>
                         <Code>{agent.alias}</Code>
                     </Td>

@@ -41,12 +41,12 @@ export default function Agent(props) {
 
     var solutionsRows;
     if (solutions.length !== 0) {
-        solutionsRows = solutions.map(solution => {
+        solutionsRows = solutions.map((solution, key) => {
             var fullName = getFullName(solution.solution_id);
             var description = getDescription(solution.solution_id);
 
             return (
-                <Tr>
+                <Tr key={key}>
                     <Td>{fullName}</Td>
                     <Td>{description}</Td>
                     <Td textAlign={'right'}>
