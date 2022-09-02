@@ -1,5 +1,5 @@
-import { Box, Heading } from '@chakra-ui/react';
-import React from 'react';
+import { Box, Heading, Text } from '@chakra-ui/react';
+import React, { useState } from 'react';
 import {
     VictoryArea,
     VictoryAxis,
@@ -16,45 +16,62 @@ import {
 
 import { convertUTCSecondsToFormattedDate } from '../../utilities/date';
 
-const translateValuesToTimeseries = (timestamps, values) => {
+class TimeValuePair {
+    constructor(timestamp = -1, value = NaN) {
+        this.timestamp = timestamp;
+        this.value = value;
+    }
+}
+
+const translateTimestampValuesToVictoryProps = (timestamps, values) => {
     return timestamps.map(function (timestamp, i) {
         return { x: timestamp, y: values[i] };
     });
 };
 
-const RulerCursor = ({ yLabel, valuePreffix, x, y, datum, dx, dy }) => (
-    <g>
-        <rect
-            x={x}
-            y={25}
-            width="0.3"
-            dx={dx}
-            dy={dy + 20}
-            height="60"
-            fill="var(--chakra-colors-blue-500)"
-            strokeWidth={0}
-        />
-        <text x={x + 3} y={y - 25} fontSize="5">
-            {`Date: ${convertUTCSecondsToFormattedDate(datum.x)}`}
-        </text>
-        <text x={x + 3} y={y - 15} fontSize="5">
-            {`${yLabel}: ${datum.y}${valuePreffix}`}
-        </text>
-    </g>
-);
+const NofifyingVerticalCursor = ({
+    x,
+    y,
+    datum,
+    dx,
+    dy,
+    setTimeValueUnderCursorMethod,
+}) => {
+    setTimeValueUnderCursorMethod(new TimeValuePair(datum.x, datum.y));
+
+    return (
+        <g>
+            <rect
+                x={x}
+                y={25}
+                width="0.3"
+                dx={dx}
+                dy={dy + 20}
+                height="60"
+                fill="var(--chakra-colors-blue-500)"
+                strokeWidth={0}
+            />
+        </g>
+    );
+};
 
 export function TimeLineChartWithCursor(props) {
+    const [cursorTimeValuePair, setCursorTimeValuePair] = useState(
+        new TimeValuePair()
+    );
+
     const valuePreffix = props.valuePreffix ? props.valuePreffix : '';
+    const chartTitle = props.title ? (
+        <Heading as="h3" size="md">
+            {props.title}
+        </Heading>
+    ) : (
+        ''
+    );
 
     return (
         <Box>
-            {props.title ? (
-                <Heading as="h3" size="md">
-                    {props.title}
-                </Heading>
-            ) : (
-                ''
-            )}
+            {chartTitle}
 
             <VictoryChart
                 theme={VictoryTheme.grayscale}
@@ -71,9 +88,10 @@ export function TimeLineChartWithCursor(props) {
                                     fontSize: 4,
                                 }}
                                 flyoutComponent={
-                                    <RulerCursor
-                                        yLabel={props.yLabel}
-                                        valuePreffix={valuePreffix}
+                                    <NofifyingVerticalCursor
+                                        setTimeValueUnderCursorMethod={
+                                            setCursorTimeValuePair
+                                        }
                                     />
                                 }
                             />
@@ -91,7 +109,7 @@ export function TimeLineChartWithCursor(props) {
                 />
 
                 <VictoryLine
-                    data={translateValuesToTimeseries(
+                    data={translateTimestampValuesToVictoryProps(
                         props.timestamps,
                         props.values
                     )}
@@ -103,6 +121,27 @@ export function TimeLineChartWithCursor(props) {
                     }}
                 />
             </VictoryChart>
+
+            <Box
+                marginTop="10px"
+                opacity={cursorTimeValuePair.timestamp === -1 ? 0 : 1}
+            >
+                <Text>
+                    <Text as="b" fontWeight={900}>
+                        Date at Cursor:
+                    </Text>{' '}
+                    {convertUTCSecondsToFormattedDate(
+                        cursorTimeValuePair.timestamp
+                    )}
+                </Text>
+                <Text>
+                    <Text as="b" fontWeight={900}>
+                        {props.yLabel} at Cursor:
+                    </Text>{' '}
+                    {cursorTimeValuePair.value}
+                    {valuePreffix}
+                </Text>
+            </Box>
         </Box>
     );
 }
@@ -158,7 +197,7 @@ export function TimeStackedChartWithCursor(props) {
                     }}
                 >
                     <VictoryGroup
-                        data={translateValuesToTimeseries(
+                        data={translateTimestampValuesToVictoryProps(
                             props.timestamps,
                             props.upperValues
                         )}
@@ -169,7 +208,7 @@ export function TimeStackedChartWithCursor(props) {
                         </VictoryPortal>
                     </VictoryGroup>
                     <VictoryGroup
-                        data={translateValuesToTimeseries(
+                        data={translateTimestampValuesToVictoryProps(
                             props.timestamps,
                             props.bottomValues
                         )}
