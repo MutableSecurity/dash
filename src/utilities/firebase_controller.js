@@ -10,8 +10,13 @@ import {
 
 import { plainToClass } from 'class-transformer';
 import { initializeApp } from 'firebase/app';
-import mock_data from '../data/offline_firebase.json';
+import mock_data from '../data/offlineFirebase.json';
 import { auth } from './auth';
+import {
+    FIREBASE_CONFIG,
+    IS_TESTING,
+    PROMISE_DELAY_WHEN_TESTING,
+} from './config';
 import {
     Agent,
     FailedTestDetails,
@@ -21,21 +26,8 @@ import {
     Solution,
 } from './data_models';
 
-const FIREBASE_CONFIG = {
-    apiKey: 'AIzaSyCuxxjfdyRRU0IkgmuN07bizMzq90KZeV4',
-    authDomain: 'mutablesecurity.firebaseapp.com',
-    databaseURL:
-        'https://mutablesecurity-default-rtdb.europe-west1.firebasedatabase.app',
-    projectId: 'mutablesecurity',
-    storageBucket: 'mutablesecurity.appspot.com',
-    messagingSenderId: '256666998300',
-    appId: '1:256666998300:web:91e485c2fd01da8ad871d9',
-    measurementId: 'G-Q4EYX6MQST',
-};
 export const app = initializeApp(FIREBASE_CONFIG);
 const database = ref(getDatabase(app));
-const TESTING = true;
-const PROMISE_DELAY = 100;
 const MONTH_IN_SECONDS = 31 * 24 * 60 * 60;
 const MEASUREMENTS_IN_TEST = 10;
 const TEST_TIMESTAMPS = [...Array(MEASUREMENTS_IN_TEST).keys()].map(
@@ -52,7 +44,7 @@ function createTestPromise(data) {
     return new Promise(function (resolve, reject) {
         setTimeout(function () {
             resolve(data);
-        }, PROMISE_DELAY);
+        }, PROMISE_DELAY_WHEN_TESTING);
     });
 }
 
@@ -305,25 +297,25 @@ function getLastTestFailedTest(solutionId, testsCount) {
     return createTestPromise(data);
 }
 
-export const getUserSettings = TESTING
+export const getUserSettings = IS_TESTING
     ? getUserSettingsTest
     : getUserSettingsProd;
-export const getLastMonthStatistics = TESTING
+export const getLastMonthStatistics = IS_TESTING
     ? getLastMonthStatisticsTest
     : getLastMonthStatisticsProd;
-export const getAgent = TESTING ? getAgentTest : getAgentProd;
-export const getAgents = TESTING ? getAgentsTest : getAgentsProd;
-export const getSolutions = TESTING ? getSolutionsTest : getSolutionsProd;
-export const getSolution = TESTING ? getSolutionTest : getSolutionProd;
-export const getLastConfiguration = TESTING
+export const getAgent = IS_TESTING ? getAgentTest : getAgentProd;
+export const getAgents = IS_TESTING ? getAgentsTest : getAgentsProd;
+export const getSolutions = IS_TESTING ? getSolutionsTest : getSolutionsProd;
+export const getSolution = IS_TESTING ? getSolutionTest : getSolutionProd;
+export const getLastConfiguration = IS_TESTING
     ? getLastConfigurationTest
     : getLastConfigurationProd;
-export const getMetricsValue = TESTING
+export const getMetricsValue = IS_TESTING
     ? getMetricsValueTest
     : getMetricsValueProd;
-export const getPassedTestsForSolution = TESTING
+export const getPassedTestsForSolution = IS_TESTING
     ? getPassedTestsForSolutionTest
     : getPassedTestsForSolutionProd;
-export const getLastTestFailed = TESTING
+export const getLastTestFailed = IS_TESTING
     ? getLastTestFailedTest
     : getLastTestFailedProd;

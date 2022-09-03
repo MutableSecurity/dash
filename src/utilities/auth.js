@@ -6,13 +6,10 @@ import {
 import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 
+import { LOGIN_CHECK_GRACE_PERIOD } from './config';
 import { app } from './firebase_controller';
 
-const LOGIN_TIMEOUT = 3000;
-
 export const auth = getAuth(app);
-
-var user = undefined;
 
 export function RequireActiveSession({ children }) {
     const [user, setUser] = useState(null);
@@ -32,7 +29,7 @@ export function RequireActiveSession({ children }) {
 
         setTimeout(() => {
             setReady(true);
-        }, LOGIN_TIMEOUT);
+        }, LOGIN_CHECK_GRACE_PERIOD);
     }, []);
 
     if (isReady) {
