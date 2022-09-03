@@ -22,17 +22,16 @@ import { FiLogOut, FiMenu, FiTarget, FiUser } from 'react-icons/fi';
 import { GrNodes } from 'react-icons/gr';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { auth, signOut } from '../../utilities/auth';
-import { MockSettings } from '../../utilities/data_models';
-import { getUserSettings } from '../../utilities/firebase_controller';
-import Account from '../Account/Account';
-import Agent from '../Agent/Agent';
-import Architecture from '../Architecture/Architecture';
-import Overview from '../Overview/Overview';
-import Solution from '../Solution/Solution';
+import { auth, signOut } from '../utilities/auth';
+import { MockSettings } from '../utilities/data_models';
+import { getUserSettings } from '../utilities/firebase_controller';
+import Account from './Account';
+import Agent from './Agent';
+import Architecture from './Architecture';
+import Overview from './Overview';
+import Solution from './Solution';
 
-import logo from '../../assets/logo.svg';
-import './Dash.css';
+import logo from '../assets/logo.svg';
 
 export default function Dash(props, { children }) {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -164,7 +163,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
                 mx="8"
                 justifyContent="space-between"
             >
-                <Image src={logo} className="logo" />
+                <Image src={logo} height="100px" margin="auto" />
                 <CloseButton
                     display={{ base: 'flex', md: 'none' }}
                     onClick={onClose}
@@ -240,6 +239,7 @@ const MobileNav = ({ title, userData, onOpen, ...rest }) => {
                 display={{ base: 'flex' }}
                 fontSize="2xl"
                 className="logo-text"
+                fontWeight={900}
                 color="black"
             >
                 {title}

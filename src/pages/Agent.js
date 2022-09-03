@@ -14,9 +14,9 @@ import {
 import React, { useEffect, useState } from 'react';
 import { FiZoomIn } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
-import { MockAgent, MockSolution } from '../../utilities/data_models';
-import { getAgent, getSolutions } from '../../utilities/firebase_controller';
-import { getDescription, getFullName } from '../../utilities/solutions_details';
+import { MockAgent, MockSolution } from '../utilities/data_models';
+import { getAgent, getSolutions } from '../utilities/firebase_controller';
+import { getDescription, getFullName } from '../utilities/solutions_details';
 
 export default function Agent(props) {
     const [receivedSolutions, markSolutionsAsReceived] = useState(false);

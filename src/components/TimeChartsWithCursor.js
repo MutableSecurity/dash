@@ -14,7 +14,7 @@ import {
     VictoryVoronoiContainer,
 } from 'victory';
 
-import { convertUTCSecondsToFormattedDate } from '../../utilities/date';
+import { convertUTCSecondsToFormattedDate } from '../utilities/date';
 
 class TimeValuePair {
     constructor(timestamp = -1, value = NaN) {

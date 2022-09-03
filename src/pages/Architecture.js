@@ -15,8 +15,8 @@ import {
 import React, { useEffect, useState } from 'react';
 import { FiZoomIn } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
-import { MockAgent } from '../../utilities/data_models';
-import { getAgents } from '../../utilities/firebase_controller';
+import { MockAgent } from '../utilities/data_models';
+import { getAgents } from '../utilities/firebase_controller';
 
 export default function Architecture(props) {
     const [receivedAgents, markAgentsAsReceived] = useState(false);

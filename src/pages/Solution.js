@@ -22,9 +22,9 @@ import {
 import React, { useEffect, useState } from 'react';
 import { FiCheck } from 'react-icons/fi';
 
-import { TimeLineChartWithCursor } from '../../components/TimeChartsWithCursor/TimeChartsWithCursor';
-import { MockAgent, MockSolution } from '../../utilities/data_models';
-import { convertUTCSecondsToFormattedDate } from '../../utilities/date';
+import { TimeLineChartWithCursor } from '../components/TimeChartsWithCursor';
+import { MockAgent, MockSolution } from '../utilities/data_models';
+import { convertUTCSecondsToFormattedDate } from '../utilities/date';
 import {
     getAgent,
     getLastConfiguration,
@@ -32,7 +32,7 @@ import {
     getMetricsValue,
     getPassedTestsForSolution,
     getSolution,
-} from '../../utilities/firebase_controller';
+} from '../utilities/firebase_controller';
 import {
     getAvailableMetricsForSolution,
     getCategories,
@@ -41,7 +41,7 @@ import {
     getInformationDescription,
     getMaturity,
     getTestDescription,
-} from '../../utilities/solutions_details';
+} from '../utilities/solutions_details';
 
 export default function Solution(props) {
     const [receivedSolution, markSolutionAsReceived] = useState(false);
@@ -49,7 +49,7 @@ export default function Solution(props) {
     const [agent, setAgent] = useState(MockAgent);
     const [lastConfigurationSet, setLastConfigurationSet] = useState({});
     const [passedTestsData, setPassedTestsData] = useState({});
-    const [lastTestFailed, setLastTestFailed] = useState({});
+    const [lastTestFailed, setLastTestFailed] = useState([]);
     const solutionId = props.solutionId;
     const [tabIndex, setTabIndex] = useState(0);
     const [metrics, setMetrics] = useState([]);

@@ -1,9 +1,9 @@
 import { ChakraProvider } from '@chakra-ui/react';
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-import Dash from './pages/Dash/Dash';
-import Login from './pages/Login/Login';
+import Dash from './pages/Dash';
+import Login from './pages/Login';
 import { RequireActiveSession } from './utilities/auth';
 
 import '@fontsource/inter/100.css';
@@ -11,10 +11,10 @@ import '@fontsource/inter/300.css';
 import '@fontsource/inter/700.css';
 import theme from './styling/theme';
 
-function App() {
+function Router() {
     return (
         <ChakraProvider theme={theme}>
-            <Router>
+            <BrowserRouter>
                 <Routes>
                     <Route path="/" element={<Login />} />
                     <Route
@@ -58,9 +58,9 @@ function App() {
                         }
                     />
                 </Routes>
-            </Router>
+            </BrowserRouter>
         </ChakraProvider>
     );
 }
 
-export default App;
+export default Router;

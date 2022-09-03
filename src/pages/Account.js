@@ -7,7 +7,7 @@ import {
     AnnotatedRadioGroup,
     AnnotatedSlider,
     AnnotatedTextInput,
-} from '../../components/AnnotatedInput/AnnotatedInput';
+} from '../components/AnnotatedInputs';
 
 export default function Account(props) {
     var userData = props.userData;

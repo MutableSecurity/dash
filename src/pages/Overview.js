@@ -12,9 +12,9 @@ import React, { useEffect, useState } from 'react';
 import {
     TimeLineChartWithCursor,
     TimeStackedChartWithCursor,
-} from '../../components/TimeChartsWithCursor/TimeChartsWithCursor';
-import { MockMonthStatistics } from '../../utilities/data_models';
-import { getAgents } from '../../utilities/firebase_controller';
+} from '../components/TimeChartsWithCursor';
+import { MockMonthStatistics } from '../utilities/data_models';
+import { getAgents } from '../utilities/firebase_controller';
 
 export default function Overview(props) {
     const [receivedStats, markStatsAsReceived] = useState(false);

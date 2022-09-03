@@ -4,7 +4,7 @@ import * as ReactDOM from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
 import * as serviceWorker from './serviceWorker';
 
-import App from './App';
+import Router from './Router';
 
 import './styling/index.css';
 
@@ -14,7 +14,7 @@ const root = ReactDOM.createRoot(container);
 root.render(
     <StrictMode>
         <ColorModeScript />
-        <App />
+        <Router />
     </StrictMode>
 );
 
