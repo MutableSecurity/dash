@@ -27,7 +27,7 @@ export default function Overview(props) {
             props.setTitleMethod('Overview');
             props.notifyLoadedMethod(true);
         });
-    });
+    }, [props]);
 
     if (!receivedData) return;
 
@@ -39,9 +39,7 @@ export default function Overview(props) {
         },
         {
             name: 'Installed Solutions',
-            value: lastMonthStatistics.solutionsCounts[
-                lastMonthStatistics.solutionsCounts.length - 1
-            ],
+            value: lastMonthStatistics.solutionsCount,
             description: 'at the moment',
         },
         {
@@ -49,6 +47,7 @@ export default function Overview(props) {
             value: lastMonthStatistics.availabilityPercentages[
                 lastMonthStatistics.availabilityPercentages.length - 1
             ],
+            valuePreffix: '%',
             description: 'at the moment',
         },
         {
@@ -61,7 +60,10 @@ export default function Overview(props) {
         return (
             <Stat key={key}>
                 <StatLabel>{details.name}</StatLabel>
-                <StatNumber>{details.value}</StatNumber>
+                <StatNumber>
+                    {details.value}
+                    {details.valuePreffix}
+                </StatNumber>
                 <StatHelpText>{details.description}</StatHelpText>
             </Stat>
         );
@@ -75,14 +77,6 @@ export default function Overview(props) {
 
             <Heading size="lg">Monthly Graphs</Heading>
             <SkeletonText mt="4" noOfLines={2} spacing="4" />
-
-            <TimeLineChartWithCursor
-                title="Installed Solutions"
-                timestamps={lastMonthStatistics.timestamps}
-                values={lastMonthStatistics.solutionsCounts}
-                yDomain={[0, 10]}
-                yLabel="Installed Solutions"
-            />
 
             <TimeLineChartWithCursor
                 title="Passed Tests Percentage"

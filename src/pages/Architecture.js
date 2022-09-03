@@ -22,15 +22,14 @@ export default function Architecture(props) {
     const [agents, setAgents] = useState([]);
     const [receivedData, notifyReceivedData] = useState(false);
 
-    props.setTitleMethod('Architecture');
-
     useEffect(() => {
         getAllAgents().then(agentsData => {
             setAgents(agentsData);
             notifyReceivedData(true);
+            props.setTitleMethod('Architecture');
             props.notifyLoadedMethod(true);
         });
-    });
+    }, [props]);
 
     if (!receivedData) return;
 

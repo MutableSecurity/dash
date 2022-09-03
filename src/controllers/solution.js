@@ -22,6 +22,8 @@ function getSolutionProd(solutionId) {
 
 function getSolutionTest(solutionId) {
     var solution = plainToClass(Solution, mock_data.solutions[solutionId]);
+    solution.id = solutionId;
+
     var configPromise = getLastConfiguration(solutionId).then(config => {
         solution.last_configuration_set = config;
     });

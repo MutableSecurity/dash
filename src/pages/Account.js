@@ -1,5 +1,5 @@
 import { Box, Flex, Heading, Image, VStack } from '@chakra-ui/react';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FaRegAddressCard, FaRegBuilding } from 'react-icons/fa';
 import { FiAtSign, FiCamera } from 'react-icons/fi';
 
@@ -12,8 +12,10 @@ import {
 export default function Account(props) {
     var userData = props.userData;
 
-    props.setTitleMethod('Account');
-    props.notifyLoadedMethod(true);
+    useEffect(() => {
+        props.setTitleMethod('Account');
+        props.notifyLoadedMethod(true);
+    }, [props]);
 
     const changeFailedTestsTrigger = function (newValue) {
         userData.reporting_configuration.failed_tests_trigger = newValue;

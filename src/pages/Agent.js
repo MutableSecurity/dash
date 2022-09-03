@@ -27,10 +27,10 @@ export default function Agent(props) {
             setAgent(agentData);
 
             notifyReceivedData(true);
-            props.setTitleMethod('Agent ' + agentData.alias);
+            props.setTitleMethod(agentData.alias);
             props.notifyLoadedMethod(true);
         });
-    });
+    }, [props, agentId]);
 
     if (!receivedData) return;
 
