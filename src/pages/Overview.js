@@ -1,6 +1,7 @@
 import {
     Flex,
     Heading,
+    SkeletonText,
     Stat,
     StatHelpText,
     StatLabel,
@@ -13,98 +14,93 @@ import {
     TimeLineChartWithCursor,
     TimeStackedChartWithCursor,
 } from '../components/TimeChartsWithCursor';
-import { MockMonthStatistics } from '../utilities/data_models';
-import { getAgents } from '../utilities/firebase_controller';
+import { getLastMonthStatistics } from '../utilities/firebase_controller';
 
 export default function Overview(props) {
-    const [receivedStats, markStatsAsReceived] = useState(false);
-    const [lastMonthStatistics, setLastMonthStatistics] =
-        useState(MockMonthStatistics);
-    const [agentsCount, setAgentsCount] = useState(0);
+    const [lastMonthStatistics, setLastMonthStatistics] = useState(null);
+    const [receivedData, notifyReceivedData] = useState(false);
 
     useEffect(() => {
-        setLastMonthStatistics(MockMonthStatistics);
-
-        getAgents().then(agents => {
-            setAgentsCount(agents.length);
+        getLastMonthStatistics().then(data => {
+            setLastMonthStatistics(data);
+            notifyReceivedData(true);
+            props.setTitleMethod('Overview');
+            props.notifyLoadedMethod(true);
         });
+    });
 
-        markStatsAsReceived(true);
-        props.notifyLoadedMethod(true);
-    }, []);
-    // useEffect(() => {
-    //     getLastMonthStatistics().then(result => {
-    //         setLastMonthStatistics(result);
-    //         markStatsAsReceived(true);
-    //     });
-    // });
+    if (!receivedData) return;
 
-    props.setTitleMethod('Overview');
-
-    const solutionsInstalledNow =
-        lastMonthStatistics.solutionsCounts[
-            lastMonthStatistics.solutionsCounts.length - 1
-        ];
-    const availabilityPercentageNow =
-        lastMonthStatistics.availabilityPercentages[
-            lastMonthStatistics.availabilityPercentages.length - 1
-        ];
-
-    if (!receivedStats) return;
-    else
+    const statGridData = [
+        {
+            name: 'Installed Agents',
+            value: lastMonthStatistics.agentsCount,
+            description: 'at the moment',
+        },
+        {
+            name: 'Installed Solutions',
+            value: lastMonthStatistics.solutionsCounts[
+                lastMonthStatistics.solutionsCounts.length - 1
+            ],
+            description: 'at the moment',
+        },
+        {
+            name: 'Passed Tests Percentage',
+            value: lastMonthStatistics.availabilityPercentages[
+                lastMonthStatistics.availabilityPercentages.length - 1
+            ],
+            description: 'at the moment',
+        },
+        {
+            name: 'Received Events',
+            value: lastMonthStatistics.reportsCount,
+            description: 'in the last months',
+        },
+    ];
+    const statsComponents = statGridData.map((details, key) => {
         return (
-            <VStack spacing={4} p={3} align="stretch" bgColor={'white'}>
-                <Heading>Overview</Heading>
-                <Flex>
-                    <Stat>
-                        <StatLabel>Agents</StatLabel>
-                        <StatNumber>{agentsCount}</StatNumber>
-                        <StatHelpText>at the moment</StatHelpText>
-                    </Stat>
-                    <Stat>
-                        <StatLabel>Installed Solutions</StatLabel>
-                        <StatNumber>{solutionsInstalledNow}</StatNumber>
-                        <StatHelpText>in the last report</StatHelpText>
-                    </Stat>
-                    <Stat>
-                        <StatLabel>Passed Tests Percentage</StatLabel>
-                        <StatNumber>{availabilityPercentageNow}%</StatNumber>
-                        <StatHelpText>in the last report</StatHelpText>
-                    </Stat>
-                    <Stat>
-                        <StatLabel>Reports</StatLabel>
-                        <StatNumber>
-                            {lastMonthStatistics.reportsCount}
-                        </StatNumber>
-                        <StatHelpText>in the last month</StatHelpText>
-                    </Stat>
-                </Flex>
-                <Heading as="h3" size="lg">
-                    Monthly Graphs
-                </Heading>
-                <TimeLineChartWithCursor
-                    title="Installed Solutions"
-                    timestamps={lastMonthStatistics.timestamps}
-                    values={lastMonthStatistics.solutionsCounts}
-                    yDomain={[0, 10]}
-                    yLabel="Installed Solutions"
-                />
-                <TimeLineChartWithCursor
-                    title="Passed Tests Percentage"
-                    timestamps={lastMonthStatistics.timestamps}
-                    values={lastMonthStatistics.availabilityPercentages}
-                    yDomain={[0, 100]}
-                    valuePreffix="%"
-                    yLabel="Passed Tests Percentage"
-                />
-                <TimeStackedChartWithCursor
-                    title="Passed-Failed Tests Distribution"
-                    upperValues={lastMonthStatistics.failedTestsCounts}
-                    upperValuesLabel="Failed Tests"
-                    bottomValues={lastMonthStatistics.passedTestsCounts}
-                    bottomValuesLabel="Passed Tests"
-                    timestamps={lastMonthStatistics.timestamps}
-                />
-            </VStack>
+            <Stat key={key}>
+                <StatLabel>{details.name}</StatLabel>
+                <StatNumber>{details.value}</StatNumber>
+                <StatHelpText>{details.description}</StatHelpText>
+            </Stat>
         );
+    });
+
+    return (
+        <VStack spacing={4} p={3} align="stretch" bgColor={'white'}>
+            <Heading>Stats at a Glance</Heading>
+            <SkeletonText mt="4" noOfLines={1} spacing="4" />
+            <Flex>{statsComponents}</Flex>
+
+            <Heading size="lg">Monthly Graphs</Heading>
+            <SkeletonText mt="4" noOfLines={2} spacing="4" />
+
+            <TimeLineChartWithCursor
+                title="Installed Solutions"
+                timestamps={lastMonthStatistics.timestamps}
+                values={lastMonthStatistics.solutionsCounts}
+                yDomain={[0, 10]}
+                yLabel="Installed Solutions"
+            />
+
+            <TimeLineChartWithCursor
+                title="Passed Tests Percentage"
+                timestamps={lastMonthStatistics.timestamps}
+                values={lastMonthStatistics.availabilityPercentages}
+                yDomain={[0, 100]}
+                valuePreffix="%"
+                yLabel="Passed Tests Percentage"
+            />
+
+            <TimeStackedChartWithCursor
+                title="Passed-Failed Tests Distribution"
+                upperValues={lastMonthStatistics.failedTestsCounts}
+                upperValuesLabel="Failed Tests"
+                bottomValues={lastMonthStatistics.passedTestsCounts}
+                bottomValuesLabel="Passed Tests"
+                timestamps={lastMonthStatistics.timestamps}
+            />
+        </VStack>
+    );
 }

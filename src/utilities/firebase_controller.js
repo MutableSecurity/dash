@@ -21,6 +21,7 @@ import {
     Agent,
     FailedTestDetails,
     MetricValues,
+    MockMonthStatistics,
     MonthStastistics,
     Settings,
     Solution,
@@ -105,16 +106,16 @@ function getLastMonthStatisticsProd() {
 }
 
 function getLastMonthStatisticsTest() {
-    const now = Math.floor(Date.now() / 1000);
-    const startDate = now - MONTH_IN_SECONDS;
+    // const now = Math.floor(Date.now() / 1000);
+    // const startDate = now - MONTH_IN_SECONDS;
 
-    var data = generateMonthStatisticsFromReports(
-        mock_data.agents,
-        startDate,
-        Math.floor(Date.now() / 1000)
-    );
+    // var data = generateMonthStatisticsFromReports(
+    //     mock_data.agents,
+    //     startDate,
+    //     Math.floor(Date.now() / 1000)
+    // );
 
-    return createTestPromise(data);
+    return createTestPromise(MockMonthStatistics);
 }
 
 function generateMonthStatisticsFromReports(agentsData, startDate, endDate) {
@@ -305,7 +306,9 @@ export const getLastMonthStatistics = IS_TESTING
     : getLastMonthStatisticsProd;
 export const getAgent = IS_TESTING ? getAgentTest : getAgentProd;
 export const getAgents = IS_TESTING ? getAgentsTest : getAgentsProd;
-export const getSolutions = IS_TESTING ? getSolutionsTest : getSolutionsProd;
+export const getSolutionsOfAgent = IS_TESTING
+    ? getSolutionsTest
+    : getSolutionsProd;
 export const getSolution = IS_TESTING ? getSolutionTest : getSolutionProd;
 export const getLastConfiguration = IS_TESTING
     ? getLastConfigurationTest

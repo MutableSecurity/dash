@@ -14,65 +14,58 @@ import {
 import React, { useEffect, useState } from 'react';
 import { FiZoomIn } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
-import { MockAgent, MockSolution } from '../utilities/data_models';
-import { getAgent, getSolutions } from '../utilities/firebase_controller';
+import {
+    getAgent,
+    getSolutionsOfAgent,
+} from '../utilities/firebase_controller';
 import { getDescription, getFullName } from '../utilities/solutions_details';
 
 export default function Agent(props) {
-    const [receivedSolutions, markSolutionsAsReceived] = useState(false);
-    const [agent, setAgent] = useState(MockAgent);
-    const [solutions, setSolutions] = useState([MockSolution]);
+    // eslint-disable-next-line
+    const [agent, setAgent] = useState();
+    const [solutions, setSolutions] = useState([]);
+    const [receivedData, notifyReceivedData] = useState(false);
     const agentId = props.agentId;
 
     useEffect(() => {
-        getSolutions(agentId).then(result => {
-            setSolutions(result);
-            markSolutionsAsReceived(true);
-        });
-
         getAgent(agentId).then(result => {
             setAgent(result);
 
             props.setTitleMethod('Agent ' + result.alias);
         });
 
+        getSolutionsOfAgent(agentId).then(result => {
+            setSolutions(result);
+            notifyReceivedData(true);
+        });
+
         props.notifyLoadedMethod(true);
     });
 
-    if (!receivedSolutions) return;
+    if (!receivedData) return;
 
-    var solutionsRows;
-    if (solutions.length !== 0) {
-        solutionsRows = solutions.map((solution, key) => {
-            var fullName = getFullName(solution.solution_id);
-            var description = getDescription(solution.solution_id);
+    var solutionsRows = solutions.map((solution, key) => {
+        var fullName = getFullName(solution.solution_id);
+        var description = getDescription(solution.solution_id);
 
-            return (
-                <Tr key={key}>
-                    <Td>{fullName}</Td>
-                    <Td>{description}</Td>
-                    <Td textAlign={'right'}>
-                        <Link
-                            to={
-                                '/agents/' +
-                                agentId +
-                                '/solutions/' +
-                                solution.id
-                            }
-                        >
-                            <IconButton
-                                colorScheme="blue"
-                                aria-label="Inspect solution"
-                                icon={<FiZoomIn />}
-                            />
-                        </Link>
-                    </Td>
-                </Tr>
-            );
-        });
-    } else {
-        solutionsRows = <Tr>No data</Tr>;
-    }
+        return (
+            <Tr key={key}>
+                <Td>{fullName}</Td>
+                <Td>{description}</Td>
+                <Td textAlign={'right'}>
+                    <Link
+                        to={'/agents/' + agentId + '/solutions/' + solution.id}
+                    >
+                        <IconButton
+                            colorScheme="blue"
+                            aria-label="Inspect solution"
+                            icon={<FiZoomIn />}
+                        />
+                    </Link>
+                </Td>
+            </Tr>
+        );
+    });
 
     return (
         <VStack spacing={4} p={3} align="stretch" bgColor={'white'}>

@@ -23,7 +23,6 @@ import { GrNodes } from 'react-icons/gr';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { auth, signOut } from '../utilities/auth';
-import { MockSettings } from '../utilities/data_models';
 import { getUserSettings } from '../utilities/firebase_controller';
 import Account from './Account';
 import Agent from './Agent';
@@ -36,7 +35,7 @@ import logo from '../assets/logo.svg';
 
 export default function Dash(props, { children }) {
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const [userData, setUserData] = useState(MockSettings);
+    const [userData, setUserData] = useState(null);
     const [loadedChild, notifyLoaded] = useState(false);
     const [title, setTitle] = useState('');
     const { agentID, solutionID } = useParams();
@@ -91,7 +90,7 @@ export default function Dash(props, { children }) {
 
     return (
         <Box minH="100vh" minW="100vh" bg="white">
-            <LoadingScreen hide={loadedChild} />;
+            <LoadingScreen hide={loadedChild} />
             <Box minH="100vh" bg="white" display={loadedChild ? '' : 'none'}>
                 <SidebarContent
                     onClose={() => onClose}
@@ -243,6 +242,15 @@ const NavItem = ({ icon, children, ...rest }) => {
 };
 
 const MobileNav = ({ title, userData, onOpen, ...rest }) => {
+    var profileImage = '';
+    var fullName = '';
+    var organization = '';
+    if (userData) {
+        profileImage = userData.account.profile;
+        fullName = userData.account.full_name;
+        organization = userData.account.organization;
+    }
+
     return (
         <Flex
             ml={{ base: 0, md: 60 }}
@@ -278,18 +286,16 @@ const MobileNav = ({ title, userData, onOpen, ...rest }) => {
             <HStack spacing={{ base: '0', md: '6' }}>
                 <Flex alignItems={'center'}>
                     <HStack>
-                        <Avatar size={'sm'} src={userData.account.profile} />
+                        <Avatar size={'sm'} src={profileImage} />
                         <VStack
                             display={{ base: 'none', md: 'flex' }}
                             alignItems="flex-start"
                             spacing="1px"
                             ml="2"
                         >
-                            <Text fontSize="sm">
-                                {userData.account.full_name}
-                            </Text>
+                            <Text fontSize="sm">{fullName}</Text>
                             <Text fontSize="xs" color="gray.600">
-                                {userData.account.organization}
+                                {organization}
                             </Text>
                         </VStack>
                     </HStack>

@@ -44,39 +44,40 @@ import {
 } from '../utilities/solutions_details';
 
 export default function Solution(props) {
-    const [receivedSolution, markSolutionAsReceived] = useState(false);
     const [solution, setSolution] = useState(MockSolution);
+    // eslint-disable-next-line
     const [agent, setAgent] = useState(MockAgent);
     const [lastConfigurationSet, setLastConfigurationSet] = useState({});
-    const [passedTestsData, setPassedTestsData] = useState({});
+    const [passedTestsData, setPassedTestsData] = useState(null);
     const [lastTestFailed, setLastTestFailed] = useState([]);
-    const solutionId = props.solutionId;
-    const [tabIndex, setTabIndex] = useState(0);
-    const [metrics, setMetrics] = useState([]);
+    const [currentValuesForMetric, setCurrentValuesForMetric] = useState([]);
     const [currentMetricTests, setCurrentMetricTests] = useState([]);
+    const [tabIndex, setTabIndex] = useState(0);
+    const [receivedData, notifyReceivedData] = useState(false);
+    const solutionId = props.solutionId;
 
     useEffect(() => {
-        getSolution(solutionId).then(result => {
-            setSolution(result);
+        getSolution(solutionId).then(solutionData => {
+            setSolution(solutionData);
 
-            setMetrics(getAvailableMetricsForSolution(result.solution_id));
+            const abstractSolutionId = solutionData.solution_id;
 
-            getLastConfiguration(result.solution_id).then(configurationSet => {
+            setCurrentValuesForMetric(
+                getAvailableMetricsForSolution(abstractSolutionId)
+            );
+
+            getLastConfiguration(abstractSolutionId).then(configurationSet => {
                 setLastConfigurationSet(configurationSet);
-
-                markSolutionAsReceived(true);
             });
 
             getAgent(props.agentId).then(result => {
                 setAgent(result);
 
-                if (solution.solution_id !== undefined) {
-                    props.setTitleMethod(
-                        getFullName(solution.solution_id) +
-                            ' Managed By Agent ' +
-                            result.alias
-                    );
-                }
+                props.setTitleMethod(
+                    getFullName(solutionData.solution_id) +
+                        ' Managed By Agent ' +
+                        result.alias
+                );
             });
 
             getLastTestFailed(solutionId, 5).then(result => {
@@ -87,15 +88,20 @@ export default function Solution(props) {
                 setPassedTestsData(data);
             });
 
-            getMetricsValue(solutionId, metrics[tabIndex]).then(data => {
-                setCurrentMetricTests([...Array(metrics.length)].fill(data));
-            });
+            getMetricsValue(solutionId, currentValuesForMetric[tabIndex]).then(
+                data => {
+                    setCurrentMetricTests(
+                        [...Array(currentValuesForMetric.length)].fill(data)
+                    );
+                }
+            );
 
+            notifyReceivedData(true);
             props.notifyLoadedMethod(true);
         });
-    }, [tabIndex]);
+    });
 
-    if (!receivedSolution) return;
+    if (!receivedData) return;
 
     var configurationRows = Object.keys(lastConfigurationSet).map(key => {
         return (
@@ -109,55 +115,59 @@ export default function Solution(props) {
         );
     });
 
-    var tabList = metrics.map((identifier, key) => {
+    var availableMetricsTabs = currentValuesForMetric.map((identifier, key) => {
         return <Tab key={key}>{identifier}</Tab>;
     });
 
-    var tabPanelsList = currentMetricTests.map(identifier => {
-        return (
-            <TabPanel>
-                <TimeLineChartWithCursor
-                    timestamps={identifier.timestamps}
-                    values={identifier.values}
-                    yDomain={[0, 10]}
-                    yLabel="Value"
-                />
-            </TabPanel>
-        );
-    });
+    var availableMetricsPanel = currentMetricTests
+        ? currentMetricTests.map(identifier => {
+              return (
+                  <TabPanel>
+                      <TimeLineChartWithCursor
+                          timestamps={identifier.timestamps}
+                          values={identifier.values}
+                          yDomain={[0, 10]}
+                          yLabel="Value"
+                      />
+                  </TabPanel>
+              );
+          })
+        : '';
 
-    var passedTestsChart = '';
-    if (passedTestsData) {
-        passedTestsChart = (
-            <TimeLineChartWithCursor
-                timestamps={passedTestsData.timestamps}
-                values={passedTestsData.values}
-                yDomain={[0, 100]}
-                valuePreffix="%"
-                yLabel="Passed Tests Percentage"
-            />
-        );
-    }
+    var passedTestsChart = passedTestsData ? (
+        <TimeLineChartWithCursor
+            timestamps={passedTestsData.timestamps}
+            values={passedTestsData.values}
+            yDomain={[0, 100]}
+            valuePreffix="%"
+            yLabel="Passed Tests Percentage"
+        />
+    ) : (
+        ''
+    );
 
-    var failedTestsRows = '';
-    if (lastTestFailed) {
-        failedTestsRows = lastTestFailed.map((test, key) => {
-            return (
-                <Tr key={key}>
-                    <Td>{convertUTCSecondsToFormattedDate(test.timestamp)}</Td>
-                    <Td>{<Code>{test.id}</Code>}</Td>
-                    <Td>{getTestDescription(solution.solution_id, test.id)}</Td>
-                    <Td textAlign="center">
-                        <IconButton
-                            colorScheme="green"
-                            aria-label="Mark failed test as checked"
-                            icon={<FiCheck />}
-                        />
-                    </Td>
-                </Tr>
-            );
-        });
-    }
+    var failedTestsRows = lastTestFailed
+        ? lastTestFailed.map((test, key) => {
+              return (
+                  <Tr key={key}>
+                      <Td>
+                          {convertUTCSecondsToFormattedDate(test.timestamp)}
+                      </Td>
+                      <Td>{<Code>{test.id}</Code>}</Td>
+                      <Td>
+                          {getTestDescription(solution.solution_id, test.id)}
+                      </Td>
+                      <Td textAlign="center">
+                          <IconButton
+                              colorScheme="green"
+                              aria-label="Mark failed test as checked"
+                              icon={<FiCheck />}
+                          />
+                      </Td>
+                  </Tr>
+              );
+          })
+        : '';
 
     var solutionCategories = getCategories(solution.solution_id).map(
         category => (
@@ -166,7 +176,7 @@ export default function Solution(props) {
             </Tag>
         )
     );
-    var solutionDetails = (
+    var genericSolutionDetails = (
         <VStack spacing={3} p={0} align="stretch" bgColor={'white'}>
             <Text>
                 <Text as="b">Identifier</Text>:{' '}
@@ -227,8 +237,8 @@ export default function Solution(props) {
                 isLazy
                 onChange={index => setTabIndex(index)}
             >
-                <TabList>{tabList}</TabList>
-                <TabPanels>{tabPanelsList}</TabPanels>
+                <TabList>{availableMetricsTabs}</TabList>
+                <TabPanels>{availableMetricsPanel}</TabPanels>
             </Tabs>
 
             <Heading as="h1" size="lg">
@@ -263,7 +273,7 @@ export default function Solution(props) {
             <Heading as="h1" size="lg">
                 General Information
             </Heading>
-            {solutionDetails}
+            {genericSolutionDetails}
         </VStack>
     );
 }

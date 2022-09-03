@@ -12,7 +12,7 @@ import { app } from './firebase_controller';
 export const auth = getAuth(app);
 
 export function RequireActiveSession({ children }) {
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState();
     const [isReady, setReady] = useState(false);
 
     useEffect(() => {

@@ -15,50 +15,44 @@ import {
 import React, { useEffect, useState } from 'react';
 import { FiZoomIn } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
-import { MockAgent } from '../utilities/data_models';
+
 import { getAgents } from '../utilities/firebase_controller';
 
 export default function Architecture(props) {
-    const [receivedAgents, markAgentsAsReceived] = useState(false);
-    const [agents, setAgents] = useState([MockAgent]);
+    const [agents, setAgents] = useState([]);
+    const [receivedData, notifyReceivedData] = useState(false);
 
     props.setTitleMethod('Architecture');
 
     useEffect(() => {
-        getAgents().then(result => {
-            setAgents(result);
-            markAgentsAsReceived(true);
-
+        getAgents().then(data => {
+            setAgents(data);
+            notifyReceivedData(true);
             props.notifyLoadedMethod(true);
         });
     });
 
-    if (!receivedAgents) return;
+    if (!receivedData) return;
 
-    var agentsRows;
-    if (agents.length !== 0) {
-        agentsRows = agents.map((agent, key) => {
-            return (
-                <Tr key={key}>
-                    <Td>
-                        <Code>{agent.alias}</Code>
-                    </Td>
-                    <Td>{agent.description}</Td>
-                    <Td textAlign={'right'}>
-                        <Link to={'/agents/' + agent.id}>
-                            <IconButton
-                                colorScheme="blue"
-                                aria-label="Inspect agent"
-                                icon={<FiZoomIn />}
-                            />
-                        </Link>
-                    </Td>
-                </Tr>
-            );
-        });
-    } else {
-        agentsRows = <Tr>No data</Tr>;
-    }
+    const agentsRows = agents.map((agent, key) => {
+        return (
+            <Tr key={key}>
+                <Td>
+                    <Code>{agent.alias}</Code>
+                </Td>
+                <Td>{agent.description}</Td>
+                <Td textAlign={'right'}>
+                    <Link to={'/agents/' + agent.id}>
+                        <IconButton
+                            colorScheme="blue"
+                            aria-label="Inspect agent"
+                            icon={<FiZoomIn />}
+                        />
+                    </Link>
+                </Td>
+            </Tr>
+        );
+    });
 
     return (
         <VStack spacing={4} p={3} align="stretch" bgColor={'white'}>
