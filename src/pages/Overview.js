@@ -30,6 +30,7 @@ export default function Overview(props) {
         });
 
         markStatsAsReceived(true);
+        props.notifyLoadedMethod(true);
     }, []);
     // useEffect(() => {
     //     getLastMonthStatistics().then(result => {

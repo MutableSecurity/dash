@@ -35,6 +35,8 @@ export default function Agent(props) {
 
             props.setTitleMethod('Agent ' + result.alias);
         });
+
+        props.notifyLoadedMethod(true);
     });
 
     if (!receivedSolutions) return;

@@ -28,6 +28,8 @@ export default function Architecture(props) {
         getAgents().then(result => {
             setAgents(result);
             markAgentsAsReceived(true);
+
+            props.notifyLoadedMethod(true);
         });
     });
 

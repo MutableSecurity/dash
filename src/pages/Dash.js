@@ -28,6 +28,7 @@ import { getUserSettings } from '../utilities/firebase_controller';
 import Account from './Account';
 import Agent from './Agent';
 import Architecture from './Architecture';
+import { LoadingScreen } from './LoadingScreen';
 import Overview from './Overview';
 import Solution from './Solution';
 
@@ -36,6 +37,7 @@ import logo from '../assets/logo.svg';
 export default function Dash(props, { children }) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [userData, setUserData] = useState(MockSettings);
+    const [loadedChild, notifyLoaded] = useState(false);
     const [title, setTitle] = useState('');
     const { agentID, solutionID } = useParams();
 
@@ -45,48 +47,74 @@ export default function Dash(props, { children }) {
 
     var innerPage;
     if (props.overview) {
-        innerPage = <Overview userData={userData} setTitleMethod={setTitle} />;
+        innerPage = (
+            <Overview
+                userData={userData}
+                setTitleMethod={setTitle}
+                notifyLoadedMethod={notifyLoaded}
+            />
+        );
     } else if (props.architecture) {
         innerPage = (
-            <Architecture userData={userData} setTitleMethod={setTitle} />
+            <Architecture
+                userData={userData}
+                setTitleMethod={setTitle}
+                notifyLoadedMethod={notifyLoaded}
+            />
         );
     } else if (props.account) {
-        innerPage = <Account userData={userData} setTitleMethod={setTitle} />;
+        innerPage = (
+            <Account
+                userData={userData}
+                setTitleMethod={setTitle}
+                notifyLoadedMethod={notifyLoaded}
+            />
+        );
     } else if (props.agent) {
-        innerPage = <Agent agentId={agentID} setTitleMethod={setTitle} />;
+        innerPage = (
+            <Agent
+                agentId={agentID}
+                setTitleMethod={setTitle}
+                notifyLoadedMethod={notifyLoaded}
+            />
+        );
     } else if (props.solution) {
         innerPage = (
             <Solution
                 agentId={agentID}
                 solutionId={solutionID}
                 setTitleMethod={setTitle}
+                notifyLoadedMethod={notifyLoaded}
             />
         );
     }
 
     return (
-        <Box minH="100vh" bg="white">
-            <SidebarContent
-                onClose={() => onClose}
-                display={{ base: 'none', md: 'block' }}
-            />
-            <Drawer
-                autoFocus={false}
-                isOpen={isOpen}
-                placement="left"
-                onClose={onClose}
-                returnFocusOnClose={false}
-                onOverlayClick={onClose}
-                size="full"
-            >
-                <DrawerContent>
-                    <SidebarContent onClose={onClose} />
-                </DrawerContent>
-            </Drawer>
-            <MobileNav title={title} userData={userData} onOpen={onOpen} />
-            <Box ml={{ base: 0, md: 60 }} p="10" background="white">
-                {innerPage}
-                {children}
+        <Box minH="100vh" minW="100vh" bg="white">
+            <LoadingScreen hide={loadedChild} />;
+            <Box minH="100vh" bg="white" display={loadedChild ? '' : 'none'}>
+                <SidebarContent
+                    onClose={() => onClose}
+                    display={{ base: 'none', md: 'block' }}
+                />
+                <Drawer
+                    autoFocus={false}
+                    isOpen={isOpen}
+                    placement="left"
+                    onClose={onClose}
+                    returnFocusOnClose={false}
+                    onOverlayClick={onClose}
+                    size="full"
+                >
+                    <DrawerContent>
+                        <SidebarContent onClose={onClose} />
+                    </DrawerContent>
+                </Drawer>
+                <MobileNav title={title} userData={userData} onOpen={onOpen} />
+                <Box ml={{ base: 0, md: 60 }} p="10" background="white">
+                    {innerPage}
+                    {children}
+                </Box>
             </Box>
         </Box>
     );

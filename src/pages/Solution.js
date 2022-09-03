@@ -90,6 +90,8 @@ export default function Solution(props) {
             getMetricsValue(solutionId, metrics[tabIndex]).then(data => {
                 setCurrentMetricTests([...Array(metrics.length)].fill(data));
             });
+
+            props.notifyLoadedMethod(true);
         });
     }, [tabIndex]);
 

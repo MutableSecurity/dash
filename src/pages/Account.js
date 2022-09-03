@@ -13,6 +13,7 @@ export default function Account(props) {
     var userData = props.userData;
 
     props.setTitleMethod('Account');
+    props.notifyLoadedMethod(true);
 
     const changeFailedTestsTrigger = function (newValue) {
         userData.reporting_configuration.failed_tests_trigger = newValue;
