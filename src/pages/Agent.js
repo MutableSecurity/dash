@@ -18,6 +18,7 @@ import { getDescription, getFullName } from '../controllers/abstract_solution';
 import { getAgent } from '../controllers/agent';
 
 export default function Agent(props) {
+    const [title, setTitle] = useState('');
     const [agent, setAgent] = useState();
     const [receivedData, notifyReceivedData] = useState(false);
     const agentId = props.agentId;
@@ -27,7 +28,7 @@ export default function Agent(props) {
             setAgent(agentData);
 
             notifyReceivedData(true);
-            props.setTitleMethod(agentData.alias);
+            setTitle('Agent ' + agentData.alias);
             props.notifyLoadedMethod(true);
         });
     }, [props, agentId]);
@@ -58,6 +59,9 @@ export default function Agent(props) {
 
     return (
         <VStack spacing={4} p={3} align="stretch" bgColor={'white'}>
+            <Heading as="h1" size="xl">
+                {title}
+            </Heading>
             <Heading>Managed Solutions</Heading>
             <SkeletonText mt="4" noOfLines={2} spacing="4" />
             <TableContainer marginBottom={10}>

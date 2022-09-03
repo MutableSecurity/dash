@@ -13,7 +13,6 @@ export default function Account(props) {
     var userData = props.userData;
 
     useEffect(() => {
-        props.setTitleMethod('Account');
         props.notifyLoadedMethod(true);
     }, [props]);
 
@@ -23,6 +22,10 @@ export default function Account(props) {
 
     return (
         <VStack spacing={4} p={3} align="stretch" bgColor={'white'}>
+            <Heading as="h1" size="xl">
+                Account
+            </Heading>
+
             <Heading>Settings</Heading>
 
             <Heading as="h3" size="lg">

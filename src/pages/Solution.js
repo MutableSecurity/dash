@@ -39,6 +39,7 @@ import { MockSolution } from '../models/solution';
 import { convertUTCSecondsToFormattedDate } from '../utilities/date';
 
 export default function Solution(props) {
+    const [title, setTitle] = useState('');
     const [solution, setSolution] = useState(MockSolution);
     const [agent, setAgent] = useState(MockAgent); // eslint-disable-line
     const [currentValuesForMetric, setCurrentValuesForMetric] = useState([]);
@@ -56,7 +57,7 @@ export default function Solution(props) {
             getAgent(props.agentId).then(agentData => {
                 setAgent(agentData);
 
-                props.setTitleMethod(
+                setTitle(
                     getFullName(abstractId) +
                         ' Managed By Agent ' +
                         agentData.alias
@@ -177,6 +178,10 @@ export default function Solution(props) {
 
     return (
         <VStack spacing={4} p={3} align="stretch" bgColor={'white'}>
+            <Heading as="h1" size="xl">
+                {title}
+            </Heading>
+
             <Heading as="h1" size="lg">
                 Information
             </Heading>

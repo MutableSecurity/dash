@@ -26,7 +26,6 @@ export default function Architecture(props) {
         getAllAgents().then(agentsData => {
             setAgents(agentsData);
             notifyReceivedData(true);
-            props.setTitleMethod('Architecture');
             props.notifyLoadedMethod(true);
         });
     }, [props]);
@@ -55,6 +54,9 @@ export default function Architecture(props) {
 
     return (
         <VStack spacing={4} p={3} align="stretch" bgColor={'white'}>
+            <Heading as="h1" size="xl">
+                Architecture
+            </Heading>
             <Heading>Your Agents</Heading>
             <SkeletonText mt="4" noOfLines={2} spacing="4" />
             <TableContainer marginBottom={10}>

@@ -24,7 +24,6 @@ export default function Overview(props) {
         getLastMonthStatistics().then(data => {
             setLastMonthStatistics(data);
             notifyReceivedData(true);
-            props.setTitleMethod('Overview');
             props.notifyLoadedMethod(true);
         });
     }, [props]);
@@ -71,6 +70,10 @@ export default function Overview(props) {
 
     return (
         <VStack spacing={4} p={3} align="stretch" bgColor={'white'}>
+            <Heading as="h1" size="xl">
+                Overview
+            </Heading>
+
             <Heading>Stats at a Glance</Heading>
             <SkeletonText mt="4" noOfLines={1} spacing="4" />
             <Flex>{statsComponents}</Flex>
