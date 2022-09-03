@@ -2,9 +2,9 @@ import { ChakraProvider } from '@chakra-ui/react';
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
+import { RequireActiveSession } from './controllers/auth';
 import Dash from './pages/Dash';
 import Login from './pages/Login';
-import { RequireActiveSession } from './utilities/auth';
 
 import '@fontsource/inter/100.css';
 import '@fontsource/inter/300.css';

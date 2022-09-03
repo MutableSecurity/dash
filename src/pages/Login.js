@@ -12,7 +12,7 @@ import {
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { auth, signInWithEmailAndPassword } from '../utilities/auth';
+import { auth, signInWithEmailAndPassword } from '../controllers/auth';
 
 import logo from '../assets/logo.svg';
 

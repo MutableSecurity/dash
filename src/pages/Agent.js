@@ -14,8 +14,8 @@ import {
 import React, { useEffect, useState } from 'react';
 import { FiZoomIn } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
-import { getAgent } from '../utilities/firebase_controller';
-import { getDescription, getFullName } from '../utilities/solutions_details';
+import { getDescription, getFullName } from '../controllers/abstract_solution';
+import { getAgent } from '../controllers/agent';
 
 export default function Agent(props) {
     const [agent, setAgent] = useState();

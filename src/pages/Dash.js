@@ -22,8 +22,8 @@ import { FiLogOut, FiMenu, FiTarget, FiUser } from 'react-icons/fi';
 import { GrNodes } from 'react-icons/gr';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { auth, signOut } from '../utilities/auth';
-import { getUserSettings } from '../utilities/firebase_controller';
+import { getUserSettings } from '../controllers/account';
+import { auth, signOut } from '../controllers/auth';
 import Account from './Account';
 import Agent from './Agent';
 import Architecture from './Architecture';

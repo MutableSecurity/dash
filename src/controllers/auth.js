@@ -6,8 +6,8 @@ import {
 import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 
-import { LOGIN_CHECK_GRACE_PERIOD } from './config';
-import { app } from './firebase_controller';
+import { LOGIN_CHECK_GRACE_PERIOD } from '../config';
+import { app } from './common';
 
 export const auth = getAuth(app);
 

@@ -23,13 +23,6 @@ import React, { useEffect, useState } from 'react';
 import { FiCheck } from 'react-icons/fi';
 
 import { TimeLineChartWithCursor } from '../components/TimeChartsWithCursor';
-import { MockAgent, MockSolution } from '../utilities/data_models';
-import { convertUTCSecondsToFormattedDate } from '../utilities/date';
-import {
-    getAgent,
-    getMetricsValue,
-    getSolution,
-} from '../utilities/firebase_controller';
 import {
     getAvailableMetricsForSolution,
     getCategories,
@@ -38,7 +31,12 @@ import {
     getInformationDescription,
     getMaturity,
     getTestDescription,
-} from '../utilities/solutions_details';
+} from '../controllers/abstract_solution';
+import { getAgent } from '../controllers/agent';
+import { getMetricsValue, getSolution } from '../controllers/solution';
+import { MockAgent } from '../models/agent';
+import { MockSolution } from '../models/solution';
+import { convertUTCSecondsToFormattedDate } from '../utilities/date';
 
 export default function Solution(props) {
     const [solution, setSolution] = useState(MockSolution);
@@ -53,18 +51,20 @@ export default function Solution(props) {
         getSolution(solutionId).then(solutionData => {
             setSolution(solutionData);
 
+            var abstractId = solutionData.solution_id;
+
             getAgent(props.agentId).then(agentData => {
                 setAgent(agentData);
 
                 props.setTitleMethod(
-                    getFullName(solutionData.solution_id) +
+                    getFullName(abstractId) +
                         ' Managed By Agent ' +
                         agentData.alias
                 );
             });
 
             setCurrentValuesForMetric(
-                getAvailableMetricsForSolution(solutionId)
+                getAvailableMetricsForSolution(abstractId)
             );
 
             getMetricsValue(solutionId, currentValuesForMetric[tabIndex]).then(

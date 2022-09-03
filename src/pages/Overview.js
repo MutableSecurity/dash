@@ -14,7 +14,7 @@ import {
     TimeLineChartWithCursor,
     TimeStackedChartWithCursor,
 } from '../components/TimeChartsWithCursor';
-import { getLastMonthStatistics } from '../utilities/firebase_controller';
+import { getLastMonthStatistics } from '../controllers/overview';
 
 export default function Overview(props) {
     const [lastMonthStatistics, setLastMonthStatistics] = useState(null);
