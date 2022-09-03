@@ -23,10 +23,12 @@ DATA: dict = {
     },
     "agents": {
         "-NArt1ypl5yf7FU_Ilj9": {
+            "alias": "db",
             "parent_user": "VLjFcXZ1aiddKubb1rBSHABCpvm1",
             "description": "Database server",
         },
         "-NAru5tve2bGWdOHwiqN": {
+            "alias": "web",
             "parent_user": "VLjFcXZ1aiddKubb1rBSHABCpvm1",
             "description": "Web server",
         },
@@ -49,7 +51,7 @@ DUMMY_INFORMATION_REPORT = """{{
     "solution_id": "{}",
     "timestamp": {},
     "current_user": "root",
-    "file_size": 0,
+    "file_size": {},
     "machine_id": "0126ebfd7c25422eb2378bea154a4db1"
 }}"""
 DUMMY_TEST_REPORT = """{{
@@ -58,8 +60,8 @@ DUMMY_TEST_REPORT = """{{
     "presence": {},
     "ubuntu": {}
 }}"""
-SECONDS_IN_HOUR = 60 * 60
-SECONDS_IN_MONTH = 31 * 24 * SECONDS_IN_HOUR
+SECONDS_IN_DAY = 60 * 60 * 24
+SECONDS_IN_MONTH = 31 * 60 * 60 * 24
 CHANGE_PROBABILITY = 100
 
 BoolsList = typing.List[bool]
@@ -72,7 +74,7 @@ def main() -> None:
     for timestamp in range(
         current_timestamp - SECONDS_IN_MONTH,
         current_timestamp,
-        SECONDS_IN_HOUR,
+        SECONDS_IN_DAY,
     ):
         append_new_reports(final_data, timestamp)
 
@@ -89,16 +91,14 @@ def append_new_reports(current_data: dict, timestamp: int) -> None:
         )
 
         key = PushID().next_id()
-        current_data["information_reports"][
-            key
-        ] = information_report
+        current_data["information_reports"][key] = information_report
         current_data["tests_reports"][key] = tests_report
 
 
 def generate_next_test_results_report(
     solution_id: str, timestamp: int
 ) -> dict:
-    tests_results = next(generate_randomized_tests_results())
+    tests_results = next(tests_generator)
     tests_results_str = stringify_boolslist_elements(tests_results)
     string = DUMMY_TEST_REPORT.format(
         solution_id, timestamp, *tests_results_str
@@ -108,7 +108,10 @@ def generate_next_test_results_report(
 
 
 def generate_next_information_report(solution_id: str, timestamp: int) -> dict:
-    string = DUMMY_INFORMATION_REPORT.format(solution_id, timestamp)
+    random_file_size = random.randint(0, 1000)
+    string = DUMMY_INFORMATION_REPORT.format(
+        solution_id, timestamp, random_file_size
+    )
 
     return json.loads(string)
 
@@ -116,11 +119,14 @@ def generate_next_information_report(solution_id: str, timestamp: int) -> dict:
 def generate_randomized_tests_results() -> (
     typing.Generator[BoolsList, None, None]
 ):
-    last_bools = [True, True, True]
+    last_bools = [True, True]
     changed_next_index = 0
 
     while True:
-        if random.randint(0, 1 * CHANGE_PROBABILITY) == 0:
+        if (
+            CHANGE_PROBABILITY == 100
+            or random.randint(0, 1 * CHANGE_PROBABILITY) == 0
+        ):
             last_bools[changed_next_index] = not last_bools[changed_next_index]
 
             changed_next_index += 1
@@ -131,6 +137,9 @@ def generate_randomized_tests_results() -> (
 
 def stringify_boolslist_elements(array: BoolsList) -> typing.List[str]:
     return ["true" if current else "false" for current in array]
+
+
+tests_generator = generate_randomized_tests_results()
 
 
 class PushID(object):
