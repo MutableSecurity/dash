@@ -27,10 +27,7 @@ import { MockAgent, MockSolution } from '../utilities/data_models';
 import { convertUTCSecondsToFormattedDate } from '../utilities/date';
 import {
     getAgent,
-    getLastConfiguration,
-    getLastTestFailed,
     getMetricsValue,
-    getPassedTestsForSolution,
     getSolution,
 } from '../utilities/firebase_controller';
 import {
@@ -45,11 +42,7 @@ import {
 
 export default function Solution(props) {
     const [solution, setSolution] = useState(MockSolution);
-    // eslint-disable-next-line
-    const [agent, setAgent] = useState(MockAgent);
-    const [lastConfigurationSet, setLastConfigurationSet] = useState({});
-    const [passedTestsData, setPassedTestsData] = useState(null);
-    const [lastTestFailed, setLastTestFailed] = useState([]);
+    const [agent, setAgent] = useState(MockAgent); // eslint-disable-line
     const [currentValuesForMetric, setCurrentValuesForMetric] = useState([]);
     const [currentMetricTests, setCurrentMetricTests] = useState([]);
     const [tabIndex, setTabIndex] = useState(0);
@@ -60,33 +53,19 @@ export default function Solution(props) {
         getSolution(solutionId).then(solutionData => {
             setSolution(solutionData);
 
-            const abstractSolutionId = solutionData.solution_id;
-
-            setCurrentValuesForMetric(
-                getAvailableMetricsForSolution(abstractSolutionId)
-            );
-
-            getLastConfiguration(abstractSolutionId).then(configurationSet => {
-                setLastConfigurationSet(configurationSet);
-            });
-
-            getAgent(props.agentId).then(result => {
-                setAgent(result);
+            getAgent(props.agentId).then(agentData => {
+                setAgent(agentData);
 
                 props.setTitleMethod(
                     getFullName(solutionData.solution_id) +
                         ' Managed By Agent ' +
-                        result.alias
+                        agentData.alias
                 );
             });
 
-            getLastTestFailed(solutionId, 5).then(result => {
-                setLastTestFailed(result);
-            });
-
-            getPassedTestsForSolution(solutionId).then(data => {
-                setPassedTestsData(data);
-            });
+            setCurrentValuesForMetric(
+                getAvailableMetricsForSolution(solutionId)
+            );
 
             getMetricsValue(solutionId, currentValuesForMetric[tabIndex]).then(
                 data => {
@@ -103,17 +82,21 @@ export default function Solution(props) {
 
     if (!receivedData) return;
 
-    var configurationRows = Object.keys(lastConfigurationSet).map(key => {
-        return (
-            <Tr key={key}>
-                <Td>
-                    <Code>{key}</Code>
-                </Td>
-                <Td>{getInformationDescription(solution.solution_id, key)}</Td>
-                <Td>{lastConfigurationSet[key]}</Td>
-            </Tr>
-        );
-    });
+    var configurationRows = Object.keys(solution.last_configuration_set).map(
+        key => {
+            return (
+                <Tr key={key}>
+                    <Td>
+                        <Code>{key}</Code>
+                    </Td>
+                    <Td>
+                        {getInformationDescription(solution.solution_id, key)}
+                    </Td>
+                    <Td>{solution.last_configuration_set[key]}</Td>
+                </Tr>
+            );
+        }
+    );
 
     var availableMetricsTabs = currentValuesForMetric.map((identifier, key) => {
         return <Tab key={key}>{identifier}</Tab>;
@@ -134,40 +117,32 @@ export default function Solution(props) {
           })
         : '';
 
-    var passedTestsChart = passedTestsData ? (
+    var passedTestsChart = (
         <TimeLineChartWithCursor
-            timestamps={passedTestsData.timestamps}
-            values={passedTestsData.values}
+            timestamps={solution.passed_tests.timestamps}
+            values={solution.passed_tests.values}
             yDomain={[0, 100]}
             valuePreffix="%"
             yLabel="Passed Tests Percentage"
         />
-    ) : (
-        ''
     );
 
-    var failedTestsRows = lastTestFailed
-        ? lastTestFailed.map((test, key) => {
-              return (
-                  <Tr key={key}>
-                      <Td>
-                          {convertUTCSecondsToFormattedDate(test.timestamp)}
-                      </Td>
-                      <Td>{<Code>{test.id}</Code>}</Td>
-                      <Td>
-                          {getTestDescription(solution.solution_id, test.id)}
-                      </Td>
-                      <Td textAlign="center">
-                          <IconButton
-                              colorScheme="green"
-                              aria-label="Mark failed test as checked"
-                              icon={<FiCheck />}
-                          />
-                      </Td>
-                  </Tr>
-              );
-          })
-        : '';
+    var failedTestsRows = solution.last_tests_failed.map((test, key) => {
+        return (
+            <Tr key={key}>
+                <Td>{convertUTCSecondsToFormattedDate(test.timestamp)}</Td>
+                <Td>{<Code>{test.id}</Code>}</Td>
+                <Td>{getTestDescription(solution.solution_id, test.id)}</Td>
+                <Td textAlign="center">
+                    <IconButton
+                        colorScheme="green"
+                        aria-label="Mark failed test as checked"
+                        icon={<FiCheck />}
+                    />
+                </Td>
+            </Tr>
+        );
+    });
 
     var solutionCategories = getCategories(solution.solution_id).map(
         category => (

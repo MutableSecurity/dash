@@ -79,19 +79,29 @@ export const AgentStatus = {
 };
 
 export class Agent {
-    constructor(id, alias, description) {
+    constructor(id, alias, description, solutions) {
         this.id = id;
         this.alias = alias;
         this.description = description;
+        this.solutions = solutions;
     }
 }
 
-export const MockAgent = new Agent('id', 'server', 'Server');
+export const MockAgent = new Agent('id', 'server', 'Server', []);
 
 export class Solution {
-    constructor(solution_id, parent_agent) {
+    constructor(
+        solution_id,
+        parent_agent,
+        last_configuration_set,
+        last_tests_failed,
+        passed_tests
+    ) {
         this.solution_id = solution_id;
         this.parent_agent = parent_agent;
+        this.last_configuration_set = last_configuration_set;
+        this.last_tests_failed = last_tests_failed;
+        this.passed_tests = passed_tests;
     }
 }
 

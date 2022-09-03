@@ -16,7 +16,7 @@ import React, { useEffect, useState } from 'react';
 import { FiZoomIn } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 
-import { getAgents } from '../utilities/firebase_controller';
+import { getAllAgents } from '../utilities/firebase_controller';
 
 export default function Architecture(props) {
     const [agents, setAgents] = useState([]);
@@ -25,8 +25,8 @@ export default function Architecture(props) {
     props.setTitleMethod('Architecture');
 
     useEffect(() => {
-        getAgents().then(data => {
-            setAgents(data);
+        getAllAgents().then(agentsData => {
+            setAgents(agentsData);
             notifyReceivedData(true);
             props.notifyLoadedMethod(true);
         });

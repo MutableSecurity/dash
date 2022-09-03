@@ -79,6 +79,10 @@ function getUserSettingsTest() {
     return createTestPromise(data);
 }
 
+export const getUserSettings = IS_TESTING
+    ? getUserSettingsTest
+    : getUserSettingsProd;
+
 function getLastMonthStatisticsProd() {
     const userID = auth.currentUser.uid;
     const now = Math.floor(Date.now() / 1000);
@@ -117,6 +121,10 @@ function getLastMonthStatisticsTest() {
 
     return createTestPromise(MockMonthStatistics);
 }
+
+export const getLastMonthStatistics = IS_TESTING
+    ? getLastMonthStatisticsTest
+    : getLastMonthStatisticsProd;
 
 function generateMonthStatisticsFromReports(agentsData, startDate, endDate) {
     var reportsCount = 0;
@@ -194,11 +202,11 @@ function incremetKeyOrCreate(map, key) {
     }
 }
 
-function getAgentsProd() {
+function getAllAgentsProd() {
     return createTestPromise({});
 }
 
-function getAgentsTest() {
+function getAllAgentsTest() {
     var data = Object.keys(mock_data.agents).map(key => {
         var returnedAgent = plainToClass(Agent, mock_data.agents[key]);
         returnedAgent.id = key;
@@ -209,6 +217,8 @@ function getAgentsTest() {
     return createTestPromise(data);
 }
 
+export const getAllAgents = IS_TESTING ? getAllAgentsTest : getAllAgentsProd;
+
 function getAgentProd(agentId) {
     return createTestPromise({});
 }
@@ -216,24 +226,44 @@ function getAgentProd(agentId) {
 function getAgentTest(agentId) {
     var returnedAgent = plainToClass(Agent, mock_data.agents[agentId]);
 
-    return createTestPromise(returnedAgent);
+    getSolutionsOfAgent(returnedAgent.id).then(solutionsData => {
+        returnedAgent.solutions = solutionsData;
+
+        return returnedAgent;
+    });
 }
+
+export const getAgent = IS_TESTING ? getAgentTest : getAgentProd;
 
 function getSolutionProd(solutionId) {
     return createTestPromise({});
 }
 
 function getSolutionTest(solutionId) {
-    var data = plainToClass(Solution, mock_data.solutions[solutionId]);
+    var solution = plainToClass(Solution, mock_data.solutions[solutionId]);
 
-    return createTestPromise(data);
+    var configPromise = getLastConfiguration(solutionId).then(config => {
+        solution.last_configuration_set = config;
+    });
+    var failedTestsPromise = getLastTestFailed(solutionId).then(failedTests => {
+        solution.last_tests_failed = failedTests;
+    });
+    var passedTests = getPassedTestsForSolution(solutionId).then(
+        passedTests => {
+            solution.passed_tests = passedTests;
+        }
+    );
+
+    return Promise.all([configPromise, failedTestsPromise, passedTests]);
 }
 
-function getSolutionsProd(agentId) {
+export const getSolution = IS_TESTING ? getSolutionTest : getSolutionProd;
+
+function getSolutionsOfAgentProd(agentId) {
     return createTestPromise({});
 }
 
-function getSolutionsTest(agentId) {
+function getSolutionsOfAgentTest(agentId) {
     var data = Object.keys(mock_data.solutions)
         .map(key => {
             var solution = mock_data.solutions[key];
@@ -252,6 +282,10 @@ function getSolutionsTest(agentId) {
     return createTestPromise(data);
 }
 
+export const getSolutionsOfAgent = IS_TESTING
+    ? getSolutionsOfAgentTest
+    : getSolutionsOfAgentProd;
+
 function getLastConfigurationProd(solutionId) {
     return createTestPromise({});
 }
@@ -266,6 +300,10 @@ function getLastConfigurationTest(solutionId) {
     return createTestPromise(data);
 }
 
+export const getLastConfiguration = IS_TESTING
+    ? getLastConfigurationTest
+    : getLastConfigurationProd;
+
 function getMetricsValueProd(solutionId, informationId) {
     return createTestPromise({});
 }
@@ -276,6 +314,10 @@ function getMetricsValueTest(solutionId, informationId) {
     return createTestPromise(data);
 }
 
+export const getMetricsValue = IS_TESTING
+    ? getMetricsValueTest
+    : getMetricsValueProd;
+
 function getPassedTestsForSolutionProd(solutionId) {
     return createTestPromise({});
 }
@@ -285,6 +327,10 @@ function getPassedTestsForSolutionTest(solutionId) {
 
     return createTestPromise(data);
 }
+
+export const getPassedTestsForSolution = IS_TESTING
+    ? getPassedTestsForSolutionTest
+    : getPassedTestsForSolutionProd;
 
 function getLastTestFailedProd(solutionId, testsCount) {
     return createTestPromise({});
@@ -298,27 +344,6 @@ function getLastTestFailedTest(solutionId, testsCount) {
     return createTestPromise(data);
 }
 
-export const getUserSettings = IS_TESTING
-    ? getUserSettingsTest
-    : getUserSettingsProd;
-export const getLastMonthStatistics = IS_TESTING
-    ? getLastMonthStatisticsTest
-    : getLastMonthStatisticsProd;
-export const getAgent = IS_TESTING ? getAgentTest : getAgentProd;
-export const getAgents = IS_TESTING ? getAgentsTest : getAgentsProd;
-export const getSolutionsOfAgent = IS_TESTING
-    ? getSolutionsTest
-    : getSolutionsProd;
-export const getSolution = IS_TESTING ? getSolutionTest : getSolutionProd;
-export const getLastConfiguration = IS_TESTING
-    ? getLastConfigurationTest
-    : getLastConfigurationProd;
-export const getMetricsValue = IS_TESTING
-    ? getMetricsValueTest
-    : getMetricsValueProd;
-export const getPassedTestsForSolution = IS_TESTING
-    ? getPassedTestsForSolutionTest
-    : getPassedTestsForSolutionProd;
 export const getLastTestFailed = IS_TESTING
     ? getLastTestFailedTest
     : getLastTestFailedProd;
