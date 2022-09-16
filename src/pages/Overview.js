@@ -21,11 +21,10 @@ export default function Overview(props) {
     const [receivedData, notifyReceivedData] = useState(false);
 
     useEffect(() => {
-        getLastMonthStatistics().then(data => {
-            setLastMonthStatistics(data);
-            notifyReceivedData(true);
-            props.notifyLoadedMethod(true);
-        });
+        var stats = getLastMonthStatistics();
+        setLastMonthStatistics(stats);
+        notifyReceivedData(true);
+        props.notifyLoadedMethod(true);
     }, [props]);
 
     if (!receivedData) return;

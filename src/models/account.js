@@ -7,15 +7,11 @@ export class AccountDetails {
     }
 }
 
-export const MockAccountDetails = new AccountDetails('', '', '', '');
-
 export class AgentsConfiguration {
     constructor(reporting_interval) {
         this.reporting_interval = reporting_interval;
     }
 }
-
-export const MockAgentsConfiguration = new AgentsConfiguration(60);
 
 export class ReportingConfiguration {
     constructor(config_change_group, failed_tests_trigger) {
@@ -24,11 +20,6 @@ export class ReportingConfiguration {
     }
 }
 
-export const MockReportingConfiguration = new ReportingConfiguration(
-    60,
-    'daily'
-);
-
 export class Settings {
     constructor(accountDetails, agentsConfiguration, reportingConfiguration) {
         this.account = accountDetails;
@@ -36,9 +27,3 @@ export class Settings {
         this.reporting_configuration = reportingConfiguration;
     }
 }
-
-export const MockSettings = new Settings(
-    MockAccountDetails,
-    MockAgentsConfiguration,
-    MockReportingConfiguration
-);

@@ -1,51 +1,13 @@
-import { plainToClass } from 'class-transformer';
+import { data } from '../data/data';
 
-import { IS_TESTING } from '../config';
-import mock_data from '../data/offlineFirebase.json';
-import { Agent } from '../models/agent';
-import { Solution } from '../models/solution';
-import { createMockedFirebasePromise } from './common';
-
-function getSolutionsOfAgentProd(agentId) {
-    return createMockedFirebasePromise({});
+export function getAllAgents() {
+    return data.agents;
 }
 
-function getSolutionsOfAgentTest(agentId) {
-    var data = Object.keys(mock_data.solutions)
-        .map(key => {
-            var solution = mock_data.solutions[key];
-
-            if (solution['parent_agent'] !== agentId) {
-                return null;
-            }
-
-            var returnedSolution = plainToClass(Solution, solution);
-            returnedSolution.id = key;
-
-            return returnedSolution;
-        })
-        .filter(solution => !!solution);
-
-    return createMockedFirebasePromise(data);
+export function countAllAgents() {
+    return data.agents.length;
 }
 
-export const getSolutionsOfAgent = IS_TESTING
-    ? getSolutionsOfAgentTest
-    : getSolutionsOfAgentProd;
-
-function getAgentProd(agentId) {
-    return createMockedFirebasePromise({});
+export function getAgent(agentId) {
+    return data.agents.find(agent => agent.id === agentId);
 }
-
-function getAgentTest(agentId) {
-    var returnedAgent = plainToClass(Agent, mock_data.agents[agentId]);
-    returnedAgent.id = agentId;
-
-    return getSolutionsOfAgent(agentId).then(solutionsData => {
-        returnedAgent.solutions = solutionsData;
-
-        return returnedAgent;
-    });
-}
-
-export const getAgent = IS_TESTING ? getAgentTest : getAgentProd;

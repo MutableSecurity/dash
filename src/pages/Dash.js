@@ -17,7 +17,7 @@ import {
     useToast,
     VStack,
 } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FiLogOut, FiMenu, FiTarget, FiUser } from 'react-icons/fi';
 import { GrNodes } from 'react-icons/gr';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -39,9 +39,11 @@ export default function Dash(props, { children }) {
     const [loadedChild, notifyLoaded] = useState(false);
     const { agentID, solutionID } = useParams();
 
-    getUserSettings().then(result => {
-        setUserData(result);
-    });
+    useEffect(() => {
+        var user = getUserSettings();
+
+        setUserData(user);
+    }, []);
 
     var innerPage;
     if (props.overview) {

@@ -33,107 +33,103 @@ import {
     getTestDescription,
 } from '../controllers/abstract_solution';
 import { getAgent } from '../controllers/agent';
-import { getMetricsValue, getSolution } from '../controllers/solution';
-import { MockAgent } from '../models/agent';
-import { MockSolution } from '../models/solution';
+import {
+    getLastConfiguration,
+    getMetricsValues,
+} from '../controllers/information';
+import { getSolution } from '../controllers/solution';
+import {
+    getLastTestFailed,
+    getPassedTestsPercentagesForSolution,
+} from '../controllers/test';
 import { convertUTCSecondsToFormattedDate } from '../utilities/date';
 
 export default function Solution(props) {
     const [title, setTitle] = useState('');
-    const [solution, setSolution] = useState(MockSolution);
-    const [agent, setAgent] = useState(MockAgent); // eslint-disable-line
+    const [solution, setSolution] = useState(null);
+    const [agent, setAgent] = useState(null); // eslint-disable-line
+    const [lastConfig, setLastConfig] = useState();
     const [currentValuesForMetric, setCurrentValuesForMetric] = useState([]);
+    const [passedTests, setPassedTests] = useState();
+    const [lastFailedTests, setLastTestsFailed] = useState();
     const [currentMetricTests, setCurrentMetricTests] = useState([]);
     const [tabIndex, setTabIndex] = useState(0);
     const [receivedData, notifyReceivedData] = useState(false);
     const solutionId = props.solutionId;
 
     useEffect(() => {
-        getSolution(solutionId).then(solutionData => {
-            setSolution(solutionData);
+        var solution = getSolution(solutionId);
+        setSolution(solution);
+        var abstractId = solution.solution_id;
+        var agent = getAgent(props.agentId);
+        setAgent(agent);
+        setTitle(getFullName(abstractId) + ' Managed By Agent ' + agent.alias);
+        setCurrentValuesForMetric(getAvailableMetricsForSolution(abstractId));
+        setPassedTests(getPassedTestsPercentagesForSolution(solution.id));
+        setLastTestsFailed(getLastTestFailed(solution.id, 10));
+        setLastConfig(getLastConfiguration(solution));
 
-            var abstractId = solutionData.solution_id;
+        var metrics = getMetricsValues(
+            solutionId,
+            currentValuesForMetric[tabIndex]
+        );
+        setCurrentMetricTests(
+            [...Array(currentValuesForMetric.length)].fill(metrics)
+        );
 
-            getAgent(props.agentId).then(agentData => {
-                setAgent(agentData);
-
-                setTitle(
-                    getFullName(abstractId) +
-                        ' Managed By Agent ' +
-                        agentData.alias
-                );
-            });
-
-            setCurrentValuesForMetric(
-                getAvailableMetricsForSolution(abstractId)
-            );
-
-            getMetricsValue(solutionId, currentValuesForMetric[tabIndex]).then(
-                data => {
-                    setCurrentMetricTests(
-                        [...Array(currentValuesForMetric.length)].fill(data)
-                    );
-                }
-            );
-
-            notifyReceivedData(true);
-            props.notifyLoadedMethod(true);
-        });
-    });
+        notifyReceivedData(true);
+        props.notifyLoadedMethod(true);
+    }, [solutionId, props, currentValuesForMetric, tabIndex]);
 
     if (!receivedData) return;
 
-    var configurationRows = Object.keys(solution.last_configuration_set).map(
-        key => {
-            return (
-                <Tr key={key}>
-                    <Td>
-                        <Code>{key}</Code>
-                    </Td>
-                    <Td>
-                        {getInformationDescription(solution.solution_id, key)}
-                    </Td>
-                    <Td>{solution.last_configuration_set[key]}</Td>
-                </Tr>
-            );
-        }
-    );
+    var configurationRows = Object.keys(lastConfig).map(key => {
+        return (
+            <Tr key={key}>
+                <Td>
+                    <Code>{key}</Code>
+                </Td>
+                <Td>{getInformationDescription(solution.solution_id, key)}</Td>
+                <Td>{lastConfig[key]}</Td>
+            </Tr>
+        );
+    });
 
     var availableMetricsTabs = currentValuesForMetric.map((identifier, key) => {
         return <Tab key={key}>{identifier}</Tab>;
     });
 
-    var availableMetricsPanel = currentMetricTests
-        ? currentMetricTests.map(identifier => {
-              return (
-                  <TabPanel>
-                      <TimeLineChartWithCursor
-                          timestamps={identifier.timestamps}
-                          values={identifier.values}
-                          yDomain={[0, 10]}
-                          yLabel="Value"
-                      />
-                  </TabPanel>
-              );
-          })
-        : '';
+    var availableMetricsPanel = currentMetricTests.map(identifier => {
+        return (
+            <TabPanel>
+                <TimeLineChartWithCursor
+                    timestamps={identifier.timestamps}
+                    values={identifier.values}
+                    yDomain={[0, 10]}
+                    yLabel="Value"
+                />
+            </TabPanel>
+        );
+    });
 
     var passedTestsChart = (
         <TimeLineChartWithCursor
-            timestamps={solution.passed_tests.timestamps}
-            values={solution.passed_tests.values}
+            timestamps={passedTests.timestamps}
+            values={passedTests.values}
             yDomain={[0, 100]}
             valuePreffix="%"
             yLabel="Passed Tests Percentage"
         />
     );
 
-    var failedTestsRows = solution.last_tests_failed.map((test, key) => {
+    var failedTestsRows = lastFailedTests.map((test, key) => {
         return (
             <Tr key={key}>
                 <Td>{convertUTCSecondsToFormattedDate(test.timestamp)}</Td>
                 <Td>{<Code>{test.id}</Code>}</Td>
-                <Td>{getTestDescription(solution.solution_id, test.id)}</Td>
+                <Td>
+                    {getTestDescription(solution.solution_id, test.test_id)}
+                </Td>
                 <Td textAlign="center">
                     <IconButton
                         colorScheme="green"

@@ -16,18 +16,26 @@ export function getCategories(solutionId) {
     return solutions_data.solutions[solutionId].categories;
 }
 
-export function getAvailableMetricsForSolution(solutionId) {
+function getInformationWithProperty(solutionId, property) {
     const information = solutions_data.solutions[solutionId].information;
 
     var metrics = [];
     Object.keys(information).forEach(current_key => {
-        if (information[current_key].properties.includes('METRIC')) {
+        if (information[current_key].properties.includes(property)) {
             metrics.push(current_key);
         } else {
         }
     });
 
     return metrics;
+}
+
+export function getAvailableMetricsForSolution(solutionId) {
+    return getInformationWithProperty(solutionId, 'METRIC');
+}
+
+export function getAvailableConfigurationForSolution(solutionId) {
+    return getInformationWithProperty(solutionId, 'CONFIGURATION');
 }
 
 export function getInformationDescription(solutionId, informationId) {

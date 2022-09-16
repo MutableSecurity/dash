@@ -11,3 +11,13 @@ export const database = ref(getDatabase(app));
 export function createMockedFirebasePromise(data) {
     return createPromiseWitData(data, PROMISE_DELAY_WHEN_TESTING);
 }
+
+export function incremetKeyOrCreate(map, key) {
+    var oldValue = map.get(key);
+
+    if (oldValue === undefined) {
+        map.set(key, 1);
+    } else {
+        map.set(key, oldValue + 1);
+    }
+}

@@ -16,26 +16,27 @@ import { FiZoomIn } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import { getDescription, getFullName } from '../controllers/abstract_solution';
 import { getAgent } from '../controllers/agent';
+import { getSolutionsOfAgent } from '../controllers/solution';
 
 export default function Agent(props) {
     const [title, setTitle] = useState('');
     const [agent, setAgent] = useState();
+    const [solutions, setSolutions] = useState();
     const [receivedData, notifyReceivedData] = useState(false);
     const agentId = props.agentId;
 
     useEffect(() => {
-        getAgent(agentId).then(agentData => {
-            setAgent(agentData);
-
-            notifyReceivedData(true);
-            setTitle('Agent ' + agentData.alias);
-            props.notifyLoadedMethod(true);
-        });
+        var agent = getAgent(agentId);
+        setAgent(agent);
+        setSolutions(getSolutionsOfAgent(agentId));
+        setTitle('Agent ' + agent.alias);
+        notifyReceivedData(true);
+        props.notifyLoadedMethod(true);
     }, [props, agentId]);
 
     if (!receivedData) return;
 
-    var solutionsRows = agent.solutions.map((solution, key) => {
+    var solutionsRows = solutions.map((solution, key) => {
         var fullName = getFullName(solution.solution_id);
         var description = getDescription(solution.solution_id);
         var solutionUrl = '/agents/' + agentId + '/solutions/' + solution.id;

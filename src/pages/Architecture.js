@@ -16,18 +16,17 @@ import React, { useEffect, useState } from 'react';
 import { FiZoomIn } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 
-import { getAllAgents } from '../controllers/architecture';
+import { getAllAgents } from '../controllers/agent';
 
 export default function Architecture(props) {
     const [agents, setAgents] = useState([]);
     const [receivedData, notifyReceivedData] = useState(false);
 
     useEffect(() => {
-        getAllAgents().then(agentsData => {
-            setAgents(agentsData);
-            notifyReceivedData(true);
-            props.notifyLoadedMethod(true);
-        });
+        var agents = getAllAgents();
+        setAgents(agents);
+        notifyReceivedData(true);
+        props.notifyLoadedMethod(true);
     }, [props]);
 
     if (!receivedData) return;
