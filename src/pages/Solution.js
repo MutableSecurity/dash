@@ -56,10 +56,9 @@ export default function Solution(props) {
     const [currentMetricTests, setCurrentMetricTests] = useState([]);
     const [tabIndex, setTabIndex] = useState(0);
     const [receivedData, notifyReceivedData] = useState(false);
-    const solutionId = props.solutionId;
 
     useEffect(() => {
-        var solution = getSolution(solutionId);
+        var solution = getSolution(props.solutionId);
         setSolution(solution);
         var abstractId = solution.solution_id;
         var agent = getAgent(props.agentId);
@@ -70,17 +69,19 @@ export default function Solution(props) {
         setLastTestsFailed(getLastTestFailed(solution.id, 10));
         setLastConfig(getLastConfiguration(solution));
 
+        notifyReceivedData(true);
+        props.notifyLoadedMethod(true);
+    }, [props]);
+
+    useEffect(() => {
         var metrics = getMetricsValues(
-            solutionId,
+            props.solutionId,
             currentValuesForMetric[tabIndex]
         );
         setCurrentMetricTests(
             [...Array(currentValuesForMetric.length)].fill(metrics)
         );
-
-        notifyReceivedData(true);
-        props.notifyLoadedMethod(true);
-    }, [solutionId, props, currentValuesForMetric, tabIndex]);
+    }, [props, currentValuesForMetric, tabIndex]);
 
     if (!receivedData) return;
 
@@ -137,7 +138,7 @@ export default function Solution(props) {
         return (
             <Tr key={key}>
                 <Td>{convertUTCSecondsToFormattedDate(test.timestamp)}</Td>
-                <Td>{<Code>{test.id}</Code>}</Td>
+                <Td>{<Code>{test.test_id}</Code>}</Td>
                 <Td>
                     {getTestDescription(solution.solution_id, test.test_id)}
                 </Td>

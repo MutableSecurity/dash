@@ -43,11 +43,11 @@ const NofifyingVerticalCursor = ({
         <g>
             <rect
                 x={x}
-                y={25}
+                y={15}
                 width="0.3"
                 dx={dx}
                 dy={dy + 20}
-                height="60"
+                height="70"
                 fill="var(--chakra-colors-blue-500)"
                 strokeWidth={0}
             />

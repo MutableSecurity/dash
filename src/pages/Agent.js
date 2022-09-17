@@ -21,7 +21,7 @@ import { getSolutionsOfAgent } from '../controllers/solution';
 
 export default function Agent(props) {
     const [title, setTitle] = useState('');
-    const [agent, setAgent] = useState();
+    const [agent, setAgent] = useState(); // eslint-disable-line
     const [solutions, setSolutions] = useState();
     const [receivedData, notifyReceivedData] = useState(false);
     const agentId = props.agentId;
