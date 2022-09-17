@@ -16,6 +16,7 @@ import {
     Text,
     Th,
     Thead,
+    Tooltip,
     Tr,
     VStack,
 } from '@chakra-ui/react';
@@ -96,7 +97,17 @@ export default function Solution(props) {
     });
 
     var availableMetricsTabs = currentValuesForMetric.map((identifier, key) => {
-        return <Tab key={key}>{identifier}</Tab>;
+        return (
+            <Tooltip
+                hasArrow
+                label="View metric"
+                placement="bottom"
+                bg="black"
+                color="white"
+            >
+                <Tab key={key}>{identifier}</Tab>
+            </Tooltip>
+        );
     });
 
     var availableMetricsPanel = currentMetricTests.map(identifier => {
@@ -131,11 +142,19 @@ export default function Solution(props) {
                     {getTestDescription(solution.solution_id, test.test_id)}
                 </Td>
                 <Td textAlign="center">
-                    <IconButton
-                        colorScheme="green"
-                        aria-label="Mark failed test as checked"
-                        icon={<FiCheck />}
-                    />
+                    <Tooltip
+                        hasArrow
+                        label="Mark test as checked"
+                        placement="left"
+                        bg="black"
+                        color="white"
+                    >
+                        <IconButton
+                            colorScheme="green"
+                            aria-label="Mark as checked"
+                            icon={<FiCheck />}
+                        />
+                    </Tooltip>
                 </Td>
             </Tr>
         );
@@ -143,7 +162,7 @@ export default function Solution(props) {
 
     var solutionCategories = getCategories(solution.solution_id).map(
         category => (
-            <Tag size="md" key="md" variant="solid" colorScheme="blue">
+            <Tag size="lg" key="lg" variant="solid" colorScheme="blue">
                 {category}
             </Tag>
         )
@@ -173,17 +192,17 @@ export default function Solution(props) {
     );
 
     return (
-        <VStack spacing={4} p={3} align="stretch" bgColor={'white'}>
-            <Heading as="h1" size="xl">
+        <VStack spacing={8} p={3} align="stretch" bgColor={'white'}>
+            <Heading as="h1" size="2xl">
                 {title}
             </Heading>
 
-            <Heading as="h1" size="lg">
+            <Heading as="h1" size="xl">
                 Information
             </Heading>
             <SkeletonText mt="4" noOfLines={1} spacing="4" />
 
-            <Heading as="h2" size="md">
+            <Heading as="h2" size="lg">
                 Current Configuration
             </Heading>
             <SkeletonText mt="4" noOfLines={2} spacing="4" />
@@ -201,7 +220,7 @@ export default function Solution(props) {
                 </Table>
             </TableContainer>
 
-            <Heading as="h2" size="md">
+            <Heading as="h2" size="lg">
                 Metrics Graphs
             </Heading>
             <SkeletonText mt="4" noOfLines={2} spacing="4" />
@@ -217,18 +236,18 @@ export default function Solution(props) {
                 <TabPanels>{availableMetricsPanel}</TabPanels>
             </Tabs>
 
-            <Heading as="h1" size="lg">
+            <Heading as="h1" size="xl">
                 Tests
             </Heading>
             <SkeletonText mt="4" noOfLines={1} spacing="4" />
 
-            <Heading as="h2" size="md">
+            <Heading as="h2" size="lg">
                 Passed Tests Percentages
             </Heading>
             <SkeletonText mt="4" noOfLines={2} spacing="4" />
             {passedTestsChart}
 
-            <Heading as="h2" size="md">
+            <Heading as="h2" size="lg">
                 Last Failed Tests
             </Heading>
             <SkeletonText mt="4" noOfLines={2} spacing="4" />
@@ -246,7 +265,7 @@ export default function Solution(props) {
                 </Table>
             </TableContainer>
 
-            <Heading as="h1" size="lg">
+            <Heading as="h1" size="xl">
                 General Information
             </Heading>
             {genericSolutionDetails}

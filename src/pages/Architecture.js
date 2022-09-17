@@ -9,6 +9,7 @@ import {
     Td,
     Th,
     Thead,
+    Tooltip,
     Tr,
     VStack,
 } from '@chakra-ui/react';
@@ -40,11 +41,19 @@ export default function Architecture(props) {
                 <Td>{agent.description}</Td>
                 <Td textAlign={'right'}>
                     <Link to={'/agents/' + agent.id}>
-                        <IconButton
-                            colorScheme="blue"
-                            aria-label="Inspect agent"
-                            icon={<FiZoomIn />}
-                        />
+                        <Tooltip
+                            hasArrow
+                            label="View agent"
+                            placement="left"
+                            bg="black"
+                            color="white"
+                        >
+                            <IconButton
+                                colorScheme="blue"
+                                aria-label="Inspect agent"
+                                icon={<FiZoomIn />}
+                            />
+                        </Tooltip>
                     </Link>
                 </Td>
             </Tr>
@@ -52,11 +61,13 @@ export default function Architecture(props) {
     });
 
     return (
-        <VStack spacing={4} p={3} align="stretch" bgColor={'white'}>
-            <Heading as="h1" size="xl">
+        <VStack spacing={8} p={3} align="stretch" bgColor={'white'}>
+            <Heading as="h1" size="2xl">
                 Architecture
             </Heading>
-            <Heading>Your Agents</Heading>
+            <Heading as="h2" size="xl">
+                Your Agents
+            </Heading>
             <SkeletonText mt="4" noOfLines={2} spacing="4" />
             <TableContainer marginBottom={10}>
                 <Table variant="simple">

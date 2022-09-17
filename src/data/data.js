@@ -6,12 +6,12 @@ import { Agent } from '../models/agent';
 import { Information } from '../models/information';
 import { Solution } from '../models/solution';
 import { Test } from '../models/test';
-import dummy_data from './dummy.json';
-import firebase_data from './firebase';
+import { get as getDummy } from './dummy';
+import { get as getFirebase } from './firebase';
 
 class Database {
     constructor() {
-        var used_data = IS_TESTING ? dummy_data : firebase_data;
+        var used_data = IS_TESTING ? getDummy() : getFirebase();
 
         this.init_account(used_data);
         this.init_agents(used_data);
@@ -49,7 +49,7 @@ class Database {
     init_tests(data) {
         this.tests = [];
 
-        Object.keys(data.tests_reports).map(test_id => {
+        Object.keys(data.tests_reports).forEach(test_id => {
             var current_report = data.tests_reports[test_id];
 
             var tests = Object.keys(current_report)
@@ -73,7 +73,7 @@ class Database {
     init_information(data) {
         this.information = [];
 
-        Object.keys(data.information_reports).map(test_id => {
+        Object.keys(data.information_reports).forEach(test_id => {
             var current_report = data.information_reports[test_id];
 
             var info = Object.keys(current_report)

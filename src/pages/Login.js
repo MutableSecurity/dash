@@ -64,7 +64,7 @@ export default function SplitScreen() {
                         justify="center"
                     >
                         <Image src={logo} width={200} />
-                        <Heading fontSize={'2xl'} textAlign="center">
+                        <Heading size="lg" as="h1" textAlign="center">
                             Sign in to MutableSecurity
                         </Heading>
                     </Stack>

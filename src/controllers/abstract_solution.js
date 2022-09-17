@@ -1,4 +1,4 @@
-import solutions_data from '../data/solutions.json';
+import solutions_data from '../data/offline/solutions.json';
 
 export function getFullName(solutionId) {
     return solutions_data.solutions[solutionId].full_name;

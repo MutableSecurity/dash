@@ -20,7 +20,7 @@ export function AnnotatedTextInput(props) {
     return (
         <Box flex={props.flex}>
             <FormControl>
-                <FormLabel>{props.title}</FormLabel>
+                <FormLabel fontWeight={900}>{props.title}</FormLabel>
                 <InputGroup>
                     <InputLeftElement
                         pointerEvents="none"
@@ -50,7 +50,7 @@ export function AnnotatedRadioGroup(props) {
 
     return (
         <FormControl>
-            <FormLabel>{props.title}</FormLabel>
+            <FormLabel fontWeight={900}>{props.title}</FormLabel>
             <RadioGroup
                 value={value}
                 border="1px"
@@ -72,7 +72,7 @@ export function AnnotatedSlider(props) {
 
     return (
         <FormControl>
-            <FormLabel>{props.title}</FormLabel>
+            <FormLabel fontWeight={900}>{props.title}</FormLabel>
             <Slider
                 aria-label="slider-ex-1"
                 defaultValue={5}

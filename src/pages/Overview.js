@@ -68,16 +68,20 @@ export default function Overview(props) {
     });
 
     return (
-        <VStack spacing={4} p={3} align="stretch" bgColor={'white'}>
-            <Heading as="h1" size="xl">
+        <VStack spacing={8} p={3} align="stretch" bgColor={'white'}>
+            <Heading as="h1" size="2xl">
                 Overview
             </Heading>
 
-            <Heading>Stats at a Glance</Heading>
+            <Heading as="h2" size="xl">
+                Stats at a Glance
+            </Heading>
             <SkeletonText mt="4" noOfLines={1} spacing="4" />
             <Flex>{statsComponents}</Flex>
 
-            <Heading size="lg">Monthly Graphs</Heading>
+            <Heading as="h2" size="xl">
+                Monthly Graphs
+            </Heading>
             <SkeletonText mt="4" noOfLines={2} spacing="4" />
 
             <TimeLineChartWithCursor

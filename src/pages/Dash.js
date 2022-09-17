@@ -177,7 +177,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
                 mx="8"
                 justifyContent="space-between"
             >
-                <Image src={logo} height="100px" margin="auto" />
+                <Image src={logo} height="24" margin="auto" />
                 <CloseButton
                     display={{ base: 'flex', md: 'none' }}
                     onClick={onClose}
@@ -266,7 +266,7 @@ const MobileNav = ({ userData, onOpen, ...rest }) => {
                         <VStack
                             display={{ base: 'none', md: 'flex' }}
                             alignItems="flex-start"
-                            spacing="1px"
+                            spacing="0"
                             ml="2"
                         >
                             <Text fontSize="sm">{fullName}</Text>

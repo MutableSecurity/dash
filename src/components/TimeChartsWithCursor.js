@@ -1,4 +1,4 @@
-import { Box, Heading, Text } from '@chakra-ui/react';
+import { Box, Text } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import {
     VictoryArea,
@@ -55,29 +55,40 @@ const NofifyingVerticalCursor = ({
     );
 };
 
+export function ChartTitle(props) {
+    return props.title ? (
+        <Text
+            size="md"
+            color={'var(--chakra-colors-white)'}
+            backgroundColor={'var(--chakra-colors-blue-500)'}
+            padding={2}
+            width="max-content"
+        >
+            Chart:{' '}
+            <Text display={'inline'} fontWeight={900}>
+                {props.title}
+            </Text>
+        </Text>
+    ) : (
+        ''
+    );
+}
+
 export function TimeLineChartWithCursor(props) {
     const [cursorTimeValuePair, setCursorTimeValuePair] = useState(
         new TimeValuePair()
     );
 
     const valuePreffix = props.valuePreffix ? props.valuePreffix : '';
-    const chartTitle = props.title ? (
-        <Heading as="h3" size="md">
-            {props.title}
-        </Heading>
-    ) : (
-        ''
-    );
 
     return (
         <Box>
-            {chartTitle}
-
+            <ChartTitle title={props.title} />
             <VictoryChart
                 theme={VictoryTheme.grayscale}
                 domain={{ y: props.yDomain }}
                 height={100}
-                padding={{ top: 40, bottom: 20, left: 35, right: 10 }}
+                padding={{ top: 20, bottom: 20, left: 35, right: 10 }}
                 scale={{ x: 'time' }}
                 containerComponent={
                     <VictoryVoronoiContainer
@@ -123,7 +134,7 @@ export function TimeLineChartWithCursor(props) {
             </VictoryChart>
 
             <Box
-                marginTop="10px"
+                marginTop={4}
                 opacity={cursorTimeValuePair.timestamp === -1 ? 0 : 1}
             >
                 <Text>
@@ -149,13 +160,15 @@ export function TimeLineChartWithCursor(props) {
 export function TimeStackedChartWithCursor(props) {
     return (
         <Box>
-            <Heading as="h3" size="md">
-                {props.title}
-            </Heading>
-            <VictoryChart height={150} scale={{ x: 'time' }}>
+            <ChartTitle title={props.title} />
+            <VictoryChart
+                padding={{ top: 30, bottom: 20, left: 35, right: 10 }}
+                height={150}
+                scale={{ x: 'time' }}
+            >
                 <VictoryLegend
                     x={50}
-                    y={30}
+                    y={10}
                     orientation="horizontal"
                     symbolSpacer={5}
                     gutter={20}
