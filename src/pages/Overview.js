@@ -47,6 +47,7 @@ export default function Overview(props) {
             value: lastMonthStatistics.availabilityPercentages[
                 lastMonthStatistics.availabilityPercentages.length - 1
             ],
+            round: true,
             valuePreffix: '%',
             description: 'at the moment',
         },
@@ -57,11 +58,13 @@ export default function Overview(props) {
         },
     ];
     const statsComponents = statGridData.map((details, key) => {
+        var value = details.round ? details.value.toFixed(2) : details.value;
+
         return (
             <Stat key={key}>
                 <StatLabel>{details.name}</StatLabel>
                 <StatNumber>
-                    {details.value}
+                    {value}
                     {details.valuePreffix}
                 </StatNumber>
                 <StatHelpText>{details.description}</StatHelpText>
