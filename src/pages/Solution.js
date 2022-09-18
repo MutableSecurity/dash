@@ -1,6 +1,8 @@
 import {
+    Button,
     Code,
     IconButton,
+    Link,
     SkeletonText,
     Tab,
     Table,
@@ -20,7 +22,7 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
-import { FiCheck } from 'react-icons/fi';
+import { FiCheck, FiExternalLink } from 'react-icons/fi';
 
 import {
     PageHeading,
@@ -32,6 +34,7 @@ import {
     getAvailableMetricsForSolution,
     getCategories,
     getDescription,
+    getDocumentationURL,
     getFullName,
     getInformationDescription,
     getMaturity,
@@ -193,6 +196,15 @@ export default function Solution(props) {
                 <Text as="b">Maturity</Text>:{' '}
                 {getMaturity(solution.solution_id)}
             </Text>
+            <Link href={getDocumentationURL(solution.solution_id)} isExternal>
+                <Button
+                    rightIcon={<FiExternalLink />}
+                    colorScheme="blue"
+                    variant="outline"
+                >
+                    Open Documentation
+                </Button>
+            </Link>
         </VStack>
     );
 

@@ -16,6 +16,10 @@ export function getCategories(solutionId) {
     return solutions_data.solutions[solutionId].categories;
 }
 
+export function getDocumentationURL(solutionId) {
+    return 'https://mutablesecurity.io/docs/users/modules/' + solutionId;
+}
+
 function getInformationWithProperty(solutionId, property) {
     const information = solutions_data.solutions[solutionId].information;
 
