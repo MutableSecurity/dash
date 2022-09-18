@@ -75,13 +75,13 @@ export default function Overview(props) {
 
             <SectionHeadingWithDescription
                 title="Stats at a Glance"
-                description="Bird-eye view statistics about your security infrastructure"
+                description="Statistical overview of your security infrastructure"
             />
             <Flex>{statsComponents}</Flex>
 
             <SectionHeadingWithDescription
                 title="Monthly Charts"
-                description="Charts generated with the data reported in the last month"
+                description="Charts created from data reported in the previous month"
             />
             <TimeLineChartWithCursor
                 title="Passed Tests Percentage"

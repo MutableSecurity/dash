@@ -78,7 +78,7 @@ export default function Agent(props) {
                 description={
                     'Security solution managed by agent ' +
                     agent.alias +
-                    '. They defend the server on which they are installed, according to the set configuration.'
+                    '. According to the predetermined configuration, they protect the server on which they are deployed.'
                 }
             />
             <TableContainer marginBottom={10}>

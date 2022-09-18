@@ -236,13 +236,12 @@ export default function Solution(props) {
 
             <SectionHeadingWithDescription
                 title="Information"
-                description="Details about the current security solution"
+                description="Details on the current security solution"
             />
 
             <SubSectionHeadingWithDescription
                 title="Current Configuration"
-                description="Writable information that configures the way in which the
-                security solution behaves"
+                description="Writable data that defines how the security solution should behave"
             />
 
             <TableContainer marginBottom={10}>
@@ -260,7 +259,7 @@ export default function Solution(props) {
 
             <SubSectionHeadingWithDescription
                 title="Metrics Charts"
-                description="Read-only information that describes the security solution"
+                description="Read-only information describing the security solution"
             />
 
             <Tabs
@@ -276,19 +275,18 @@ export default function Solution(props) {
 
             <SectionHeadingWithDescription
                 title="Tests"
-                description="Operations with an expected output, executed periodically to check if the solution functions properly"
+                description="Operations with an expected outcome, that are run on a regular basis to ensure that the solution is working appropriately."
             />
 
             <SubSectionHeadingWithDescription
                 title="Passed Tests Percentages"
-                description="The ratio of the executed tests which are passed"
+                description="The percentage of tests that were run and passed"
             />
             {passedTestsChart}
 
             <SubSectionHeadingWithDescription
                 title="Last Failed Tests"
-                description="The last executed tests that failed. As this is not a normal
-                behaviour, please consider finding out the root cause."
+                description="The most recently ran tests that failed. Because this is not normal behavior, please investigate the main cause."
             />
             <TableContainer marginBottom={10}>
                 <Table variant="simple">
@@ -306,7 +304,7 @@ export default function Solution(props) {
 
             <SectionHeadingWithDescription
                 title="General Information"
-                description="Generic details about the security solution"
+                description="General details about the security solution"
             />
             {genericSolutionDetails}
         </VStack>

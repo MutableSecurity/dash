@@ -67,9 +67,7 @@ export default function Architecture(props) {
             <PageHeading>Architecture</PageHeading>
             <SectionHeadingWithDescription
                 title="Your Agents"
-                description="Agents installed on all managed device. They automate the
-                cybersecurity solutions from their host and report data to
-                MutableSecurity servers."
+                description="Installed agents on every managed device. They automate the host's security solutions and provide data to the MutableSecurity Dash."
             />
             <TableContainer marginBottom={10}>
                 <Table variant="simple">

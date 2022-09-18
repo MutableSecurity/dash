@@ -77,7 +77,7 @@ export default function Account(props) {
 
             <SectionHeadingWithDescription
                 title="Agents Configuration"
-                description="Configuration controlling how agents behave"
+                description="Configuration determining how agents act"
             />
             <AnnotatedRadioGroup
                 title="Reporting Interval"
@@ -89,7 +89,7 @@ export default function Account(props) {
 
             <SectionHeadingWithDescription
                 title="Alerting Configuration"
-                description="Configuration for alerts generated due to changes in your security infrastructure"
+                description="Configuration for alerts triggered by changes in your security infrastructure"
             />
             <VStack spacing={4} align="stretch">
                 <AnnotatedSlider
