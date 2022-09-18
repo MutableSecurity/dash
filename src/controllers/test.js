@@ -3,9 +3,14 @@ import { TimeseriesWithValues } from '../models/generic';
 import { incremetKeyOrCreate } from './common';
 
 export function getLastTestFailed(solutionId, testsCount) {
-    return data.tests
-        .filter(test => test.solution_id === solutionId && !test.passed)
+    var tests = data.tests
+        .filter(
+            test =>
+                test.solution_id === solutionId && !test.passed && !test.checked
+        )
         .slice(-testsCount);
+
+    return tests;
 }
 
 export function getPassedTestsPercentagesForSolution(solutionId) {
@@ -37,4 +42,8 @@ export function getPassedTestsPercentagesForSolution(solutionId) {
     });
 
     return new TimeseriesWithValues(timestamps, percentages);
+}
+
+export function setTestAsChecked(test) {
+    test.checked = true;
 }

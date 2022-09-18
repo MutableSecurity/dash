@@ -61,7 +61,8 @@ class Database {
                         test_id,
                         current_report.timestamp,
                         current_report[test_id],
-                        current_report.solution_id
+                        current_report.solution_id,
+                        current_report.checked.includes(test_id)
                     );
                 })
                 .filter(test => !!test);

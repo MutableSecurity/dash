@@ -49,6 +49,7 @@ import { getSolution } from '../controllers/solution';
 import {
     getLastTestFailed,
     getPassedTestsPercentagesForSolution,
+    setTestAsChecked,
 } from '../controllers/test';
 import { convertUTCSecondsToFormattedDate } from '../utilities/date';
 
@@ -63,6 +64,7 @@ export default function Solution(props) {
     const [currentMetricTests, setCurrentMetricTests] = useState([]);
     const [tabIndex, setTabIndex] = useState(0);
     const [receivedData, notifyReceivedData] = useState(false);
+    const [updatePassedTestsFlag, updatePassedTests] = useState(false);
 
     useEffect(() => {
         var solution = getSolution(props.solutionId);
@@ -73,12 +75,17 @@ export default function Solution(props) {
         setTitle(getFullName(abstractId) + ' Managed By Agent ' + agent.alias);
         setCurrentValuesForMetric(getAvailableMetricsForSolution(abstractId));
         setPassedTests(getPassedTestsPercentagesForSolution(solution.id));
-        setLastTestsFailed(getLastTestFailed(solution.id, 10));
         setLastConfig(getLastConfiguration(solution));
 
         notifyReceivedData(true);
         props.notifyLoadedMethod(true);
     }, [props]);
+
+    useEffect(() => {
+        if (solution) {
+            setLastTestsFailed(getLastTestFailed(solution.id, 10));
+        }
+    }, [solution, updatePassedTestsFlag]);
 
     useEffect(() => {
         var metrics = getMetricsValues(
@@ -89,6 +96,12 @@ export default function Solution(props) {
             [...Array(currentValuesForMetric.length)].fill(metrics)
         );
     }, [props, currentValuesForMetric, tabIndex]);
+
+    const markTestAsVerified = test => {
+        setTestAsChecked(test);
+
+        updatePassedTests(updatePassedTestsFlag => !updatePassedTestsFlag);
+    };
 
     if (!receivedData) return;
 
@@ -141,32 +154,42 @@ export default function Solution(props) {
         />
     );
 
-    var failedTestsRows = lastFailedTests.map((test, key) => {
-        return (
-            <Tr key={key}>
-                <Td>{convertUTCSecondsToFormattedDate(test.timestamp)}</Td>
-                <Td>{<Code>{test.test_id}</Code>}</Td>
-                <Td>
-                    {getTestDescription(solution.solution_id, test.test_id)}
-                </Td>
-                <Td textAlign="center">
-                    <Tooltip
-                        hasArrow
-                        label="Mark test as checked"
-                        placement="left"
-                        bg="black"
-                        color="white"
-                    >
-                        <IconButton
-                            colorScheme="green"
-                            aria-label="Mark as checked"
-                            icon={<FiCheck />}
-                        />
-                    </Tooltip>
-                </Td>
-            </Tr>
-        );
-    });
+    var failedTestsRows = lastFailedTests
+        ? lastFailedTests.map((test, key) => {
+              return (
+                  <Tr key={key}>
+                      <Td>
+                          {convertUTCSecondsToFormattedDate(test.timestamp)}
+                      </Td>
+                      <Td>{<Code>{test.test_id}</Code>}</Td>
+                      <Td>
+                          {getTestDescription(
+                              solution.solution_id,
+                              test.test_id
+                          )}
+                      </Td>
+                      <Td textAlign="center">
+                          <Tooltip
+                              hasArrow
+                              label="Mark test as checked"
+                              placement="left"
+                              bg="black"
+                              color="white"
+                          >
+                              <IconButton
+                                  colorScheme="green"
+                                  aria-label="Mark as checked"
+                                  icon={<FiCheck />}
+                                  onClick={() => {
+                                      markTestAsVerified(test);
+                                  }}
+                              />
+                          </Tooltip>
+                      </Td>
+                  </Tr>
+              );
+          })
+        : '';
 
     var solutionCategories = getCategories(solution.solution_id).map(
         category => (
