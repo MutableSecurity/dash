@@ -82,7 +82,12 @@ export function TimeLineChartWithCursor(props) {
     const valuePreffix = props.valuePreffix ? props.valuePreffix : '';
 
     return (
-        <Box>
+        <Box
+            padding={4}
+            borderStyle="dashed"
+            borderWidth="1px"
+            borderColor="gray.200"
+        >
             <ChartTitle title={props.title} />
             <VictoryChart
                 theme={VictoryTheme.grayscale}
@@ -159,7 +164,12 @@ export function TimeLineChartWithCursor(props) {
 
 export function TimeStackedChartWithCursor(props) {
     return (
-        <Box>
+        <Box
+            padding={4}
+            borderStyle="dashed"
+            borderWidth="1px"
+            borderColor="gray.200"
+        >
             <ChartTitle title={props.title} />
             <VictoryChart
                 padding={{ top: 30, bottom: 20, left: 35, right: 10 }}
