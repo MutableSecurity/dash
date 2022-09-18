@@ -1,6 +1,5 @@
 import {
     Flex,
-    Heading,
     SkeletonText,
     Stat,
     StatHelpText,
@@ -10,6 +9,7 @@ import {
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 
+import { PageHeading, SectionHeading } from '../components/Headings';
 import {
     TimeLineChartWithCursor,
     TimeStackedChartWithCursor,
@@ -69,19 +69,13 @@ export default function Overview(props) {
 
     return (
         <VStack spacing={8} p={3} align="stretch" bgColor={'white'}>
-            <Heading as="h1" size="2xl">
-                Overview
-            </Heading>
+            <PageHeading>Overview</PageHeading>
 
-            <Heading as="h2" size="xl">
-                Stats at a Glance
-            </Heading>
+            <SectionHeading>Stats at a Glance</SectionHeading>
             <SkeletonText mt="4" noOfLines={1} spacing="4" />
             <Flex>{statsComponents}</Flex>
 
-            <Heading as="h2" size="xl">
-                Monthly Graphs
-            </Heading>
+            <SectionHeading>Monthly Graphs</SectionHeading>
             <SkeletonText mt="4" noOfLines={2} spacing="4" />
 
             <TimeLineChartWithCursor

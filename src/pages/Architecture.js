@@ -1,6 +1,5 @@
 import {
     Code,
-    Heading,
     IconButton,
     SkeletonText,
     Table,
@@ -17,6 +16,7 @@ import React, { useEffect, useState } from 'react';
 import { FiZoomIn } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 
+import { PageHeading, SectionHeading } from '../components/Headings';
 import { getAllAgents } from '../controllers/agent';
 
 export default function Architecture(props) {
@@ -62,12 +62,8 @@ export default function Architecture(props) {
 
     return (
         <VStack spacing={8} p={3} align="stretch" bgColor={'white'}>
-            <Heading as="h1" size="2xl">
-                Architecture
-            </Heading>
-            <Heading as="h2" size="xl">
-                Your Agents
-            </Heading>
+            <PageHeading>Architecture</PageHeading>
+            <SectionHeading>Your Agents</SectionHeading>
             <SkeletonText mt="4" noOfLines={2} spacing="4" />
             <TableContainer marginBottom={10}>
                 <Table variant="simple">

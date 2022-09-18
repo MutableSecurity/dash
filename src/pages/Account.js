@@ -1,7 +1,8 @@
-import { Box, Flex, Heading, Image, VStack } from '@chakra-ui/react';
+import { Box, Flex, Image, VStack } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import { FaRegAddressCard, FaRegBuilding } from 'react-icons/fa';
 import { FiAtSign, FiCamera } from 'react-icons/fi';
+import { PageHeading, SectionHeading } from '../components/Headings';
 
 import {
     AnnotatedRadioGroup,
@@ -22,13 +23,9 @@ export default function Account(props) {
 
     return (
         <VStack spacing={8} p={3} align="stretch" bgColor={'white'}>
-            <Heading as="h1" size="2xl">
-                Account
-            </Heading>
+            <PageHeading>Account</PageHeading>
 
-            <Heading as="h2" size="xl">
-                Account Details
-            </Heading>
+            <SectionHeading>Account Details</SectionHeading>
             <VStack spacing={4} align="stretch">
                 <AnnotatedTextInput
                     title="Full Name"
@@ -74,9 +71,7 @@ export default function Account(props) {
                 </Flex>
             </VStack>
 
-            <Heading as="h2" size="xl">
-                Agents Configuration
-            </Heading>
+            <SectionHeading>Agents Configuration</SectionHeading>
             <AnnotatedRadioGroup
                 title="Reporting Interval"
                 description="Interval between two consecutive sendings of data from an agent to MutableSecurity servers"
@@ -85,9 +80,7 @@ export default function Account(props) {
                 value={userData.agents_configuration.reporting_interval.toString()}
             />
 
-            <Heading as="h2" size="xl">
-                Email Reporting Configuration
-            </Heading>
+            <SectionHeading>Email Reporting Configuration</SectionHeading>
             <VStack spacing={4} align="stretch">
                 <AnnotatedSlider
                     title="Number of Failed Tests Before Reporting"

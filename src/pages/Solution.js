@@ -1,6 +1,5 @@
 import {
     Code,
-    Heading,
     IconButton,
     SkeletonText,
     Tab,
@@ -23,6 +22,11 @@ import {
 import React, { useEffect, useState } from 'react';
 import { FiCheck } from 'react-icons/fi';
 
+import {
+    PageHeading,
+    SectionHeading,
+    SubSectionHeading,
+} from '../components/Headings';
 import { TimeLineChartWithCursor } from '../components/TimeChartsWithCursor';
 import {
     getAvailableMetricsForSolution,
@@ -194,18 +198,12 @@ export default function Solution(props) {
 
     return (
         <VStack spacing={8} p={3} align="stretch" bgColor={'white'}>
-            <Heading as="h1" size="2xl">
-                {title}
-            </Heading>
+            <PageHeading>{title}</PageHeading>
 
-            <Heading as="h1" size="xl">
-                Information
-            </Heading>
+            <SectionHeading>Information</SectionHeading>
             <SkeletonText mt="4" noOfLines={1} spacing="4" />
 
-            <Heading as="h2" size="lg">
-                Current Configuration
-            </Heading>
+            <SubSectionHeading>Current Configuration</SubSectionHeading>
             <SkeletonText mt="4" noOfLines={2} spacing="4" />
 
             <TableContainer marginBottom={10}>
@@ -221,9 +219,7 @@ export default function Solution(props) {
                 </Table>
             </TableContainer>
 
-            <Heading as="h2" size="lg">
-                Metrics Graphs
-            </Heading>
+            <SubSectionHeading>Metrics Graphs</SubSectionHeading>
             <SkeletonText mt="4" noOfLines={2} spacing="4" />
 
             <Tabs
@@ -237,20 +233,14 @@ export default function Solution(props) {
                 <TabPanels>{availableMetricsPanel}</TabPanels>
             </Tabs>
 
-            <Heading as="h1" size="xl">
-                Tests
-            </Heading>
+            <SectionHeading>Tests</SectionHeading>
             <SkeletonText mt="4" noOfLines={1} spacing="4" />
 
-            <Heading as="h2" size="lg">
-                Passed Tests Percentages
-            </Heading>
+            <SubSectionHeading>Passed Tests Percentages</SubSectionHeading>
             <SkeletonText mt="4" noOfLines={2} spacing="4" />
             {passedTestsChart}
 
-            <Heading as="h2" size="lg">
-                Last Failed Tests
-            </Heading>
+            <SubSectionHeading>Last Failed Tests</SubSectionHeading>
             <SkeletonText mt="4" noOfLines={2} spacing="4" />
             <TableContainer marginBottom={10}>
                 <Table variant="simple">
@@ -266,9 +256,7 @@ export default function Solution(props) {
                 </Table>
             </TableContainer>
 
-            <Heading as="h1" size="xl">
-                General Information
-            </Heading>
+            <SectionHeading>General Information</SectionHeading>
             {genericSolutionDetails}
         </VStack>
     );

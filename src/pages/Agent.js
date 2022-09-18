@@ -1,5 +1,4 @@
 import {
-    Heading,
     IconButton,
     SkeletonText,
     Table,
@@ -15,6 +14,8 @@ import {
 import React, { useEffect, useState } from 'react';
 import { FiZoomIn } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
+
+import { PageHeading, SectionHeading } from '../components/Headings';
 import { getDescription, getFullName } from '../controllers/abstract_solution';
 import { getAgent } from '../controllers/agent';
 import { getSolutionsOfAgent } from '../controllers/solution';
@@ -69,12 +70,8 @@ export default function Agent(props) {
 
     return (
         <VStack spacing={8} p={3} align="stretch" bgColor={'white'}>
-            <Heading as="h1" size="2xl">
-                {title}
-            </Heading>
-            <Heading as="h2" size="xl">
-                Managed Solutions
-            </Heading>
+            <PageHeading>{title}</PageHeading>
+            <SectionHeading>Managed Solutions</SectionHeading>
             <SkeletonText mt="4" noOfLines={2} spacing="4" />
             <TableContainer marginBottom={10}>
                 <Table variant="simple">
