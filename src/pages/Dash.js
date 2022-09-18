@@ -18,17 +18,18 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
-import { FiLogOut, FiMenu, FiTarget, FiUser } from 'react-icons/fi';
+import { FiLogOut, FiMenu, FiTarget } from 'react-icons/fi';
+import { GiSettingsKnobs } from 'react-icons/gi';
 import { GrNodes } from 'react-icons/gr';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { getUserSettings } from '../controllers/account';
 import { auth, signOut } from '../controllers/auth';
-import Account from './Account';
 import Agent from './Agent';
 import Architecture from './Architecture';
 import { LoadingScreen } from './LoadingScreen';
 import Overview from './Overview';
+import Settings from './Settings';
 import Solution from './Solution';
 
 import logo from '../assets/logo.svg';
@@ -57,9 +58,9 @@ export default function Dash(props, { children }) {
                 notifyLoadedMethod={notifyLoaded}
             />
         );
-    } else if (props.account) {
+    } else if (props.settings) {
         innerPage = (
-            <Account userData={userData} notifyLoadedMethod={notifyLoaded} />
+            <Settings userData={userData} notifyLoadedMethod={notifyLoaded} />
         );
     } else if (props.agent) {
         innerPage = (
@@ -125,10 +126,10 @@ const SidebarContent = ({ onClose, ...rest }) => {
             },
         },
         {
-            name: 'Account',
-            icon: FiUser,
+            name: 'Settings',
+            icon: GiSettingsKnobs,
             action: () => {
-                navigate('/account');
+                navigate('/settings');
             },
         },
         {

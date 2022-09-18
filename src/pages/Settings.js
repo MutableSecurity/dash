@@ -11,7 +11,7 @@ import {
 } from '../components/AnnotatedInputs';
 import { SectionHeadingWithDescription } from '../components/Headings';
 
-export default function Account(props) {
+export default function Settings(props) {
     var userData = props.userData;
 
     useEffect(() => {
@@ -24,7 +24,7 @@ export default function Account(props) {
 
     return (
         <VStack spacing={8} p={3} align="stretch" bgColor={'white'}>
-            <PageHeading>Account</PageHeading>
+            <PageHeading>Settings</PageHeading>
 
             <SectionHeadingWithDescription
                 title="Account Details"

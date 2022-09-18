@@ -50,10 +50,10 @@ function Router() {
                         }
                     />
                     <Route
-                        path="/account"
+                        path="/settings"
                         element={
                             <RequireActiveSession>
-                                <Dash account />
+                                <Dash settings />
                             </RequireActiveSession>
                         }
                     />
