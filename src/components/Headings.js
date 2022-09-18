@@ -1,4 +1,12 @@
-import { Heading, Text } from '@chakra-ui/react';
+import { Heading, Text, VStack } from '@chakra-ui/react';
+
+export function SectionDescription({ children }) {
+    return (
+        <Text fontSize="lg" marginTop={0}>
+            {children}
+        </Text>
+    );
+}
 
 export function PageHeading({ children }) {
     return (
@@ -30,6 +38,15 @@ export function SectionHeading({ children }) {
     );
 }
 
+export function SectionHeadingWithDescription(props) {
+    return (
+        <VStack spacing={2} align="stretch">
+            <SectionHeading>{props.title}</SectionHeading>
+            <SectionDescription>{props.description}</SectionDescription>
+        </VStack>
+    );
+}
+
 export function SubSectionHeading({ children }) {
     return (
         <Heading as="h3" size="lg">
@@ -42,5 +59,14 @@ export function SubSectionHeading({ children }) {
             </Text>{' '}
             {children}
         </Heading>
+    );
+}
+
+export function SubSectionHeadingWithDescription(props) {
+    return (
+        <VStack spacing={2} align="stretch">
+            <SubSectionHeading>{props.title}</SubSectionHeading>
+            <SectionDescription>{props.description}</SectionDescription>
+        </VStack>
     );
 }

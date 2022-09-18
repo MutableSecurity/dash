@@ -2,13 +2,14 @@ import { Box, Flex, Image, VStack } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import { FaRegAddressCard, FaRegBuilding } from 'react-icons/fa';
 import { FiAtSign, FiCamera } from 'react-icons/fi';
-import { PageHeading, SectionHeading } from '../components/Headings';
+import { PageHeading } from '../components/Headings';
 
 import {
     AnnotatedRadioGroup,
     AnnotatedSlider,
     AnnotatedTextInput,
 } from '../components/AnnotatedInputs';
+import { SectionHeadingWithDescription } from '../components/Headings';
 
 export default function Account(props) {
     var userData = props.userData;
@@ -25,7 +26,10 @@ export default function Account(props) {
         <VStack spacing={8} p={3} align="stretch" bgColor={'white'}>
             <PageHeading>Account</PageHeading>
 
-            <SectionHeading>Account Details</SectionHeading>
+            <SectionHeadingWithDescription
+                title="Account Details"
+                description="Details describing the account you're logged in"
+            />
             <VStack spacing={4} align="stretch">
                 <AnnotatedTextInput
                     title="Full Name"
@@ -71,7 +75,10 @@ export default function Account(props) {
                 </Flex>
             </VStack>
 
-            <SectionHeading>Agents Configuration</SectionHeading>
+            <SectionHeadingWithDescription
+                title="Agents Configuration"
+                description="Configuration controlling how agents behave"
+            />
             <AnnotatedRadioGroup
                 title="Reporting Interval"
                 description="Interval between two consecutive sendings of data from an agent to MutableSecurity servers"
@@ -80,11 +87,14 @@ export default function Account(props) {
                 value={userData.agents_configuration.reporting_interval.toString()}
             />
 
-            <SectionHeading>Email Reporting Configuration</SectionHeading>
+            <SectionHeadingWithDescription
+                title="Alerting Configuration"
+                description="Configuration for alerts generated due to changes in your security infrastructure"
+            />
             <VStack spacing={4} align="stretch">
                 <AnnotatedSlider
-                    title="Number of Failed Tests Before Reporting"
-                    description="Number of tests to fail before reporting the events by email"
+                    title="Number of Failed Tests Before Alert"
+                    description="Number of tests to fail before alerting the events by email"
                     min={0}
                     max={100}
                     step={5}

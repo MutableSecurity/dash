@@ -1,6 +1,5 @@
 import {
     IconButton,
-    SkeletonText,
     Table,
     TableContainer,
     Tbody,
@@ -15,7 +14,10 @@ import React, { useEffect, useState } from 'react';
 import { FiZoomIn } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 
-import { PageHeading, SectionHeading } from '../components/Headings';
+import {
+    PageHeading,
+    SectionHeadingWithDescription,
+} from '../components/Headings';
 import { getDescription, getFullName } from '../controllers/abstract_solution';
 import { getAgent } from '../controllers/agent';
 import { getSolutionsOfAgent } from '../controllers/solution';
@@ -71,8 +73,14 @@ export default function Agent(props) {
     return (
         <VStack spacing={8} p={3} align="stretch" bgColor={'white'}>
             <PageHeading>{title}</PageHeading>
-            <SectionHeading>Managed Solutions</SectionHeading>
-            <SkeletonText mt="4" noOfLines={2} spacing="4" />
+            <SectionHeadingWithDescription
+                title="Managed Solutions"
+                description={
+                    'Security solution managed by agent ' +
+                    agent.alias +
+                    '. They defend the server on which they are installed, according to the set configuration.'
+                }
+            />
             <TableContainer marginBottom={10}>
                 <Table variant="simple">
                     <Thead>

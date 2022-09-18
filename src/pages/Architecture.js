@@ -1,7 +1,6 @@
 import {
     Code,
     IconButton,
-    SkeletonText,
     Table,
     TableContainer,
     Tbody,
@@ -16,7 +15,10 @@ import React, { useEffect, useState } from 'react';
 import { FiZoomIn } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 
-import { PageHeading, SectionHeading } from '../components/Headings';
+import {
+    PageHeading,
+    SectionHeadingWithDescription,
+} from '../components/Headings';
 import { getAllAgents } from '../controllers/agent';
 
 export default function Architecture(props) {
@@ -63,8 +65,12 @@ export default function Architecture(props) {
     return (
         <VStack spacing={8} p={3} align="stretch" bgColor={'white'}>
             <PageHeading>Architecture</PageHeading>
-            <SectionHeading>Your Agents</SectionHeading>
-            <SkeletonText mt="4" noOfLines={2} spacing="4" />
+            <SectionHeadingWithDescription
+                title="Your Agents"
+                description="Agents installed on all managed device. They automate the
+                cybersecurity solutions from their host and report data to
+                MutableSecurity servers."
+            />
             <TableContainer marginBottom={10}>
                 <Table variant="simple">
                     <Thead>

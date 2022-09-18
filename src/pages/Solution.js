@@ -3,7 +3,6 @@ import {
     Code,
     IconButton,
     Link,
-    SkeletonText,
     Tab,
     Table,
     TableContainer,
@@ -26,8 +25,8 @@ import { FiCheck, FiExternalLink } from 'react-icons/fi';
 
 import {
     PageHeading,
-    SectionHeading,
-    SubSectionHeading,
+    SectionHeadingWithDescription,
+    SubSectionHeadingWithDescription,
 } from '../components/Headings';
 import { TimeLineChartWithCursor } from '../components/TimeChartsWithCursor';
 import {
@@ -235,11 +234,16 @@ export default function Solution(props) {
         <VStack spacing={8} p={3} align="stretch" bgColor={'white'}>
             <PageHeading>{title}</PageHeading>
 
-            <SectionHeading>Information</SectionHeading>
-            <SkeletonText mt="4" noOfLines={1} spacing="4" />
+            <SectionHeadingWithDescription
+                title="Information"
+                description="Details about the current security solution"
+            />
 
-            <SubSectionHeading>Current Configuration</SubSectionHeading>
-            <SkeletonText mt="4" noOfLines={2} spacing="4" />
+            <SubSectionHeadingWithDescription
+                title="Current Configuration"
+                description="Writable information that configures the way in which the
+                security solution behaves"
+            />
 
             <TableContainer marginBottom={10}>
                 <Table variant="simple">
@@ -254,8 +258,10 @@ export default function Solution(props) {
                 </Table>
             </TableContainer>
 
-            <SubSectionHeading>Metrics Graphs</SubSectionHeading>
-            <SkeletonText mt="4" noOfLines={2} spacing="4" />
+            <SubSectionHeadingWithDescription
+                title="Metrics Charts"
+                description="Read-only information that describes the security solution"
+            />
 
             <Tabs
                 variant="solid-rounded"
@@ -268,15 +274,22 @@ export default function Solution(props) {
                 <TabPanels>{availableMetricsPanel}</TabPanels>
             </Tabs>
 
-            <SectionHeading>Tests</SectionHeading>
-            <SkeletonText mt="4" noOfLines={1} spacing="4" />
+            <SectionHeadingWithDescription
+                title="Tests"
+                description="Operations with an expected output, executed periodically to check if the solution functions properly"
+            />
 
-            <SubSectionHeading>Passed Tests Percentages</SubSectionHeading>
-            <SkeletonText mt="4" noOfLines={2} spacing="4" />
+            <SubSectionHeadingWithDescription
+                title="Passed Tests Percentages"
+                description="The ratio of the executed tests which are passed"
+            />
             {passedTestsChart}
 
-            <SubSectionHeading>Last Failed Tests</SubSectionHeading>
-            <SkeletonText mt="4" noOfLines={2} spacing="4" />
+            <SubSectionHeadingWithDescription
+                title="Last Failed Tests"
+                description="The last executed tests that failed. As this is not a normal
+                behaviour, please consider finding out the root cause."
+            />
             <TableContainer marginBottom={10}>
                 <Table variant="simple">
                     <Thead>
@@ -291,7 +304,10 @@ export default function Solution(props) {
                 </Table>
             </TableContainer>
 
-            <SectionHeading>General Information</SectionHeading>
+            <SectionHeadingWithDescription
+                title="General Information"
+                description="Generic details about the security solution"
+            />
             {genericSolutionDetails}
         </VStack>
     );

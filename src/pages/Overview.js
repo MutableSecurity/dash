@@ -1,6 +1,5 @@
 import {
     Flex,
-    SkeletonText,
     Stat,
     StatHelpText,
     StatLabel,
@@ -9,7 +8,10 @@ import {
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 
-import { PageHeading, SectionHeading } from '../components/Headings';
+import {
+    PageHeading,
+    SectionHeadingWithDescription,
+} from '../components/Headings';
 import {
     TimeLineChartWithCursor,
     TimeStackedChartWithCursor,
@@ -71,13 +73,16 @@ export default function Overview(props) {
         <VStack spacing={8} p={3} align="stretch" bgColor={'white'}>
             <PageHeading>Overview</PageHeading>
 
-            <SectionHeading>Stats at a Glance</SectionHeading>
-            <SkeletonText mt="4" noOfLines={1} spacing="4" />
+            <SectionHeadingWithDescription
+                title="Stats at a Glance"
+                description="Bird-eye view statistics about your security infrastructure"
+            />
             <Flex>{statsComponents}</Flex>
 
-            <SectionHeading>Monthly Graphs</SectionHeading>
-            <SkeletonText mt="4" noOfLines={2} spacing="4" />
-
+            <SectionHeadingWithDescription
+                title="Monthly Charts"
+                description="Charts generated with the data reported in the last month"
+            />
             <TimeLineChartWithCursor
                 title="Passed Tests Percentage"
                 timestamps={lastMonthStatistics.timestamps}
@@ -86,7 +91,6 @@ export default function Overview(props) {
                 valuePreffix="%"
                 yLabel="Passed Tests Percentage"
             />
-
             <TimeStackedChartWithCursor
                 title="Passed-Failed Tests Distribution"
                 upperValues={lastMonthStatistics.failedTestsCounts}
