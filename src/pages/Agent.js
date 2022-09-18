@@ -1,4 +1,5 @@
 import {
+    Code,
     IconButton,
     Table,
     TableContainer,
@@ -33,7 +34,11 @@ export default function Agent(props) {
         var agent = getAgent(agentId);
         setAgent(agent);
         setSolutions(getSolutionsOfAgent(agentId));
-        setTitle('Agent ' + agent.alias);
+        setTitle(
+            <span>
+                Agent <Code fontSize={'inherit'}>{agent.alias}</Code>
+            </span>
+        );
         notifyReceivedData(true);
         props.notifyLoadedMethod(true);
     }, [props, agentId]);
@@ -70,15 +75,20 @@ export default function Agent(props) {
         );
     });
 
+    console.log(title);
+
     return (
         <VStack spacing={8} p={3} align="stretch" bgColor={'white'}>
             <PageHeading>{title}</PageHeading>
             <SectionHeadingWithDescription
                 title="Managed Solutions"
                 description={
-                    'Security solution managed by agent ' +
-                    agent.alias +
-                    '. According to the predetermined configuration, they protect the server on which they are deployed.'
+                    <span>
+                        Security solution managed by agent{' '}
+                        <Code>{agent.alias}</Code>. According to the
+                        predetermined configuration, they protect the server on
+                        which they are deployed.
+                    </span>
                 }
             />
             <TableContainer marginBottom={10}>

@@ -71,7 +71,12 @@ export default function Solution(props) {
         var abstractId = solution.solution_id;
         var agent = getAgent(props.agentId);
         setAgent(agent);
-        setTitle(getFullName(abstractId) + ' Managed By Agent ' + agent.alias);
+        setTitle(
+            <span>
+                {getFullName(abstractId)} Managed By Agent{' '}
+                <Code fontSize={'inherit'}>{agent.alias}</Code>
+            </span>
+        );
         setCurrentValuesForMetric(getAvailableMetricsForSolution(abstractId));
         setPassedTests(getPassedTestsPercentagesForSolution(solution.id));
         setLastConfig(getLastConfiguration(solution));
