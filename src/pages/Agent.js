@@ -75,8 +75,6 @@ export default function Agent(props) {
         );
     });
 
-    console.log(title);
-
     return (
         <VStack spacing={8} p={3} align="stretch" bgColor={'white'}>
             <PageHeading>{title}</PageHeading>

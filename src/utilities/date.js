@@ -19,3 +19,7 @@ export function convertUTCSecondsToFormattedDate(seconds) {
 export function convertUTCSecondsToJSTimestamp(seconds) {
     return new Date(seconds * 1000);
 }
+
+export function getCurrentUnixTimestamp() {
+    return Math.floor(Date.now() / 1000);
+}

@@ -9,21 +9,29 @@ import { Test } from '../models/test';
 import { get as getDummy } from './dummy';
 import { get as getFirebase } from './firebase';
 
+export const GetReason = {
+    Visit: 'visit',
+    Login: 'login',
+};
+
 class Database {
     constructor() {
-        var used_data = IS_TESTING ? getDummy() : getFirebase();
+        // TODO: Make the reason dynamic
+        var reason = GetReason.Login;
+
+        var used_data = IS_TESTING ? getDummy(reason) : getFirebase(reason);
 
         this.init_account(used_data);
         this.init_agents(used_data);
         this.init_solutions(used_data);
         this.init_tests(used_data);
         this.init_information(used_data);
+
+        console.log('The database was created.');
     }
 
     init_account(data) {
-        var accountsId = Object.keys(data.users)[0];
-
-        this.account = plainToClass(Settings, data.users[accountsId]);
+        this.account = plainToClass(Settings, data.settings);
     }
 
     init_agents(data) {
