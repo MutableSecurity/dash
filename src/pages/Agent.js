@@ -1,6 +1,8 @@
 import {
     Code,
+    Flex,
     IconButton,
+    Image,
     Table,
     TableContainer,
     Tbody,
@@ -51,7 +53,20 @@ export default function Agent(props) {
 
         return (
             <Tr key={key}>
-                <Td>{fullName}</Td>
+                <Td>
+                    <Flex>
+                        <Image
+                            src={
+                                'https://mutablesecurity.io/images/solutions/' +
+                                solution.solution_id +
+                                '.webp'
+                            }
+                            height={4}
+                            marginRight={2}
+                        />
+                        {fullName}
+                    </Flex>
+                </Td>
                 <Td textAlign={'right'}>
                     <Link to={solutionUrl}>
                         <Tooltip

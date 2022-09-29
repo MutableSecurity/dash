@@ -1,7 +1,9 @@
 import {
     Button,
     Code,
+    Flex,
     IconButton,
+    Image,
     Link,
     Tab,
     Table,
@@ -210,36 +212,58 @@ export default function Solution(props) {
         )
     );
     var genericSolutionDetails = (
-        <VStack spacing={3} p={0} align="stretch" bgColor={'white'}>
-            <Text>
-                <Text as="b">Identifier</Text>:{' '}
-                <Code>{solution.solution_id}</Code>
-            </Text>
-            <Text>
-                <Text as="b">Full Name</Text>:{' '}
-                {getFullName(solution.solution_id)}
-            </Text>
-            <Text>
-                <Text as="b">Description</Text>:{' '}
-                {getDescription(solution.solution_id)}
-            </Text>
-            <Text>
-                <Text as="b">Categories</Text>: {solutionCategories}
-            </Text>
-            <Text>
-                <Text as="b">Maturity</Text>:{' '}
-                {getMaturity(solution.solution_id)}
-            </Text>
-            <Link href={getDocumentationURL(solution.solution_id)} isExternal>
-                <Button
-                    rightIcon={<FiExternalLink />}
-                    colorScheme="blue"
-                    variant="outline"
+        <Flex>
+            <VStack
+                spacing={3}
+                p={8}
+                align="stretch"
+                bgColor={'white'}
+                margin="auto"
+            >
+                <Image
+                    src={
+                        'https://mutablesecurity.io/images/solutions/' +
+                        solution.solution_id +
+                        '.webp'
+                    }
+                    height={32}
+                    margin="auto"
+                />
+                <Link
+                    href={getDocumentationURL(solution.solution_id)}
+                    isExternal
                 >
-                    Open Documentation
-                </Button>
-            </Link>
-        </VStack>
+                    <Button
+                        rightIcon={<FiExternalLink />}
+                        colorScheme="blue"
+                        variant="outline"
+                    >
+                        Open Documentation
+                    </Button>
+                </Link>
+            </VStack>
+            <VStack spacing={3} p={0} align="stretch" bgColor={'white'}>
+                <Text>
+                    <Text as="b">Identifier</Text>:{' '}
+                    <Code>{solution.solution_id}</Code>
+                </Text>
+                <Text>
+                    <Text as="b">Full Name</Text>:{' '}
+                    {getFullName(solution.solution_id)}
+                </Text>
+                <Text>
+                    <Text as="b">Description</Text>:{' '}
+                    {getDescription(solution.solution_id)}
+                </Text>
+                <Text>
+                    <Text as="b">Categories</Text>: {solutionCategories}
+                </Text>
+                <Text>
+                    <Text as="b">Maturity</Text>:{' '}
+                    {getMaturity(solution.solution_id)}
+                </Text>
+            </VStack>
+        </Flex>
     );
 
     return (
