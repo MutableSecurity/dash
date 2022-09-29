@@ -62,18 +62,14 @@ async function getObjectsWithCache(
             oldObjects = { ...oldObjects, ...newObjects };
             localStorage.setItem(keyInLocalStorage, JSON.stringify(oldObjects));
 
-            console.log('new');
-
             return oldObjects;
         } else {
-            console.log('old');
-
             return oldObjects;
         }
     });
 }
 
-export async function get(reason) {
+export async function get() {
     const firebasePath = 'dash/' + auth.currentUser.uid + '/';
 
     var result = {

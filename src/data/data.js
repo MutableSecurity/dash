@@ -9,25 +9,19 @@ import { Test } from '../models/test';
 import { get as getDummy } from './dummy';
 import { get as getFirebase } from './firebase';
 
-export const GetReason = {
-    Visit: 'visit',
-    Login: 'login',
-};
-
 class Database {
     constructor() {
-        // TODO: Make the reason dynamic
-        var reason = GetReason.Login;
+        this.init_database();
+    }
 
-        var used_data = IS_TESTING ? getDummy(reason) : getFirebase(reason);
+    init_database() {
+        var used_data = IS_TESTING ? getDummy() : getFirebase();
 
         this.init_account(used_data);
         this.init_agents(used_data);
         this.init_solutions(used_data);
         this.init_tests(used_data);
         this.init_information(used_data);
-
-        console.log('The database was created.');
     }
 
     init_account(data) {

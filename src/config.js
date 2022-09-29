@@ -21,3 +21,6 @@ export const FIREBASE_CONFIG = {
 // Miliseconds before reponding to a mocked function with promises
 export const PROMISE_DELAY_WHEN_TESTING =
     process.env.PROMISE_DELAY_WHEN_TESTING_IN_SECONDS || 1000;
+
+// Auto-refresh interval in miliseconds
+export const AUTO_REFRESH_INTERVAL = 5 * 1000;

@@ -12,19 +12,24 @@ import {
     Link,
     Spacer,
     Text,
+    Tooltip,
     useColorModeValue,
     useDisclosure,
     useToast,
     VStack,
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
+import { FaRegClock } from 'react-icons/fa';
 import { FiLogOut, FiMenu, FiTarget } from 'react-icons/fi';
 import { GiSettingsKnobs } from 'react-icons/gi';
 import { GrNodes } from 'react-icons/gr';
+import { MdAutorenew } from 'react-icons/md';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import { AUTO_REFRESH_INTERVAL } from '../config';
 import { getUserSettings } from '../controllers/account';
 import { auth, signOut } from '../controllers/auth';
+import { data } from '../data/data';
 import Agent from './Agent';
 import Architecture from './Architecture';
 import { LoadingScreen } from './LoadingScreen';
@@ -37,14 +42,37 @@ import logo from '../assets/logo.svg';
 export default function Dash(props, { children }) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [userData, setUserData] = useState(null);
+    const [autoRefresh, setAutoRefresh] = useState(false);
     const [loadedChild, notifyLoaded] = useState(false);
+    const [seed, setSeed] = useState(null);
     const { agentID, solutionID } = useParams();
 
     useEffect(() => {
         var user = getUserSettings();
 
+        if (seed === null) setSeed(Math.random());
+
         setUserData(user);
-    }, []);
+    }, [seed]);
+
+    var refresh = () => {
+        data.init_database();
+
+        setSeed(Math.random());
+    };
+
+    var enableAutoRefresh = () => {
+        if (autoRefresh) {
+            clearInterval(autoRefresh);
+            setAutoRefresh(null);
+        } else {
+            var interval = setInterval(() => {
+                refresh();
+            }, AUTO_REFRESH_INTERVAL);
+
+            setAutoRefresh(interval);
+        }
+    };
 
     var innerPage;
     if (props.overview) {
@@ -97,7 +125,13 @@ export default function Dash(props, { children }) {
                         <SidebarContent onClose={onClose} />
                     </DrawerContent>
                 </Drawer>
-                <MobileNav userData={userData} onOpen={onOpen} />
+                <MobileNav
+                    userData={userData}
+                    autoRefresh={autoRefresh}
+                    onOpen={onOpen}
+                    onRefreshMethod={refresh}
+                    onEnablingAutoRefreshMethod={enableAutoRefresh}
+                />
                 <Box ml={{ base: 0, md: 60 }} p="10" background="white">
                     {innerPage}
                     {children}
@@ -229,7 +263,14 @@ const NavItem = ({ icon, children, ...rest }) => {
     );
 };
 
-const MobileNav = ({ userData, onOpen, ...rest }) => {
+const MobileNav = ({
+    userData,
+    autoRefresh,
+    onOpen,
+    onRefreshMethod,
+    onEnablingAutoRefreshMethod,
+    ...rest
+}) => {
     var profileImage = '';
     var fullName = '';
     var organization = '';
@@ -263,6 +304,35 @@ const MobileNav = ({ userData, onOpen, ...rest }) => {
             <HStack spacing={{ base: '0', md: '6' }}>
                 <Flex alignItems={'center'}>
                     <HStack>
+                        <Tooltip
+                            hasArrow
+                            label="Reload data now"
+                            placement="bottom"
+                            bg="black"
+                            color="white"
+                        >
+                            <IconButton
+                                size="md"
+                                icon={<MdAutorenew />}
+                                variant="ghost"
+                                onClick={() => onRefreshMethod()}
+                            />
+                        </Tooltip>
+                        <Tooltip
+                            hasArrow
+                            label="Auto-reload data at 60 seconds"
+                            placement="bottom"
+                            bg="black"
+                            color="white"
+                        >
+                            <IconButton
+                                size="md"
+                                icon={<FaRegClock />}
+                                colorScheme={autoRefresh ? 'blue' : ''}
+                                variant={autoRefresh ? 'solid' : 'ghost'}
+                                onClick={() => onEnablingAutoRefreshMethod()}
+                            />
+                        </Tooltip>
                         <Avatar size={'sm'} src={profileImage} />
                         <VStack
                             display={{ base: 'none', md: 'flex' }}
