@@ -27,7 +27,6 @@ function getInformationWithProperty(solutionId, property) {
     Object.keys(information).forEach(current_key => {
         if (information[current_key].properties.includes(property)) {
             metrics.push(current_key);
-        } else {
         }
     });
 
@@ -40,6 +39,21 @@ export function getAvailableMetricsForSolution(solutionId) {
 
 export function getAvailableConfigurationForSolution(solutionId) {
     return getInformationWithProperty(solutionId, 'CONFIGURATION');
+}
+
+export function getPlottableMetricsForSolution(solutionId) {
+    const information = solutions_data.solutions[solutionId].information;
+
+    var plottable = [];
+    getAvailableMetricsForSolution(solutionId).forEach(current_key => {
+        var type = information[current_key].type;
+
+        if (type == 'INTEGER' || type == 'BOOLEAN' || type == 'STRING') {
+            plottable.push(current_key);
+        }
+    });
+
+    return plottable;
 }
 
 export function getInformationDescription(solutionId, informationId) {

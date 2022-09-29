@@ -14,7 +14,10 @@ import {
     VictoryVoronoiContainer,
 } from 'victory';
 
-import { convertUTCSecondsToFormattedDate } from '../utilities/date';
+import {
+    convertUTCSecondsToFormattedDate,
+    convertUTCSecondsToJSTimestamp,
+} from '../utilities/date';
 
 class TimeValuePair {
     constructor(timestamp = -1, value = NaN) {
@@ -25,7 +28,7 @@ class TimeValuePair {
 
 const translateTimestampValuesToVictoryProps = (timestamps, values) => {
     return timestamps.map(function (timestamp, i) {
-        return { x: timestamp, y: values[i] };
+        return { x: convertUTCSecondsToJSTimestamp(timestamp), y: values[i] };
     });
 };
 

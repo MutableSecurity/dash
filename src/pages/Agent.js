@@ -19,7 +19,7 @@ import {
     PageHeading,
     SectionHeadingWithDescription,
 } from '../components/Headings';
-import { getDescription, getFullName } from '../controllers/abstract_solution';
+import { getFullName } from '../controllers/abstract_solution';
 import { getAgent } from '../controllers/agent';
 import { getSolutionsOfAgent } from '../controllers/solution';
 
@@ -47,13 +47,11 @@ export default function Agent(props) {
 
     var solutionsRows = solutions.map((solution, key) => {
         var fullName = getFullName(solution.solution_id);
-        var description = getDescription(solution.solution_id);
         var solutionUrl = '/agents/' + agentId + '/solutions/' + solution.id;
 
         return (
             <Tr key={key}>
                 <Td>{fullName}</Td>
-                <Td>{description}</Td>
                 <Td textAlign={'right'}>
                     <Link to={solutionUrl}>
                         <Tooltip
@@ -94,7 +92,6 @@ export default function Agent(props) {
                     <Thead>
                         <Tr>
                             <Th>Name</Th>
-                            <Th>Description</Th>
                             <Th textAlign={'right'}>Actions</Th>
                         </Tr>
                     </Thead>

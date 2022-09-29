@@ -20,7 +20,7 @@ export function getLastConfiguration(solution) {
     return lastConfiguration;
 }
 
-export function getMetricsValues(solutionId, informationId) {
+export function getPlottableMetricsValues(solutionId, informationId) {
     var timestamps = [];
     var values = [];
 

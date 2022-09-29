@@ -30,19 +30,19 @@ import {
 } from '../components/Headings';
 import { TimeLineChartWithCursor } from '../components/TimeChartsWithCursor';
 import {
-    getAvailableMetricsForSolution,
     getCategories,
     getDescription,
     getDocumentationURL,
     getFullName,
     getInformationDescription,
     getMaturity,
+    getPlottableMetricsForSolution,
     getTestDescription,
 } from '../controllers/abstract_solution';
 import { getAgent } from '../controllers/agent';
 import {
     getLastConfiguration,
-    getMetricsValues,
+    getPlottableMetricsValues,
 } from '../controllers/information';
 import { getSolution } from '../controllers/solution';
 import {
@@ -77,7 +77,7 @@ export default function Solution(props) {
                 <Code fontSize={'inherit'}>{agent.alias}</Code>
             </span>
         );
-        setCurrentValuesForMetric(getAvailableMetricsForSolution(abstractId));
+        setCurrentValuesForMetric(getPlottableMetricsForSolution(abstractId));
         setPassedTests(getPassedTestsPercentagesForSolution(solution.id));
         setLastConfig(getLastConfiguration(solution));
 
@@ -92,7 +92,7 @@ export default function Solution(props) {
     }, [solution, updatePassedTestsFlag]);
 
     useEffect(() => {
-        var metrics = getMetricsValues(
+        var metrics = getPlottableMetricsValues(
             props.solutionId,
             currentValuesForMetric[tabIndex]
         );
@@ -115,8 +115,10 @@ export default function Solution(props) {
                 <Td>
                     <Code>{key}</Code>
                 </Td>
+                <Td>
+                    <Code>{lastConfig[key]}</Code>
+                </Td>
                 <Td>{getInformationDescription(solution.solution_id, key)}</Td>
-                <Td>{lastConfig[key]}</Td>
             </Tr>
         );
     });
@@ -141,7 +143,6 @@ export default function Solution(props) {
                 <TimeLineChartWithCursor
                     timestamps={identifier.timestamps}
                     values={identifier.values}
-                    yDomain={[0, 10]}
                     yLabel="Value"
                 />
             </TabPanel>
@@ -197,7 +198,13 @@ export default function Solution(props) {
 
     var solutionCategories = getCategories(solution.solution_id).map(
         category => (
-            <Tag size="lg" key="lg" variant="solid" colorScheme="blue">
+            <Tag
+                size="lg"
+                key="lg"
+                variant="solid"
+                colorScheme="blue"
+                marginRight={2}
+            >
                 {category}
             </Tag>
         )
@@ -254,8 +261,8 @@ export default function Solution(props) {
                     <Thead>
                         <Tr>
                             <Th>Identifier</Th>
-                            <Th>Description</Th>
                             <Th>Value</Th>
+                            <Th>Description</Th>
                         </Tr>
                     </Thead>
                     <Tbody>{configurationRows}</Tbody>
