@@ -7,7 +7,7 @@ import typing
 
 DATA: dict = {
     "dash": {
-        "VLjFcXZ1aiddKubb1rBSHABCpvm1": {
+        "rwtEP9QTLac847w8KAjMBCoSUkC2": {
             "settings": {
                 "account": {
                     "email": "tom@mutablesecurity.io",
@@ -51,7 +51,7 @@ DATA: dict = {
         }
     }
 }
-SOLUTIONS_IDS = list(DATA["dash"]["VLjFcXZ1aiddKubb1rBSHABCpvm1"]["solutions"].keys())
+SOLUTIONS_IDS = list(DATA["dash"]["rwtEP9QTLac847w8KAjMBCoSUkC2"]["solutions"].keys())
 CLAMAV_INFORMATION_REPORT = """{{
     "solution_id": "{}",
     "timestamp": {},
@@ -108,7 +108,7 @@ def main() -> None:
     current_timestamp = int(time.time())
     final_data = populate_timestamps(DATA, current_timestamp)
 
-    user_data = DATA["dash"]["VLjFcXZ1aiddKubb1rBSHABCpvm1"]
+    user_data = DATA["dash"]["rwtEP9QTLac847w8KAjMBCoSUkC2"]
     for timestamp in range(
         current_timestamp - SECONDS_IN_MONTH,
         current_timestamp,
@@ -116,7 +116,7 @@ def main() -> None:
     ):
         append_new_reports(user_data, timestamp)
     
-    DATA["dash"]["VLjFcXZ1aiddKubb1rBSHABCpvm1"] = user_data
+    DATA["dash"]["rwtEP9QTLac847w8KAjMBCoSUkC2"] = user_data
 
     print(json.dumps(final_data))
 

@@ -48,7 +48,7 @@ export function getPlottableMetricsForSolution(solutionId) {
     getAvailableMetricsForSolution(solutionId).forEach(current_key => {
         var type = information[current_key].type;
 
-        if (type == 'INTEGER' || type == 'BOOLEAN' || type == 'STRING') {
+        if (type === 'INTEGER' || type === 'BOOLEAN' || type === 'STRING') {
             plottable.push(current_key);
         }
     });

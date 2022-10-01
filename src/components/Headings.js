@@ -10,14 +10,7 @@ export function SectionDescription({ children }) {
 
 export function PageHeading({ children }) {
     return (
-        <Heading as="h1" size="2xl">
-            <Text
-                display={'inline'}
-                color="var(--chakra-colors-blue-500)"
-                fontWeight={500}
-            >
-                #
-            </Text>{' '}
+        <Heading as="h1" size="2xl" color={'gray.900'}>
             {children}
         </Heading>
     );
@@ -25,14 +18,7 @@ export function PageHeading({ children }) {
 
 export function SectionHeading({ children }) {
     return (
-        <Heading as="h2" size="xl">
-            <Text
-                display={'inline'}
-                color="var(--chakra-colors-blue-500)"
-                fontWeight={500}
-            >
-                ##
-            </Text>{' '}
+        <Heading as="h2" size="xl" color={'gray.800'}>
             {children}
         </Heading>
     );
@@ -49,14 +35,7 @@ export function SectionHeadingWithDescription(props) {
 
 export function SubSectionHeading({ children }) {
     return (
-        <Heading as="h3" size="lg">
-            <Text
-                display={'inline'}
-                color="var(--chakra-colors-blue-500)"
-                fontWeight={500}
-            >
-                ###
-            </Text>{' '}
+        <Heading as="h3" size="lg" color={'gray.700'}>
             {children}
         </Heading>
     );
