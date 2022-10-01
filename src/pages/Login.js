@@ -18,6 +18,7 @@ import { useNavigate } from 'react-router-dom';
 import { auth, signInWithEmailAndPassword } from '../controllers/auth';
 
 import logo from '../assets/logo.svg';
+import { data } from '../data/data';
 
 const heroTexts = [
     'Deploy MutableSecurity agents.',
@@ -38,6 +39,7 @@ export default function SplitScreen() {
 
     useEffect(() => {
         moveTransitionToNextState(0);
+        // eslint-disable-next-line
     }, []);
 
     const moveTransitionToNextState = state => {
@@ -67,6 +69,8 @@ export default function SplitScreen() {
                     isClosable: false,
                     position: 'bottom-right',
                 });
+
+                data.init_database();
 
                 setTimeout(() => {
                     navigate('/overview');

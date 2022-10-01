@@ -1,5 +1,9 @@
-// Boolean indicating if the application is in tests or production
-export const IS_TESTING = process.env.IS_TESTING || true;
+// Boolean indicating if the dummy data is used
+export const IS_DUMMY_DATA_USED =
+    process.env.REACT_APP_IS_DUMMY_DATA_USED || true;
+
+// Boolean indicating if the build corresponds to production
+export const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
 // Miliseconds until the user is logout if no response from Firebase
 export const LOGIN_CHECK_GRACE_PERIOD =

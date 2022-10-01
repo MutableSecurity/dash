@@ -55,8 +55,8 @@ export default function Dash(props, { children }) {
         setUserData(user);
     }, [seed]);
 
-    var refresh = () => {
-        data.init_database();
+    var refresh = async () => {
+        await data.init_database();
 
         setSeed(Math.random());
     };
@@ -84,15 +84,24 @@ export default function Dash(props, { children }) {
             <Architecture
                 userData={userData}
                 notifyLoadedMethod={notifyLoaded}
+                seed={seed}
             />
         );
     } else if (props.settings) {
         innerPage = (
-            <Settings userData={userData} notifyLoadedMethod={notifyLoaded} />
+            <Settings
+                userData={userData}
+                notifyLoadedMethod={notifyLoaded}
+                seed={seed}
+            />
         );
     } else if (props.agent) {
         innerPage = (
-            <Agent agentId={agentID} notifyLoadedMethod={notifyLoaded} />
+            <Agent
+                agentId={agentID}
+                notifyLoadedMethod={notifyLoaded}
+                seed={seed}
+            />
         );
     } else if (props.solution) {
         innerPage = (
@@ -100,6 +109,7 @@ export default function Dash(props, { children }) {
                 agentId={agentID}
                 solutionId={solutionID}
                 notifyLoadedMethod={notifyLoaded}
+                seed={seed}
             />
         );
     }

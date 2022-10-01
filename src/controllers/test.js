@@ -45,5 +45,5 @@ export function getPassedTestsPercentagesForSolution(solutionId) {
 }
 
 export function setTestAsChecked(test) {
-    test.checked = true;
+    test.markAsChecked();
 }
