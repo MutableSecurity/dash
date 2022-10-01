@@ -184,6 +184,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
                     status: 'success',
                     duration: 2000,
                     isClosable: false,
+                    position: 'bottom-right',
                 });
 
                 setTimeout(() => {

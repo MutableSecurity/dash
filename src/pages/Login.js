@@ -57,7 +57,7 @@ export default function SplitScreen() {
 
     const handleLogin = () => {
         signInWithEmailAndPassword(auth, email, password)
-            .then(userCredential => {
+            .then(() => {
                 toast({
                     title: 'Welcome back!',
                     description:
@@ -65,6 +65,7 @@ export default function SplitScreen() {
                     status: 'success',
                     duration: 2000,
                     isClosable: false,
+                    position: 'bottom-right',
                 });
 
                 setTimeout(() => {
@@ -81,6 +82,7 @@ export default function SplitScreen() {
                     status: 'error',
                     duration: 4000,
                     isClosable: false,
+                    position: 'bottom-right',
                 });
             });
     };
