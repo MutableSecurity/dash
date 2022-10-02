@@ -1,15 +1,17 @@
 import { ChakraProvider } from '@chakra-ui/react';
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import { RequireActiveSession } from './controllers/auth';
-import Dash from './pages/Dash';
 import Login from './pages/Login';
 
 import '@fontsource/inter/100.css';
 import '@fontsource/inter/300.css';
 import '@fontsource/inter/700.css';
+import { LoadingScreen } from './pages/LoadingScreen';
 import theme from './styling/theme';
+
+const Dash = lazy(() => import('./pages/Dash'));
 
 function Router() {
     return (
@@ -21,7 +23,9 @@ function Router() {
                         path="/overview"
                         element={
                             <RequireActiveSession>
-                                <Dash overview />
+                                <Suspense fallback={<LoadingScreen />}>
+                                    <Dash overview />
+                                </Suspense>
                             </RequireActiveSession>
                         }
                     />
@@ -29,7 +33,9 @@ function Router() {
                         path="/architecture"
                         element={
                             <RequireActiveSession>
-                                <Dash architecture />
+                                <Suspense fallback={<LoadingScreen />}>
+                                    <Dash architecture />
+                                </Suspense>
                             </RequireActiveSession>
                         }
                     />
@@ -37,7 +43,9 @@ function Router() {
                         path="/agents/:agentID"
                         element={
                             <RequireActiveSession>
-                                <Dash agent />
+                                <Suspense fallback={<LoadingScreen />}>
+                                    <Dash agent />
+                                </Suspense>
                             </RequireActiveSession>
                         }
                     />
@@ -45,7 +53,9 @@ function Router() {
                         path="/agents/:agentID/solutions/:solutionID"
                         element={
                             <RequireActiveSession>
-                                <Dash solution />
+                                <Suspense fallback={<LoadingScreen />}>
+                                    <Dash solution />
+                                </Suspense>
                             </RequireActiveSession>
                         }
                     />
@@ -53,7 +63,9 @@ function Router() {
                         path="/settings"
                         element={
                             <RequireActiveSession>
-                                <Dash settings />
+                                <Suspense fallback={<LoadingScreen />}>
+                                    <Dash settings />
+                                </Suspense>
                             </RequireActiveSession>
                         }
                     />
