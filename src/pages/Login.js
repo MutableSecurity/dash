@@ -23,8 +23,8 @@ import { data } from '../data/data';
 const heroTexts = [
     'Deploy MutableSecurity agents.',
     'Install security solutions with our OSS.',
-    'Visualize configuration of deployed solutions with Dash.',
-    'Visualize functional metrics about deployed solution with Dash.',
+    'Use Dash to visualize the configuration of deployed solutions.',
+    'Use Dash to visualize metrics about deployed solution.',
     'Get malfunctioning alerts directly on your email inbox.',
 ];
 
