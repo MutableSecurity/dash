@@ -187,6 +187,7 @@ export default function Solution(props) {
                           >
                               <IconButton
                                   colorScheme="green"
+                                  variant="outline"
                                   aria-label="Mark as checked"
                                   icon={<FiCheck />}
                                   onClick={() => {
