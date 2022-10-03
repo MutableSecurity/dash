@@ -281,7 +281,7 @@ export default function Solution(props) {
             <SectionHeadingWithDescription
                 title="Information"
                 description="Details on the current security solution"
-                pillTitle="Documentation"
+                pillTitle="Learn more"
                 pillLink={getInformationDocumentationURL(solution.solution_id)}
                 pillLinkIsExternal={true}
             />
@@ -289,9 +289,6 @@ export default function Solution(props) {
             <SubSectionHeadingWithDescription
                 title="Current Configuration"
                 description="Writable data that defines how the security solution should behave"
-                pillTitle="Documentation"
-                pillLink={getInformationDocumentationURL(solution.solution_id)}
-                pillLinkIsExternal={true}
             />
 
             <TableContainer marginBottom={10}>
@@ -310,9 +307,6 @@ export default function Solution(props) {
             <SubSectionHeadingWithDescription
                 title="Metrics Charts"
                 description="Read-only information describing the security solution"
-                pillTitle="Documentation"
-                pillLink={getInformationDocumentationURL(solution.solution_id)}
-                pillLinkIsExternal={true}
             />
 
             <Tabs
@@ -329,7 +323,7 @@ export default function Solution(props) {
             <SectionHeadingWithDescription
                 title="Tests"
                 description="Operations with an expected outcome, that are run on a regular basis to ensure that the solution is working appropriately."
-                pillTitle="Documentation"
+                pillTitle="Learn more"
                 pillLink={getTestsDocumentationURL(solution.solution_id)}
                 pillLinkIsExternal={true}
             />
@@ -337,18 +331,12 @@ export default function Solution(props) {
             <SubSectionHeadingWithDescription
                 title="Passed Tests Percentages"
                 description="The percentage of tests that were run and passed"
-                pillTitle="Documentation"
-                pillLink={getTestsDocumentationURL(solution.solution_id)}
-                pillLinkIsExternal={true}
             />
             {passedTestsChart}
 
             <SubSectionHeadingWithDescription
                 title="Last Failed Tests"
                 description="The most recently ran tests that failed. Because this is not normal behavior, please investigate the main cause."
-                pillTitle="Documentation"
-                pillLink={getTestsDocumentationURL(solution.solution_id)}
-                pillLinkIsExternal={true}
             />
             <TableContainer marginBottom={10}>
                 <Table variant="simple">
