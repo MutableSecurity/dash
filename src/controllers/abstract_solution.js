@@ -20,6 +20,20 @@ export function getDocumentationURL(solutionId) {
     return 'https://mutablesecurity.io/docs/users/modules/' + solutionId;
 }
 
+export function getInformationDocumentationURL(solutionId) {
+    return (
+        'https://mutablesecurity.io/docs/users/modules/' +
+        solutionId +
+        '#information'
+    );
+}
+
+export function getTestsDocumentationURL(solutionId) {
+    return (
+        'https://mutablesecurity.io/docs/users/modules/' + solutionId + '#tests'
+    );
+}
+
 function getInformationWithProperty(solutionId, property) {
     const information = solutions_data.solutions[solutionId].information;
 

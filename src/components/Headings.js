@@ -1,4 +1,13 @@
-import { Heading, Text, VStack } from '@chakra-ui/react';
+import {
+    Heading,
+    Link,
+    Tag,
+    TagLabel,
+    TagRightIcon,
+    Text,
+    VStack,
+} from '@chakra-ui/react';
+import { BiLink } from 'react-icons/bi';
 
 export function SectionDescription({ children }) {
     return (
@@ -24,10 +33,41 @@ export function SectionHeading({ children }) {
     );
 }
 
+function Pill(props) {
+    return (
+        <Link href={props.pillLink} isExternal={props.pillLinkIsExternal}>
+            <Tag
+                size={'sm'}
+                variant="subtle"
+                colorScheme="blue"
+                verticalAlign={'middle'}
+                marginLeft={2}
+            >
+                <TagLabel>{props.pillTitle}</TagLabel>
+                <TagRightIcon as={BiLink} />
+            </Tag>
+        </Link>
+    );
+}
+
 export function SectionHeadingWithDescription(props) {
+    var pill = props.pillTitle ? (
+        <Pill
+            pillTitle={props.pillTitle}
+            pillLink={props.pillLink}
+            pillLinkIsExternal={props.pillLinkIsExternal}
+        />
+    ) : (
+        ''
+    );
+
     return (
         <VStack spacing={2} align="stretch">
-            <SectionHeading>{props.title}</SectionHeading>
+            <SectionHeading>
+                {props.title}
+                {pill}
+            </SectionHeading>
+
             <SectionDescription>{props.description}</SectionDescription>
         </VStack>
     );
@@ -42,9 +82,22 @@ export function SubSectionHeading({ children }) {
 }
 
 export function SubSectionHeadingWithDescription(props) {
+    var pill = props.pillTitle ? (
+        <Pill
+            pillTitle={props.pillTitle}
+            pillLink={props.pillLink}
+            pillLinkIsExternal={props.pillLinkIsExternal}
+        />
+    ) : (
+        ''
+    );
+
     return (
         <VStack spacing={2} align="stretch">
-            <SubSectionHeading>{props.title}</SubSectionHeading>
+            <SubSectionHeading>
+                {props.title}
+                {pill}
+            </SubSectionHeading>
             <SectionDescription>{props.description}</SectionDescription>
         </VStack>
     );
