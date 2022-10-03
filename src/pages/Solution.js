@@ -271,6 +271,12 @@ export default function Solution(props) {
             <PageHeading>{title}</PageHeading>
 
             <SectionHeadingWithDescription
+                title="General Details"
+                description="General information about the security solution"
+            />
+            {genericSolutionDetails}
+
+            <SectionHeadingWithDescription
                 title="Information"
                 description="Details on the current security solution"
             />
@@ -337,12 +343,6 @@ export default function Solution(props) {
                     <Tbody>{failedTestsRows}</Tbody>
                 </Table>
             </TableContainer>
-
-            <SectionHeadingWithDescription
-                title="General Information"
-                description="General details about the security solution"
-            />
-            {genericSolutionDetails}
         </VStack>
     );
 }
