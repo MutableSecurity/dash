@@ -28,7 +28,7 @@ export default function Settings(props) {
 
             <SectionHeadingWithDescription
                 title="Account Details"
-                description="Details describing the account you're logged in"
+                description="Details describing the account you're logged in with"
             />
             <VStack spacing={4} align="stretch">
                 <AnnotatedTextInput
@@ -94,7 +94,7 @@ export default function Settings(props) {
             <VStack spacing={4} align="stretch">
                 <AnnotatedSlider
                     title="Number of Failed Tests Before Alert"
-                    description="Number of tests to fail before alerting the events by email"
+                    description="Number of failed tests before alerting by email"
                     min={0}
                     max={100}
                     step={5}
@@ -104,9 +104,8 @@ export default function Settings(props) {
                     onChange={changeFailedTestsTrigger}
                 />
                 <AnnotatedRadioGroup
-                    title="Trigger for Configuration Change Reporting"
-                    description="The moment in which the configuration change should be
-                reported to you by email"
+                    title="Interval of Time for Configuration Change Reporting"
+                    description="The moment when the configuration change should be reported by email"
                     radioLabels={['When any test fails', 'Daily', 'Weekly']}
                     radioValues={['instant', 'daily', 'weekly']}
                     value={userData.reporting_configuration.config_change_group}
