@@ -38,7 +38,9 @@ export default function Architecture(props) {
         return (
             <Tr key={key}>
                 <Td>
-                    <Code>{agent.alias}</Code>
+                    <Link to={'/agents/' + agent.id}>
+                        <Code>{agent.alias}</Code>
+                    </Link>
                 </Td>
                 <Td>{agent.description}</Td>
                 <Td textAlign={'right'}>

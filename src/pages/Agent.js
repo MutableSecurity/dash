@@ -54,18 +54,20 @@ export default function Agent(props) {
         return (
             <Tr key={key}>
                 <Td>
-                    <Flex>
-                        <Image
-                            src={
-                                'https://mutablesecurity.io/images/solutions/' +
-                                solution.solution_id +
-                                '.webp'
-                            }
-                            height={4}
-                            marginRight={2}
-                        />
-                        {fullName}
-                    </Flex>
+                    <Link to={solutionUrl}>
+                        <Flex>
+                            <Image
+                                src={
+                                    'https://mutablesecurity.io/images/solutions/' +
+                                    solution.solution_id +
+                                    '.webp'
+                                }
+                                height={4}
+                                marginRight={2}
+                            />
+                            {fullName}
+                        </Flex>
+                    </Link>
                 </Td>
                 <Td textAlign={'right'}>
                     <Link to={solutionUrl}>
