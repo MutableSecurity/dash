@@ -17,17 +17,17 @@ export function SectionDescription({ children }) {
     );
 }
 
-export function PageHeading({ children }) {
+export function PageHeading({ id, children }) {
     return (
-        <Heading as="h1" size="2xl" color={'gray.900'}>
+        <Heading as="h1" size="2xl" color={'gray.900'} id={id}>
             {children}
         </Heading>
     );
 }
 
-export function SectionHeading({ children }) {
+export function SectionHeading({ id, children }) {
     return (
-        <Heading as="h2" size="xl" color={'gray.800'}>
+        <Heading as="h2" size="xl" color={'gray.800'} id={id}>
             {children}
         </Heading>
     );
@@ -50,7 +50,7 @@ function Pill(props) {
     );
 }
 
-export function SectionHeadingWithDescription(props) {
+export function SectionHeadingWithDescription({ id, ...props }) {
     var pill = props.pillTitle ? (
         <Pill
             pillTitle={props.pillTitle}
@@ -63,7 +63,7 @@ export function SectionHeadingWithDescription(props) {
 
     return (
         <VStack spacing={2} align="stretch">
-            <SectionHeading>
+            <SectionHeading id={id}>
                 {props.title}
                 {pill}
             </SectionHeading>
@@ -73,15 +73,15 @@ export function SectionHeadingWithDescription(props) {
     );
 }
 
-export function SubSectionHeading({ children }) {
+export function SubSectionHeading({ id, children }) {
     return (
-        <Heading as="h3" size="lg" color={'gray.700'}>
+        <Heading as="h3" size="lg" color={'gray.700'} id={id}>
             {children}
         </Heading>
     );
 }
 
-export function SubSectionHeadingWithDescription(props) {
+export function SubSectionHeadingWithDescription({ id, ...props }) {
     var pill = props.pillTitle ? (
         <Pill
             pillTitle={props.pillTitle}
@@ -94,7 +94,7 @@ export function SubSectionHeadingWithDescription(props) {
 
     return (
         <VStack spacing={2} align="stretch">
-            <SubSectionHeading>
+            <SubSectionHeading id={id}>
                 {props.title}
                 {pill}
             </SubSectionHeading>

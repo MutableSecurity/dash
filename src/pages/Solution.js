@@ -338,6 +338,7 @@ export default function Solution(props) {
             <SubSectionHeadingWithDescription
                 title="Last Failed Tests"
                 description="The most recently ran tests that failed. Because this is not normal behavior, please investigate the main cause."
+                id="failed-tests"
             />
             <TableContainer marginBottom={10}>
                 <Table variant="simple">
