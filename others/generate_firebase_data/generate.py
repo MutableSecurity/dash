@@ -17,7 +17,7 @@ DATA: dict = {
                 },
                 "agents_configuration": {"reporting_interval": 3600},
                 "reporting_configuration": {
-                    "config_change_group": "daily",
+                    "config_change_group": "instant",
                     "failed_tests_trigger": 5,
                 },
                 "timestamp": 0
