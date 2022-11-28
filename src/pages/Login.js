@@ -9,8 +9,9 @@ import {
     Input,
     SlideFade,
     Stack,
+    Text,
     useToast,
-    VStack,
+    VStack
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -29,8 +30,8 @@ const heroTexts = [
 ];
 
 export default function SplitScreen() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('tom@mutablesecurity.io');
+    const [password, setPassword] = useState('password');
     const [currentHeroText, setHeroText] = useState(heroTexts[0]);
     const [animationState, setAnimationState] = useState(0);
     const [step, setStep] = useState(1);
@@ -125,12 +126,20 @@ export default function SplitScreen() {
                         <Heading size="lg" as="h1" textAlign="center">
                             Sign in to MutableSecurity
                         </Heading>
+                        <Text textAlign={"justify"}>
+                            A valid credentials pair has already been entered. Simply click the button below to launch 
+                            Dash. For further information, please see the most recent{" "}
+                            <b>
+                                <a href="https://mutablesecurity.io/blog/coming-to-an-end">blog post</a>
+                            </b>.
+                        </Text>
                     </Stack>
                     <Stack spacing={4} w={'full'} maxW={'md'}>
                         <FormControl id="email">
                             <FormLabel>Email Address</FormLabel>
                             <Input
                                 type="email"
+                                placeholder="tom@mutablesecurity.io"
                                 onChange={event =>
                                     setEmail(event.currentTarget.value)
                                 }
@@ -140,6 +149,7 @@ export default function SplitScreen() {
                             <FormLabel>Password</FormLabel>
                             <Input
                                 type="password"
+                                placeholder="password"
                                 onChange={event =>
                                     setPassword(event.currentTarget.value)
                                 }
