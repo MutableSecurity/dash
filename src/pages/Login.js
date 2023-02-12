@@ -59,23 +59,28 @@ export default function SplitScreen() {
     };
 
     const handleLogin = () => {
+        toast({
+            title: 'Welcome back!',
+            description:
+                'We will redirect you to the dashboard in a moment.',
+            status: 'success',
+            duration: 2000,
+            isClosable: false,
+            position: 'bottom-right',
+        });
+
+        data.init_database();
+
+        setTimeout(() => {
+            navigate('/overview');
+        }, 3000);
+
+        return;
+
+        // Not executed as Firebase was deleted
         signInWithEmailAndPassword(auth, email, password)
             .then(() => {
-                toast({
-                    title: 'Welcome back!',
-                    description:
-                        'We will redirect you to the dashboard in a moment.',
-                    status: 'success',
-                    duration: 2000,
-                    isClosable: false,
-                    position: 'bottom-right',
-                });
-
-                data.init_database();
-
-                setTimeout(() => {
-                    navigate('/overview');
-                }, 3000);
+                // TODO: Place the above code
             })
             .catch(error => {
                 console.log(error);

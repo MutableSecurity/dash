@@ -32,6 +32,9 @@ export function RequireActiveSession({ children }) {
         }, LOGIN_CHECK_GRACE_PERIOD);
     }, []);
 
+    return children;
+
+    // Not executed as Firebase was deleted
     if (isReady) {
         if (user) {
             return children;
